@@ -1,0 +1,397 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>spamfilter module &mdash; TEstIDE  documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+
+  
+  
+  
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="test_spamfilter module" href="test_spamfilter.html" />
+    <link rel="prev" title="spamfilter-py" href="modules.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="index.html" class="icon icon-home" alt="Documentation Home"> TEstIDE
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">spamfilter-py</a><ul class="current">
+<li class="toctree-l2 current"><a class="current reference internal" href="#">spamfilter module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="test_spamfilter.html">test_spamfilter module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="token.html">token module</a></li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">TEstIDE</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="modules.html">spamfilter-py</a> &raquo;</li>
+        
+      <li>spamfilter module</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/spamfilter.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="module-spamfilter">
+<span id="spamfilter-module"></span><h1>spamfilter module<a class="headerlink" href="#module-spamfilter" title="Permalink to this headline">¶</a></h1>
+<dl class="class">
+<dt id="spamfilter.Spamfilter">
+<em class="property">class </em><code class="sig-prename descclassname">spamfilter.</code><code class="sig-name descname">Spamfilter</code><span class="sig-paren">(</span><em class="sig-param">training_dir</em><span class="sig-paren">)</span><a class="headerlink" href="#spamfilter.Spamfilter" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>A naive Bayesian spam filter</p>
+<dl class="method">
+<dt id="spamfilter.Spamfilter.classify">
+<code class="sig-name descname">classify</code><span class="sig-paren">(</span><em class="sig-param">filepath</em><span class="sig-paren">)</span><a class="headerlink" href="#spamfilter.Spamfilter.classify" title="Permalink to this definition">¶</a></dt>
+<dd><p>classifies a file as spam or ham based on training data</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>filepath</strong> – </p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>(boolean) True-&gt;spam, False-&gt;ham</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="spamfilter.Spamfilter.classify_all">
+<code class="sig-name descname">classify_all</code><span class="sig-paren">(</span><em class="sig-param">dir_path</em>, <em class="sig-param">known_type='spam'</em><span class="sig-paren">)</span><a class="headerlink" href="#spamfilter.Spamfilter.classify_all" title="Permalink to this definition">¶</a></dt>
+<dd><p>Classifies all emails in a testing directory and maintains count of errors</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>dir_path</strong> – path of testing directory</p></li>
+<li><p><strong>known_type</strong> – str: the known type of testing directory</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="spamfilter.Spamfilter.clean_table">
+<code class="sig-name descname">clean_table</code><span class="sig-paren">(</span><em class="sig-param">min_freq</em><span class="sig-paren">)</span><a class="headerlink" href="#spamfilter.Spamfilter.clean_table" title="Permalink to this definition">¶</a></dt>
+<dd><p>Removes entries from frequency table if they are deemed poor indicators.
+or if combined spam/ham frequency is below ‘min_freq’</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>min_freq</strong> – if total token count below threshold, delete from table</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="spamfilter.Spamfilter.create_frequency_table">
+<code class="sig-name descname">create_frequency_table</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#spamfilter.Spamfilter.create_frequency_table" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generates token frequency table from training emails
+:return:  dict{k,v}:  spam/ham frequencies
+k = (str)token, v = {spam_freq: , ham_freq:, prob_spam:, prob_ham:}</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="spamfilter.Spamfilter.print_table_info">
+<code class="sig-name descname">print_table_info</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#spamfilter.Spamfilter.print_table_info" title="Permalink to this definition">¶</a></dt>
+<dd><p>Print training info:
+- unique tokens in ham and spam, number of emails in training set</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="spamfilter.Spamfilter.prob_ham">
+<code class="sig-name descname">prob_ham</code><span class="sig-paren">(</span><em class="sig-param">token</em><span class="sig-paren">)</span><a class="headerlink" href="#spamfilter.Spamfilter.prob_ham" title="Permalink to this definition">¶</a></dt>
+<dd><p>calculates the probability that ‘token’ is found in ham emails</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>token</strong> – (str)</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>(float) probability ‘token’ is ham based on training emails</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="spamfilter.Spamfilter.prob_msg_ham">
+<code class="sig-name descname">prob_msg_ham</code><span class="sig-paren">(</span><em class="sig-param">filepath</em><span class="sig-paren">)</span><a class="headerlink" href="#spamfilter.Spamfilter.prob_msg_ham" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculates the probability that a message is ham</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>filepath</strong> – (str) path of email</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>(float) probability message is ham</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="spamfilter.Spamfilter.prob_msg_spam">
+<code class="sig-name descname">prob_msg_spam</code><span class="sig-paren">(</span><em class="sig-param">filepath</em><span class="sig-paren">)</span><a class="headerlink" href="#spamfilter.Spamfilter.prob_msg_spam" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculates the probability that a message is spam</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>filepath</strong> – (str) path of email</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>(float) probability message is spam</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="spamfilter.Spamfilter.prob_spam">
+<code class="sig-name descname">prob_spam</code><span class="sig-paren">(</span><em class="sig-param">token</em><span class="sig-paren">)</span><a class="headerlink" href="#spamfilter.Spamfilter.prob_spam" title="Permalink to this definition">¶</a></dt>
+<dd><p>calculates the probability that ‘token’ is found in spam emails</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>token</strong> – (str)</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>(float) probability ‘token’ is spam based on training emails</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="spamfilter.clean_split">
+<code class="sig-prename descclassname">spamfilter.</code><code class="sig-name descname">clean_split</code><span class="sig-paren">(</span><em class="sig-param">in_str</em><span class="sig-paren">)</span><a class="headerlink" href="#spamfilter.clean_split" title="Permalink to this definition">¶</a></dt>
+<dd><p>Removes all non-alphanum chars and splits string at whitespace, downcase</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>in_str</strong> – (str) target string</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>(list) cleaned strings</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="spamfilter.dir_tokens">
+<code class="sig-prename descclassname">spamfilter.</code><code class="sig-name descname">dir_tokens</code><span class="sig-paren">(</span><em class="sig-param">dir_path</em><span class="sig-paren">)</span><a class="headerlink" href="#spamfilter.dir_tokens" title="Permalink to this definition">¶</a></dt>
+<dd><p>tokenizes all files contained in ‘dir_path’</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>dir_path</strong> – directory containing files to be tokenized</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>list of tokens</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="spamfilter.file_tokens">
+<code class="sig-prename descclassname">spamfilter.</code><code class="sig-name descname">file_tokens</code><span class="sig-paren">(</span><em class="sig-param">filepath</em><span class="sig-paren">)</span><a class="headerlink" href="#spamfilter.file_tokens" title="Permalink to this definition">¶</a></dt>
+<dd><p>tokenizes all strings contained in ‘filepath’ after removing      all non-alphanum chars and splitting strings at whitespace</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>filepath</strong> – path of target file</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>list of tokens</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="spamfilter.tokens">
+<code class="sig-prename descclassname">spamfilter.</code><code class="sig-name descname">tokens</code><span class="sig-paren">(</span><em class="sig-param">text</em>, <em class="sig-param">tok_size=3</em><span class="sig-paren">)</span><a class="headerlink" href="#spamfilter.tokens" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a list of all substrings contained in ‘text’ of size ‘tok_size’</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>text</strong> – (string) text to tokenize</p></li>
+<li><p><strong>tok_size</strong> – length of substrings</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>(list) tokens of ‘text’</p>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="test_spamfilter.html" class="btn btn-neutral float-right" title="test_spamfilter module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="modules.html" class="btn btn-neutral float-left" title="spamfilter-py" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        
+        &copy; Copyright 2020, e
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>
