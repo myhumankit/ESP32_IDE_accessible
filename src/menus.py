@@ -1,9 +1,19 @@
 import wx
+from Panels import *
+from Utilitaries import load_img
 
 wx.ID_REFLUSH_DIR = 250
 wx.ID_EXAMPLES = 251
 wx.ID_SYNTAX_CHECK = 252
 wx.ID_DOWNLOAD_RUN = 253
+
+def Init_Top_Menu(self):
+    self.top_menu = TopMenu(self)
+    self.SetMenuBar(self.top_menu)
+
+def Init_ToolBar(self):
+    self.ToolBar = ToolBar(self)
+    self.SetToolBar(self.ToolBar)
 
 def create_File_Menu():
     MenuFile = wx.Menu(style = wx.MENU_TEAROFF)
@@ -27,20 +37,10 @@ def create_Edit_Menu():
     MenuEdit.AppendSeparator()
     return MenuEdit
 
-def create_TopMenu():
-    MenuFile = create_File_Menu()
-    MenuEdit = create_Edit_Menu()
-    MenuTop = wx.MenuBar()
-    MenuTop.Append(MenuFile, "&File")
-    MenuTop.Append(MenuEdit, "&Edit")
-    #TODO: add menu Tool later
-    #MenuTop.Append(MenuTools, "&Tools")
-    return MenuTop
-
 class TopMenu(wx.MenuBar):
     def __init__(self, parent):       
         wx.MenuBar.__init__(self)
-        self.controller = parent
+        self.parent = parent
         MenuFile = create_File_Menu()
         MenuEdit = create_Edit_Menu()
         self.Append(MenuFile, "&File")
@@ -50,12 +50,24 @@ class TopMenu(wx.MenuBar):
         wx.EVT_MENU(parent, wx.ID_SAVEAS, self.OnSaveAs)
 
     def OnExit(self, evt):
+        """ Generates token frequency table from training emails
+        :return:  dict{k,v}:  spam/ham frequencies
+        k = (str)token, v = {spam_freq: , ham_freq:, prob_spam:, prob_ham:}
+        """
         self.Parent.Destroy()
 
     def OnSave(self, evt):
+        """ Generates token frequency table from training emails
+        :return:  dict{k,v}:  spam/ham frequencies
+        k = (str)token, v = {spam_freq: , ham_freq:, prob_spam:, prob_ham:}
+        """
         print("save")
 
     def OnSaveAs(self, evt):
+        """ Generates token frequency table from training emails
+        :return:  dict{k,v}:  spam/ham frequencies
+        k = (str)token, v = {spam_freq: , ham_freq:, prob_spam:, prob_ham:}
+        """
         with wx.FileDialog(self.Parent, "Save Python file", wildcard="Python files (*.py)|*.py",
                        style=wx.FD_SAVE | wx.FD_OVERWRITE_PROMPT) as fileDialog:
             if fileDialog.ShowModal() == wx.ID_CANCEL:
@@ -85,13 +97,22 @@ class TopMenu(wx.MenuBar):
             except IOError:
                 wx.LogError("Cannot open file '%s'." % newfile)
 
-def InitToolBar(frame):
+class ToolBar(wx.ToolBar):
+    def __init__(self, parent, ):       
+        wx.ToolBar.__init__(self, parent=parent, style = wx.TB_RIGHT|wx.TE_HT_BEYOND )
+        self.parent = parent
+        self.SetMargins(100,100)
+        self.AddTool(wx.ID_NEW, '', load_img('./img/save.png'))
+        self.AddTool(wx.ID_OPEN, '', load_img('./img/save.png'))
+        self.AddTool(wx.ID_SAVE, '', load_img('./img/save.png'))
+        self.AddTool(wx.ID_DOWNLOAD_RUN, '', load_img('./img/save.png'))
+        self.AddTool(wx.ID_DOWNLOAD_RUN, '', load_img('./img/save.png'))
+        self.SetBackgroundColour("Orange")
+        self.Realize()
+        wx.EVT_MENU(parent, wx.ID_NEW, self.OnAddPage)
 
-    toolbar1 = frame.CreateToolBar(wx.TB_RIGHT| wx.TB_DOCKABLE|wx.TB_NODIVIDER)
-    toolbar1.SetMargins(100,100)
-    toolbar1.AddTool(wx.ID_NEW, '', wx.Bitmap('save.png'))
-    toolbar1.AddTool(wx.ID_OPEN, '', wx.Bitmap('save.png'))
-    toolbar1.AddTool(wx.ID_SAVE, '', wx.Bitmap('save.png'))
-    toolbar1.AddTool(wx.ID_DOWNLOAD_RUN, '', wx.Bitmap('save.png'))
-    toolbar1.AddTool(wx.ID_DOWNLOAD_RUN, '', wx.Bitmap('save.png'))
-    toolbar1.Realize()
+    def OnAddPage(self, event):
+        new_tab = MyEditor(self.parent.MyNotebook)
+        notebookP = self.parent.MyNotebook
+        notebookP.AddPage(new_tab, "Tab %s" % notebookP.tab_num)
+        notebookP.tab_num += 1    

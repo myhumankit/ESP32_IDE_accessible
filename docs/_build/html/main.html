@@ -35,7 +35,9 @@
 
     
     <link rel="index" title="Index" href="genindex.html" />
-    <link rel="search" title="Search" href="search.html" /> 
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="menus module" href="menus.html" />
+    <link rel="prev" title="Util module" href="Util.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -80,11 +82,18 @@
               
             
             
-              <!-- Local TOC -->
-              <div class="local-toc"><ul>
-<li><a class="reference internal" href="#">main module</a></li>
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">src</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="Util.html">Util module</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">main module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="menus.html">menus module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="panels.html">panels module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="setup.html">setup module</a></li>
 </ul>
-</div>
+</li>
+</ul>
+
             
           
         </div>
@@ -129,6 +138,8 @@
     
       <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
         
+          <li><a href="modules.html">src</a> &raquo;</li>
+        
       <li>main module</li>
     
     
@@ -148,8 +159,61 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="main-module">
-<h1>main module<a class="headerlink" href="#main-module" title="Permalink to this headline">¶</a></h1>
+  <div class="section" id="module-main">
+<span id="main-module"></span><h1>main module<a class="headerlink" href="#module-main" title="Permalink to this headline">¶</a></h1>
+<p><strong>Classes</strong></p>
+<table class="longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#main.MainWindow" title="main.MainWindow"><code class="xref py py-obj docutils literal notranslate"><span class="pre">MainWindow</span></code></a>(name)</p></td>
+<td><p>A naive Bayesian spam filter</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#main.Myapp" title="main.Myapp"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Myapp</span></code></a>([redirect, filename, useBestVisual, …])</p></td>
+<td><p>inits Spamfilter with training data</p></td>
+</tr>
+</tbody>
+</table>
+<dl class="class">
+<dt id="main.MainWindow">
+<em class="property">class </em><code class="sig-prename descclassname">main.</code><code class="sig-name descname">MainWindow</code><span class="sig-paren">(</span><em class="sig-param">name</em><span class="sig-paren">)</span><a class="headerlink" href="#main.MainWindow" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">wx._core.Frame</span></code></p>
+<p>A naive Bayesian spam filter</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="main.Myapp">
+<em class="property">class </em><code class="sig-prename descclassname">main.</code><code class="sig-name descname">Myapp</code><span class="sig-paren">(</span><em class="sig-param">redirect=False</em>, <em class="sig-param">filename=None</em>, <em class="sig-param">useBestVisual=False</em>, <em class="sig-param">clearSigInt=True</em><span class="sig-paren">)</span><a class="headerlink" href="#main.Myapp" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">wx.core.App</span></code></p>
+<p>inits Spamfilter with training data</p>
+<p><strong>Methods</strong></p>
+<table class="longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#main.Myapp.OnInit" title="main.Myapp.OnInit"><code class="xref py py-obj docutils literal notranslate"><span class="pre">OnInit</span></code></a>()</p></td>
+<td><p>inits Spamfilter with training data</p></td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="main.Myapp.OnInit">
+<code class="sig-name descname">OnInit</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#main.Myapp.OnInit" title="Permalink to this definition">¶</a></dt>
+<dd><p>inits Spamfilter with training data</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>training_dir</strong> – path of training directory with subdirectories
+‘/ham’ and ‘/spam’</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
 </div>
 
 
@@ -157,6 +221,15 @@
            
           </div>
           <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="menus.html" class="btn btn-neutral float-right" title="menus module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="Util.html" class="btn btn-neutral float-left" title="Util module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
   
 
   <hr/>

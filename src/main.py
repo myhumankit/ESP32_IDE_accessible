@@ -1,21 +1,28 @@
 import wx
-
-from menus import *
-from panels import *
-
-def Init_Top_Menu(self):
-    self.top_menu = TopMenu(self)
-    self.SetMenuBar(self.top_menu)
+from Menus import *
+from Panels import * 
 
 class MainWindow(wx.Frame):
-    def __init__(self, name):       
-        wx.Frame.__init__(self, None, 1, title = name, size = (1900,1200))
+    """A naive Bayesian spam filter"""
+    def __init__(self, name):
+        """ inits Spamfilter with training data
+        
+        :param training_dir: path of training directory with subdirectories
+         '/ham' and '/spam'
+        """       
+        wx.Frame.__init__(self, None, 1, title = name, size = (800,400))
         Init_Top_Menu(self)
-        InitToolBar(self)
+        Init_ToolBar(self)
         Init_Panels(self)
 
 class Myapp(wx.App):
+    """ inits Spamfilter with training data"""
     def OnInit(self):
+        """ inits Spamfilter with training data
+        
+        :param training_dir: path of training directory with subdirectories
+         '/ham' and '/spam'
+        """
         window = MainWindow("Menus")
         window.Show()
         self.SetTopWindow(window)

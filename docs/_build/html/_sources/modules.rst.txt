@@ -4,5 +4,8 @@ src
 .. toctree::
    :maxdepth: 4
 
+   Util
    main
    menus
+   panels
+   setup

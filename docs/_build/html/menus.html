@@ -35,7 +35,9 @@
 
     
     <link rel="index" title="Index" href="genindex.html" />
-    <link rel="search" title="Search" href="search.html" /> 
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="panels module" href="panels.html" />
+    <link rel="prev" title="main module" href="main.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -80,11 +82,18 @@
               
             
             
-              <!-- Local TOC -->
-              <div class="local-toc"><ul>
-<li><a class="reference internal" href="#">menus module</a></li>
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">src</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="Util.html">Util module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="main.html">main module</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">menus module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="panels.html">panels module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="setup.html">setup module</a></li>
 </ul>
-</div>
+</li>
+</ul>
+
             
           
         </div>
@@ -129,6 +138,8 @@
     
       <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
         
+          <li><a href="modules.html">src</a> &raquo;</li>
+        
       <li>menus module</li>
     
     
@@ -148,8 +159,143 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="menus-module">
-<h1>menus module<a class="headerlink" href="#menus-module" title="Permalink to this headline">¶</a></h1>
+  <div class="section" id="module-menus">
+<span id="menus-module"></span><h1>menus module<a class="headerlink" href="#module-menus" title="Permalink to this headline">¶</a></h1>
+<p><strong>Classes</strong></p>
+<table class="longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#menus.ToolBar" title="menus.ToolBar"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ToolBar</span></code></a>(parent)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#menus.TopMenu" title="menus.TopMenu"><code class="xref py py-obj docutils literal notranslate"><span class="pre">TopMenu</span></code></a>(parent)</p></td>
+<td><p></p></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Functions</strong></p>
+<table class="longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#menus.Init_ToolBar" title="menus.Init_ToolBar"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Init_ToolBar</span></code></a>(self)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#menus.Init_Top_Menu" title="menus.Init_Top_Menu"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Init_Top_Menu</span></code></a>(self)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#menus.create_Edit_Menu" title="menus.create_Edit_Menu"><code class="xref py py-obj docutils literal notranslate"><span class="pre">create_Edit_Menu</span></code></a>()</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#menus.create_File_Menu" title="menus.create_File_Menu"><code class="xref py py-obj docutils literal notranslate"><span class="pre">create_File_Menu</span></code></a>()</p></td>
+<td><p></p></td>
+</tr>
+</tbody>
+</table>
+<dl class="function">
+<dt id="menus.Init_ToolBar">
+<code class="sig-prename descclassname">menus.</code><code class="sig-name descname">Init_ToolBar</code><span class="sig-paren">(</span><em class="sig-param">self</em><span class="sig-paren">)</span><a class="headerlink" href="#menus.Init_ToolBar" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="menus.Init_Top_Menu">
+<code class="sig-prename descclassname">menus.</code><code class="sig-name descname">Init_Top_Menu</code><span class="sig-paren">(</span><em class="sig-param">self</em><span class="sig-paren">)</span><a class="headerlink" href="#menus.Init_Top_Menu" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="class">
+<dt id="menus.ToolBar">
+<em class="property">class </em><code class="sig-prename descclassname">menus.</code><code class="sig-name descname">ToolBar</code><span class="sig-paren">(</span><em class="sig-param">parent</em><span class="sig-paren">)</span><a class="headerlink" href="#menus.ToolBar" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">wx._core.ToolBar</span></code></p>
+<p><strong>Methods</strong></p>
+<table class="longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#menus.ToolBar.OnAddPage" title="menus.ToolBar.OnAddPage"><code class="xref py py-obj docutils literal notranslate"><span class="pre">OnAddPage</span></code></a>(event)</p></td>
+<td><p></p></td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="menus.ToolBar.OnAddPage">
+<code class="sig-name descname">OnAddPage</code><span class="sig-paren">(</span><em class="sig-param">event</em><span class="sig-paren">)</span><a class="headerlink" href="#menus.ToolBar.OnAddPage" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="menus.TopMenu">
+<em class="property">class </em><code class="sig-prename descclassname">menus.</code><code class="sig-name descname">TopMenu</code><span class="sig-paren">(</span><em class="sig-param">parent</em><span class="sig-paren">)</span><a class="headerlink" href="#menus.TopMenu" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">wx._core.MenuBar</span></code></p>
+<p><strong>Methods</strong></p>
+<table class="longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#menus.TopMenu.OnExit" title="menus.TopMenu.OnExit"><code class="xref py py-obj docutils literal notranslate"><span class="pre">OnExit</span></code></a>(evt)</p></td>
+<td><p>Generates token frequency table from training emails</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#menus.TopMenu.OnOpen" title="menus.TopMenu.OnOpen"><code class="xref py py-obj docutils literal notranslate"><span class="pre">OnOpen</span></code></a>(event)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#menus.TopMenu.OnSave" title="menus.TopMenu.OnSave"><code class="xref py py-obj docutils literal notranslate"><span class="pre">OnSave</span></code></a>(evt)</p></td>
+<td><p>Generates token frequency table from training emails</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#menus.TopMenu.OnSaveAs" title="menus.TopMenu.OnSaveAs"><code class="xref py py-obj docutils literal notranslate"><span class="pre">OnSaveAs</span></code></a>(evt)</p></td>
+<td><p>Generates token frequency table from training emails</p></td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="menus.TopMenu.OnExit">
+<code class="sig-name descname">OnExit</code><span class="sig-paren">(</span><em class="sig-param">evt</em><span class="sig-paren">)</span><a class="headerlink" href="#menus.TopMenu.OnExit" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generates token frequency table from training emails
+:return:  dict{k,v}:  spam/ham frequencies
+k = (str)token, v = {spam_freq: , ham_freq:, prob_spam:, prob_ham:}</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="menus.TopMenu.OnOpen">
+<code class="sig-name descname">OnOpen</code><span class="sig-paren">(</span><em class="sig-param">event</em><span class="sig-paren">)</span><a class="headerlink" href="#menus.TopMenu.OnOpen" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="menus.TopMenu.OnSave">
+<code class="sig-name descname">OnSave</code><span class="sig-paren">(</span><em class="sig-param">evt</em><span class="sig-paren">)</span><a class="headerlink" href="#menus.TopMenu.OnSave" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generates token frequency table from training emails
+:return:  dict{k,v}:  spam/ham frequencies
+k = (str)token, v = {spam_freq: , ham_freq:, prob_spam:, prob_ham:}</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="menus.TopMenu.OnSaveAs">
+<code class="sig-name descname">OnSaveAs</code><span class="sig-paren">(</span><em class="sig-param">evt</em><span class="sig-paren">)</span><a class="headerlink" href="#menus.TopMenu.OnSaveAs" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generates token frequency table from training emails
+:return:  dict{k,v}:  spam/ham frequencies
+k = (str)token, v = {spam_freq: , ham_freq:, prob_spam:, prob_ham:}</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="menus.create_Edit_Menu">
+<code class="sig-prename descclassname">menus.</code><code class="sig-name descname">create_Edit_Menu</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#menus.create_Edit_Menu" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="menus.create_File_Menu">
+<code class="sig-prename descclassname">menus.</code><code class="sig-name descname">create_File_Menu</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#menus.create_File_Menu" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
 </div>
 
 
@@ -157,6 +303,15 @@
            
           </div>
           <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="panels.html" class="btn btn-neutral float-right" title="panels module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="main.html" class="btn btn-neutral float-left" title="main module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
   
 
   <hr/>

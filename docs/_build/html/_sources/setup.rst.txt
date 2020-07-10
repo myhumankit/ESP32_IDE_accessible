@@ -1,7 +1,7 @@
-menus module
+setup module
 ============
 
-.. automodule:: menus
+.. automodule:: setup
    :members:
    :undoc-members:
    :show-inheritance:

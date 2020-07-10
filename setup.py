@@ -1,7 +1,7 @@
 from cx_Freeze import setup, Executable
 
 base = None
-executables = [Executable("main.py")]
+executables = [Executable("src/main.py")]
 #Renseignez ici la liste complète des packages utilisés par votre application
 packages = ["idna", "wx","os"]
 options = {
