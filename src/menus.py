@@ -32,6 +32,7 @@ def create_Edit_Menu():
     MenuEdit.Append(wx.ID_CUT, "&Cut\tCTRL+X")
     MenuEdit.Append(wx.ID_PASTE, "&Paste\tCTRL+V")
     MenuEdit.Append(wx.ID_REDO, "&Redo\tCTRL+Z")
+    MenuEdit.Append(wx.ID_UNDO, "&Redo\tCTRL+Z")
     MenuEdit.Append(wx.ID_SYNTAX_CHECK, "&Syntax Check")
     MenuEdit.Append(wx.ID_FIND, "&Find and/or Replace\tCTRL+F")
     MenuEdit.AppendSeparator()
@@ -39,77 +40,157 @@ def create_Edit_Menu():
 
 class TopMenu(wx.MenuBar):
     def __init__(self, parent):       
-        wx.MenuBar.__init__(self)
+        wx.MenuBar.__init__(self, wx.ID_TOP)
         self.parent = parent
-        MenuFile = create_File_Menu()
-        MenuEdit = create_Edit_Menu()
-        self.Append(MenuFile, "&File")
-        self.Append(MenuEdit, "&Edit")
-        wx.EVT_MENU(parent, wx.ID_EXIT, self.OnExit)
-        wx.EVT_MENU(parent, wx.ID_OPEN, self.OnOpen)
-        wx.EVT_MENU(parent, wx.ID_SAVEAS, self.OnSaveAs)
+        self.MenuFile = create_File_Menu()
+        self.MenuEdit = create_Edit_Menu()
+        self.Append(self.MenuFile, "&File")
+        self.Append(self.MenuEdit, "&Edit")
+        self.Bind(wx.EVT_MENU,  self.OnExit, id=wx.ID_EXIT)
+        self.Bind(wx.EVT_MENU,  self.OnOpen, id=wx.ID_OPEN)
+        self.Bind(wx.EVT_MENU,  self.OnSaveAs, id=wx.ID_SAVEAS)
+        self.Bind(wx.EVT_MENU,  self.OnCopy, id=wx.ID_COPY)
+        self.Bind(wx.EVT_MENU,  self.OnPaste, id=wx.ID_PASTE)
+        self.Bind(wx.EVT_MENU,  self.OnFindReplace, id=wx.ID_FIND)
+
 
     def OnExit(self, evt):
-        """ Generates token frequency table from training emails
-        :return:  dict{k,v}:  spam/ham frequencies
-        k = (str)token, v = {spam_freq: , ham_freq:, prob_spam:, prob_ham:}
-        """
         self.Parent.Destroy()
 
     def OnSave(self, evt):
-        """ Generates token frequency table from training emails
-        :return:  dict{k,v}:  spam/ham frequencies
-        k = (str)token, v = {spam_freq: , ham_freq:, prob_spam:, prob_ham:}
-        """
-        print("save")
+        notebookP = self.parent.MyNotebook
+        # Check if save is required
+        if (notebookP.GetCurrentPage().GetValue() 
+            != notebookP.GetCurrentPage().last_save):
+            notebookP.GetCurrentPage().saved = False
+
+        # Check if Save should bring up FileDialog
+        if (notebookP.GetCurrentPage().saved == False 
+            and notebookP.GetCurrentPage().last_save == ""): 
+            dialog = wx.FileDialog(self, 
+                                   "Choose a file", 
+                                   notebookP.GetCurrentPage().directory, 
+                                   "", 
+                                   "*", 
+                                   wx.FD_SAVE | wx.FD_OVERWRITE_PROMPT)
+            if dialog.ShowModal() == wx.ID_OK:
+                # Grab the content to be saved
+                save_as_file_contents = notebookP.GetCurrentPage().GetValue()
+
+                # Open, Write & Close File
+                save_as_name = dialog.GetFilename()
+                save_as_directory = dialog.GetDirectory()    
+                filehandle=open(os.path.join(save_as_directory, save_as_name), 'w')
+                filehandle.write(save_as_file_contents)
+                filehandle.close()
+                notebookP.SetPageText(notebookP.GetSelection(), save_as_name)
+                notebookP.GetCurrentPage().filename = save_as_name
+                notebookP.GetCurrentPage().directory = save_as_directory
+                notebookP.GetCurrentPage().last_save = save_as_file_contents
+                notebookP.GetCurrentPage().saved = True
+        else:
+            # Grab the content to be saved
+            save_as_file_contents = notebookP.GetCurrentPage().GetValue()
+            filehandle=open(os.path.join(notebookP.GetCurrentPage().directory, 
+                                         notebookP.GetCurrentPage().filename), 'w')
+            filehandle.write(save_as_file_contents)
+            filehandle.close()
+            notebookP.GetCurrentPage().last_save = save_as_file_contents
+            notebookP.GetCurrentPage().saved = True
 
     def OnSaveAs(self, evt):
-        """ Generates token frequency table from training emails
-        :return:  dict{k,v}:  spam/ham frequencies
-        k = (str)token, v = {spam_freq: , ham_freq:, prob_spam:, prob_ham:}
-        """
-        with wx.FileDialog(self.Parent, "Save Python file", wildcard="Python files (*.py)|*.py",
-                       style=wx.FD_SAVE | wx.FD_OVERWRITE_PROMPT) as fileDialog:
-            if fileDialog.ShowModal() == wx.ID_CANCEL:
-                return     # the user changed their mind
-        # save the current contents in the file
-        pathname = fileDialog.GetPath()
-        try:
-            with open(pathname, 'w') as file:
-                self.Parent.doSaveData(file)
-        except IOError:
-            wx.LogError("Cannot save current data in file '%s'." % pathname)
+        notebookP = self.parent.MyNotebook
+        dialog = wx.FileDialog(self, 
+                               "Choose a file", 
+                               notebookP.GetCurrentPage().directory, 
+                               "", 
+                               "*.py*", 
+                               wx.FD_SAVE | wx.FD_OVERWRITE_PROMPT)
+        if dialog.ShowModal() == wx.ID_OK:
+            # Grab the content to be saved
+            save_as_file_contents = notebookP.GetCurrentPage().GetValue()
+            # Open, Write & Close File
+            save_as_name = dialog.GetFilename()
+            save_as_directory = dialog.GetDirectory()
+            filehandle=open(os.path.join(save_as_directory, save_as_name), 'w')
+            filehandle.write(save_as_file_contents)
+            filehandle.close()
+            notebookP.SetPageText(notebookP.GetSelection(), save_as_name)
+            notebookP.GetCurrentPage().filename = save_as_name
+            notebookP.GetCurrentPage().directory = save_as_directory
+            notebookP.GetCurrentPage().last_save = save_as_file_contents
+            notebookP.GetCurrentPage().saved = True
+        dialog.Destroy()
 
-    def OnOpen(self, event):# ! if self.contentNotSaved:
-        if wx.MessageBox("Current content has not been saved! Proceed?", "Please confirm",#alert the user that his job 
-            wx.ICON_QUESTION | wx.YES_NO, self.Parent) == wx.NO:
-                return OnSave()
-        # otherwise ask the user what new file to open
-        with wx.FileDialog(self.Parent, "Open Python file", wildcard="Python files (*.py)|*.py",
-            style=wx.FD_OPEN | wx.FD_FILE_MUST_EXIST) as fileDialog:
-            if fileDialog.ShowModal() == wx.ID_CANCEL:
-                return     # the user changed their mind
-        # Proceed loading the file chosen by the user
-            pathname = fileDialog.GetPath()
-            try:
-                with open(pathname, 'r') as file:
-                    self.Parent.doLoadDataOrWhatever(file)
-            except IOError:
-                wx.LogError("Cannot open file '%s'." % newfile)
+    def OnOpen(self, evt):
+            notebookP = self.parent.MyNotebook
+            dialog = wx.FileDialog(self, 
+                               "Choose a File", 
+                               notebookP.GetCurrentPage().directory, 
+                               "", 
+                               "*", 
+                               wx.FD_OPEN)
+            if dialog.ShowModal() == wx.ID_OK:
+                filename = dialog.GetFilename()
+                directory = dialog.GetDirectory()
+                filehandle = open(os.path.join(directory, filename), 'r')
+                # Check if a new tabe needs to be created to display contents of opened file
+                if (notebookP.GetPageCount() == 1 
+                    and notebookP.GetCurrentPage().GetValue() == ""):
+                    notebookP.GetCurrentPage().SetValue(filehandle.read())
+                    notebookP.GetCurrentPage().filename = filename
+                    notebookP.GetCurrentPage().directory = directory
+                    notebookP.GetCurrentPage().last_save = notebookP.GetCurrentPage().GetValue()
+                    notebookP.GetCurrentPage().saved = True
+                else:
+                    print("")
+                    new_tab = MyEditor(notebookP)
+                    new_tab.filename = filename
+                    new_tab.directory = directory
+                    notebookP.AddPage(new_tab, filename, select = True)
+                    wx.CallAfter(new_tab.SetFocus)
+                # Populate the tab with file contents
+                    new_tab.SetValue(filehandle.read())
+                    new_tab.last_save = new_tab.GetValue()
+                    new_tab.saved = True
+                notebookP.SetPageText(notebookP.GetSelection(), filename)
+                filehandle.close()
+            dialog.Destroy()
+
+    def OnCopy(self, event):
+        self.parent.MyNotebook.GetCurrentPage().Copy()
+
+    def OnPaste(self, event):
+        self.parent.MyNotebook.GetCurrentPage().Paste()
+
+    def OnRedo(self, event):
+        self.parent.MyNotebook.GetCurrentPage().Redo()
+
+    def OnUndo(self, event):
+        self.parent.MyNotebook.GetCurrentPage().Undo()
+
+    def OnFindReplace(self, event):
+        notebookP = self.parent.MyNotebook
+        notebookP.data = wx.FindReplaceData()   # initializes and holds search parameters
+        notebookP.dlg = wx.FindReplaceDialog(notebookP.GetCurrentPage(), notebookP.data, 'Find')
+        notebookP.dlg.Show()
+        data = notebookP.GetCurrentPage().OnFindReplace()
 
 class ToolBar(wx.ToolBar):
     def __init__(self, parent, ):       
-        wx.ToolBar.__init__(self, parent=parent, style = wx.TB_RIGHT|wx.TE_HT_BEYOND )
+        wx.ToolBar.__init__(self, parent=parent, style= wx.TB_RIGHT)
+        self.CentreOnParent()
         self.parent = parent
-        self.SetMargins(100,100)
         self.AddTool(wx.ID_NEW, '', load_img('./img/save.png'))
-        self.AddTool(wx.ID_OPEN, '', load_img('./img/save.png'))
-        self.AddTool(wx.ID_SAVE, '', load_img('./img/save.png'))
-        self.AddTool(wx.ID_DOWNLOAD_RUN, '', load_img('./img/save.png'))
-        self.AddTool(wx.ID_DOWNLOAD_RUN, '', load_img('./img/save.png'))
+        #self.AddTool(wx.ID_OPEN, '', load_img('./img/save.png'))
+        #self.AddTool(wx.ID_SAVE, '', load_img('./img/save.png'))
+        # self.AddTool(wx.ID_DOWNLOAD_RUN, '', load_img('./img/save.png'))
+        # self.AddTool(wx.ID_DOWNLOAD_RUN, '', load_img('./img/save.png'))
         self.SetBackgroundColour("Orange")
         self.Realize()
-        wx.EVT_MENU(parent, wx.ID_NEW, self.OnAddPage)
+        self.Bind(wx.EVT_MENU, self.OnAddPage, id=wx.ID_NEW)
+        self.Bind(wx.EVT_MENU, parent.top_menu.OnOpen, id=wx.ID_OPEN)
+        self.Bind(wx.EVT_MENU, parent.top_menu.OnSave, id=wx.ID_SAVE)
 
     def OnAddPage(self, event):
         new_tab = MyEditor(self.parent.MyNotebook)
