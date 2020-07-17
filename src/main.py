@@ -19,7 +19,7 @@ class MainWindow(wx.Frame):
         :param name of the window: path of training directory with subdirectories
          '/ham' and '/spam'
         """       
-        wx.Frame.__init__(self, None, 1, title = name, size = (1600,900))
+        wx.Frame.__init__(self, None, 1, title = name, size = (1920,1080))
         self.who_is_focus = 0
 
         Init_Top_Menu(self)

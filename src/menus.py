@@ -181,7 +181,7 @@ class ToolBar(wx.ToolBar):
         wx.ToolBar.__init__(self, parent=parent, style= wx.TB_RIGHT)
         self.CentreOnParent()
         self.parent = parent
-        self.AddTool(wx.ID_NEW, '', load_img('./img/save.png'))
+        #self.AddTool(wx.ID_NEW, '', load_img('./img/save.png'))
         #self.AddTool(wx.ID_OPEN, '', load_img('./img/save.png'))
         #self.AddTool(wx.ID_SAVE, '', load_img('./img/save.png'))
         # self.AddTool(wx.ID_DOWNLOAD_RUN, '', load_img('./img/save.png'))
