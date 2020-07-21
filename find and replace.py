@@ -1,3 +1,5 @@
+
+
     def find_replace(self, event=None):
         """Find and Replace dialog and action."""
         if self.app.children:

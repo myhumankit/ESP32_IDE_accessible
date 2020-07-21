@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>main module &mdash; TEstIDE  documentation</title>
+  <title>Main module &mdash; TEstIDE  documentation</title>
   
 
   
@@ -36,8 +36,8 @@
     
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="menus module" href="menus.html" />
-    <link rel="prev" title="Util module" href="Util.html" /> 
+    <link rel="next" title="Menus module" href="Menus.html" />
+    <link rel="prev" title="Editor_Style module" href="Editor_Style.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -85,11 +85,11 @@
               <p class="caption"><span class="caption-text">Contents:</span></p>
 <ul class="current">
 <li class="toctree-l1 current"><a class="reference internal" href="modules.html">src</a><ul class="current">
-<li class="toctree-l2"><a class="reference internal" href="Util.html">Util module</a></li>
-<li class="toctree-l2 current"><a class="current reference internal" href="#">main module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="menus.html">menus module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="panels.html">panels module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="setup.html">setup module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Editor_Style.html">Editor_Style module</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Main module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Menus.html">Menus module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Panels.html">Panels module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Utilitaries.html">Utilitaries module</a></li>
 </ul>
 </li>
 </ul>
@@ -140,13 +140,13 @@
         
           <li><a href="modules.html">src</a> &raquo;</li>
         
-      <li>main module</li>
+      <li>Main module</li>
     
     
       <li class="wy-breadcrumbs-aside">
         
             
-            <a href="_sources/main.rst.txt" rel="nofollow"> View page source</a>
+            <a href="_sources/Main.rst.txt" rel="nofollow"> View page source</a>
           
         
       </li>
@@ -159,8 +159,20 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="module-main">
-<span id="main-module"></span><h1>main module<a class="headerlink" href="#module-main" title="Permalink to this headline">¶</a></h1>
+  <div class="section" id="module-Main">
+<span id="main-module"></span><h1>Main module<a class="headerlink" href="#module-Main" title="Permalink to this headline">¶</a></h1>
+<p><strong>Functions</strong></p>
+<table class="longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#Main.InitShortcuts" title="Main.InitShortcuts"><code class="xref py py-obj docutils literal notranslate"><span class="pre">InitShortcuts</span></code></a>(frame)</p></td>
+<td><p>Initiate shortcuts of the Application with wx.Accelerator Table</p></td>
+</tr>
+</tbody>
+</table>
 <p><strong>Classes</strong></p>
 <table class="longtable docutils align-default">
 <colgroup>
@@ -168,26 +180,38 @@
 <col style="width: 90%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="#main.MainWindow" title="main.MainWindow"><code class="xref py py-obj docutils literal notranslate"><span class="pre">MainWindow</span></code></a>(name)</p></td>
-<td><p>A naive Bayesian spam filter</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#Main.MainWindow" title="Main.MainWindow"><code class="xref py py-obj docutils literal notranslate"><span class="pre">MainWindow</span></code></a>(name, size)</p></td>
+<td><p>MainWindow of the app which will contains all the children classes and custom functions</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#main.Myapp" title="main.Myapp"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Myapp</span></code></a>([redirect, filename, useBestVisual, …])</p></td>
-<td><p>inits Spamfilter with training data</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#Main.Myapp" title="Main.Myapp"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Myapp</span></code></a>([redirect, filename, useBestVisual, …])</p></td>
+<td><p>Minimal class to launch the app</p></td>
 </tr>
 </tbody>
 </table>
-<dl class="class">
-<dt id="main.MainWindow">
-<em class="property">class </em><code class="sig-prename descclassname">main.</code><code class="sig-name descname">MainWindow</code><span class="sig-paren">(</span><em class="sig-param">name</em><span class="sig-paren">)</span><a class="headerlink" href="#main.MainWindow" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">wx._core.Frame</span></code></p>
-<p>A naive Bayesian spam filter</p>
+<dl class="py function">
+<dt id="Main.InitShortcuts">
+<code class="sig-prename descclassname">Main.</code><code class="sig-name descname">InitShortcuts</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">frame</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Main.InitShortcuts" title="Permalink to this definition">¶</a></dt>
+<dd><p>Initiate shortcuts of the Application with wx.Accelerator Table</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>frame</strong> – parent class to bind events)</p>
+</dd>
+<dt class="field-even">Type frame</dt>
+<dd class="field-even"><p>MainWindow()</p>
+</dd>
+</dl>
 </dd></dl>
 
-<dl class="class">
-<dt id="main.Myapp">
-<em class="property">class </em><code class="sig-prename descclassname">main.</code><code class="sig-name descname">Myapp</code><span class="sig-paren">(</span><em class="sig-param">redirect=False</em>, <em class="sig-param">filename=None</em>, <em class="sig-param">useBestVisual=False</em>, <em class="sig-param">clearSigInt=True</em><span class="sig-paren">)</span><a class="headerlink" href="#main.Myapp" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">wx.core.App</span></code></p>
-<p>inits Spamfilter with training data</p>
+<dl class="py class">
+<dt id="Main.MainWindow">
+<em class="property">class </em><code class="sig-prename descclassname">Main.</code><code class="sig-name descname">MainWindow</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">name</span></em>, <em class="sig-param"><span class="n">size</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Main.MainWindow" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">wx._core.Frame</span></code></p>
+<p>MainWindow of the app which will contains all the children classes and custom functions</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>wx.Frame</strong> – see <a class="reference external" href="https://wxpython.org/Phoenix/docs/html/wx.Frame.html">https://wxpython.org/Phoenix/docs/html/wx.Frame.html</a></p>
+</dd>
+</dl>
 <p><strong>Methods</strong></p>
 <table class="longtable docutils align-default">
 <colgroup>
@@ -195,19 +219,58 @@
 <col style="width: 90%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="#main.Myapp.OnInit" title="main.Myapp.OnInit"><code class="xref py py-obj docutils literal notranslate"><span class="pre">OnInit</span></code></a>()</p></td>
-<td><p>inits Spamfilter with training data</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#Main.MainWindow.OnChangeFocus" title="Main.MainWindow.OnChangeFocus"><code class="xref py py-obj docutils literal notranslate"><span class="pre">OnChangeFocus</span></code></a>(event)</p></td>
+<td><p>Allow to navigate in the differents region of the Frame after an event</p></td>
 </tr>
 </tbody>
 </table>
-<dl class="method">
-<dt id="main.Myapp.OnInit">
-<code class="sig-name descname">OnInit</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#main.Myapp.OnInit" title="Permalink to this definition">¶</a></dt>
-<dd><p>inits Spamfilter with training data</p>
+<dl class="py method">
+<dt id="Main.MainWindow.OnChangeFocus">
+<code class="sig-name descname">OnChangeFocus</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">event</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Main.MainWindow.OnChangeFocus" title="Permalink to this definition">¶</a></dt>
+<dd><p>Allow to navigate in the differents region of the Frame after an event</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>training_dir</strong> – path of training directory with subdirectories
-‘/ham’ and ‘/spam’</p>
+<dd class="field-odd"><p><strong>event</strong> (<em>None</em>) – Passive arg but important for binding events</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="Main.Myapp">
+<em class="property">class </em><code class="sig-prename descclassname">Main.</code><code class="sig-name descname">Myapp</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">redirect</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">filename</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">useBestVisual</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">clearSigInt</span><span class="o">=</span><span class="default_value">True</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Main.Myapp" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">wx.core.App</span></code></p>
+<p>Minimal class to launch the app</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>wx.App</strong> – <a class="reference external" href="https://wxpython.org/Phoenix/docs/html/wx.App.html">https://wxpython.org/Phoenix/docs/html/wx.App.html</a></p>
+</dd>
+</dl>
+<p><strong>Methods</strong></p>
+<table class="longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#Main.Myapp.OnInit" title="Main.Myapp.OnInit"><code class="xref py py-obj docutils literal notranslate"><span class="pre">OnInit</span></code></a>()</p></td>
+<td><p>Special constructor (do not modify) which affect the Mainwindow to the App</p></td>
+</tr>
+</tbody>
+</table>
+<dl class="py method">
+<dt id="Main.Myapp.OnInit">
+<code class="sig-name descname">OnInit</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#Main.Myapp.OnInit" title="Permalink to this definition">¶</a></dt>
+<dd><p>Special constructor (do not modify) which affect the Mainwindow to the App</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>a boolean to stop or continue the</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>Bool
+–if False exit or error
+–if True the app works</p>
 </dd>
 </dl>
 </dd></dl>
@@ -224,10 +287,10 @@
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="menus.html" class="btn btn-neutral float-right" title="menus module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="Menus.html" class="btn btn-neutral float-right" title="Menus module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="Util.html" class="btn btn-neutral float-left" title="Util module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="Editor_Style.html" class="btn btn-neutral float-left" title="Editor_Style module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   

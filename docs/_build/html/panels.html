@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>panels module &mdash; TEstIDE  documentation</title>
+  <title>Panels module &mdash; TEstIDE  documentation</title>
   
 
   
@@ -36,8 +36,8 @@
     
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="setup module" href="setup.html" />
-    <link rel="prev" title="menus module" href="menus.html" /> 
+    <link rel="next" title="Utilitaries module" href="Utilitaries.html" />
+    <link rel="prev" title="Menus module" href="Menus.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -85,11 +85,11 @@
               <p class="caption"><span class="caption-text">Contents:</span></p>
 <ul class="current">
 <li class="toctree-l1 current"><a class="reference internal" href="modules.html">src</a><ul class="current">
-<li class="toctree-l2"><a class="reference internal" href="Util.html">Util module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="main.html">main module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="menus.html">menus module</a></li>
-<li class="toctree-l2 current"><a class="current reference internal" href="#">panels module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="setup.html">setup module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Editor_Style.html">Editor_Style module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Main.html">Main module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Menus.html">Menus module</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Panels module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Utilitaries.html">Utilitaries module</a></li>
 </ul>
 </li>
 </ul>
@@ -140,13 +140,13 @@
         
           <li><a href="modules.html">src</a> &raquo;</li>
         
-      <li>panels module</li>
+      <li>Panels module</li>
     
     
       <li class="wy-breadcrumbs-aside">
         
             
-            <a href="_sources/panels.rst.txt" rel="nofollow"> View page source</a>
+            <a href="_sources/Panels.rst.txt" rel="nofollow"> View page source</a>
           
         
       </li>
@@ -159,29 +159,8 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="module-panels">
-<span id="panels-module"></span><h1>panels module<a class="headerlink" href="#module-panels" title="Permalink to this headline">¶</a></h1>
-<p><strong>Classes</strong></p>
-<table class="longtable docutils align-default">
-<colgroup>
-<col style="width: 10%" />
-<col style="width: 90%" />
-</colgroup>
-<tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="#panels.FileTreePanel" title="panels.FileTreePanel"><code class="xref py py-obj docutils literal notranslate"><span class="pre">FileTreePanel</span></code></a>(parent)</p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#panels.MyEditor" title="panels.MyEditor"><code class="xref py py-obj docutils literal notranslate"><span class="pre">MyEditor</span></code></a>(parent)</p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#panels.NotebookPanel" title="panels.NotebookPanel"><code class="xref py py-obj docutils literal notranslate"><span class="pre">NotebookPanel</span></code></a>(parent)</p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#panels.ShellPanel" title="panels.ShellPanel"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ShellPanel</span></code></a>(parent)</p></td>
-<td><p></p></td>
-</tr>
-</tbody>
-</table>
+  <div class="section" id="module-Panels">
+<span id="panels-module"></span><h1>Panels module<a class="headerlink" href="#module-Panels" title="Permalink to this headline">¶</a></h1>
 <p><strong>Functions</strong></p>
 <table class="longtable docutils align-default">
 <colgroup>
@@ -189,38 +168,101 @@
 <col style="width: 90%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="#panels.Init_Panels" title="panels.Init_Panels"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Init_Panels</span></code></a>(self)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#Panels.Init_Panels" title="Panels.Init_Panels"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Init_Panels</span></code></a>(frame)</p></td>
+<td><p>Inits the three differents regions(treeCtrl, Notebook, Shell) in the MainWindow</p></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Classes</strong></p>
+<table class="longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#Panels.FileTreePanel" title="Panels.FileTreePanel"><code class="xref py py-obj docutils literal notranslate"><span class="pre">FileTreePanel</span></code></a>(parent)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#Panels.MyEditor" title="Panels.MyEditor"><code class="xref py py-obj docutils literal notranslate"><span class="pre">MyEditor</span></code></a>(parent)</p></td>
+<td><p>Customizable Editor page</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#Panels.NotebookPanel" title="Panels.NotebookPanel"><code class="xref py py-obj docutils literal notranslate"><span class="pre">NotebookPanel</span></code></a>(parent)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#Panels.ShellPanel" title="Panels.ShellPanel"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ShellPanel</span></code></a>(parent)</p></td>
 <td><p></p></td>
 </tr>
 </tbody>
 </table>
-<dl class="class">
-<dt id="panels.FileTreePanel">
-<em class="property">class </em><code class="sig-prename descclassname">panels.</code><code class="sig-name descname">FileTreePanel</code><span class="sig-paren">(</span><em class="sig-param">parent</em><span class="sig-paren">)</span><a class="headerlink" href="#panels.FileTreePanel" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">wx._core.Panel</span></code></p>
+<dl class="py class">
+<dt id="Panels.FileTreePanel">
+<em class="property">class </em><code class="sig-prename descclassname">Panels.</code><code class="sig-name descname">FileTreePanel</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">parent</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Panels.FileTreePanel" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">wx._core.GenericDirCtrl</span></code></p>
 </dd></dl>
 
-<dl class="function">
-<dt id="panels.Init_Panels">
-<code class="sig-prename descclassname">panels.</code><code class="sig-name descname">Init_Panels</code><span class="sig-paren">(</span><em class="sig-param">self</em><span class="sig-paren">)</span><a class="headerlink" href="#panels.Init_Panels" title="Permalink to this definition">¶</a></dt>
+<dl class="py function">
+<dt id="Panels.Init_Panels">
+<code class="sig-prename descclassname">Panels.</code><code class="sig-name descname">Init_Panels</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">frame</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Panels.Init_Panels" title="Permalink to this definition">¶</a></dt>
+<dd><dl>
+<dt>Inits the three differents regions(treeCtrl, Notebook, Shell) in the MainWindow</dt><dd><div class="line-block">
+<div class="line-block">
+<div class="line">|             |</div>
+<div class="line">|     1       |</div>
+</div>
+<div class="line">3|————-|</div>
+<div class="line-block">
+<div class="line">|     2       |</div>
+<div class="line">|             |</div>
+</div>
+</div>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>frame</strong> (<a class="reference internal" href="Main.html#Main.MainWindow" title="Main.MainWindow"><em>MainWindow</em></a><em> or </em><em>other panel</em>) – MainWindow or window to split</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py class">
+<dt id="Panels.MyEditor">
+<em class="property">class </em><code class="sig-prename descclassname">Panels.</code><code class="sig-name descname">MyEditor</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">parent</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Panels.MyEditor" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">wx.py.editwindow.EditWindow</span></code></p>
+<p>Customizable Editor page</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>..</strong> (<em>pysh.edit</em>) – Editor Model customizable</p>
+</dd>
+</dl>
+<p><strong>Methods</strong></p>
+<table class="longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#Panels.MyEditor.OnFindReplace" title="Panels.MyEditor.OnFindReplace"><code class="xref py py-obj docutils literal notranslate"><span class="pre">OnFindReplace</span></code></a>()</p></td>
+<td><p></p></td>
+</tr>
+</tbody>
+</table>
+<dl class="py method">
+<dt id="Panels.MyEditor.OnFindReplace">
+<code class="sig-name descname">OnFindReplace</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#Panels.MyEditor.OnFindReplace" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="class">
-<dt id="panels.MyEditor">
-<em class="property">class </em><code class="sig-prename descclassname">panels.</code><code class="sig-name descname">MyEditor</code><span class="sig-paren">(</span><em class="sig-param">parent</em><span class="sig-paren">)</span><a class="headerlink" href="#panels.MyEditor" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">wx._core.Panel</span></code></p>
 </dd></dl>
 
-<dl class="class">
-<dt id="panels.NotebookPanel">
-<em class="property">class </em><code class="sig-prename descclassname">panels.</code><code class="sig-name descname">NotebookPanel</code><span class="sig-paren">(</span><em class="sig-param">parent</em><span class="sig-paren">)</span><a class="headerlink" href="#panels.NotebookPanel" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">wx._core.Panel</span></code></p>
+<dl class="py class">
+<dt id="Panels.NotebookPanel">
+<em class="property">class </em><code class="sig-prename descclassname">Panels.</code><code class="sig-name descname">NotebookPanel</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">parent</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Panels.NotebookPanel" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">wx.lib.agw.flatnotebook.FlatNotebook</span></code></p>
 </dd></dl>
 
-<dl class="class">
-<dt id="panels.ShellPanel">
-<em class="property">class </em><code class="sig-prename descclassname">panels.</code><code class="sig-name descname">ShellPanel</code><span class="sig-paren">(</span><em class="sig-param">parent</em><span class="sig-paren">)</span><a class="headerlink" href="#panels.ShellPanel" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">wx._core.Panel</span></code></p>
+<dl class="py class">
+<dt id="Panels.ShellPanel">
+<em class="property">class </em><code class="sig-prename descclassname">Panels.</code><code class="sig-name descname">ShellPanel</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">parent</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Panels.ShellPanel" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">wx.py.shell.Shell</span></code></p>
 </dd></dl>
 
 </div>
@@ -233,10 +275,10 @@
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="setup.html" class="btn btn-neutral float-right" title="setup module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="Utilitaries.html" class="btn btn-neutral float-right" title="Utilitaries module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="menus.html" class="btn btn-neutral float-left" title="menus module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="Menus.html" class="btn btn-neutral float-left" title="Menus module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   

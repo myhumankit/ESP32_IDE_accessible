@@ -7,26 +7,48 @@ wx.ID_EXAMPLES = 251
 wx.ID_SYNTAX_CHECK = 252
 wx.ID_DOWNLOAD_RUN = 253
 
-def Init_Top_Menu(self):
-    self.top_menu = TopMenu(self)
-    self.SetMenuBar(self.top_menu)
+def Init_Top_Menu(frame):
+    """Inits and place the top menu
 
-def Init_ToolBar(self):
-    self.ToolBar = ToolBar(self)
-    self.SetToolBar(self.ToolBar)
+    :param frame: Mainwindow
+    :type frame: Mainwindow
+    """    
+    frame.top_menu = TopMenu(frame)
+    frame.SetMenuBar(frame.top_menu)
+
+def Init_ToolBar(frame):
+    """Inits and place the toolbar
+
+    :param frame: Mainwindow
+    :type frame: Mainwindow
+    """    
+    frame.ToolBar = ToolBar(frame)
+    frame.SetToolBar(frame.ToolBar)
 
 def create_File_Menu():
+    """Inits a File menu and his buttons (Save, Open,...)
+
+    :return: the File menu filled by buttons
+    :rtype: wx.Menu see https://wxpython.org/Phoenix/docs/html/wx.Menu.html
+    """    
     MenuFile = wx.Menu(style = wx.MENU_TEAROFF)
+    MenuFile.Append(wx.ID_NEW, "&New\tCTRL+N")
     MenuFile.Append(wx.ID_SAVE, "&Save\tCTRL+S")
-    MenuFile.Append(wx.ID_SAVEAS, "&Save as")
+    MenuFile.Append(wx.ID_SAVEAS, "&Save as\tCTRL+A")
     MenuFile.Append(wx.ID_OPEN, "&Open\tCTRL+O")
     MenuFile.Append(wx.ID_REFLUSH_DIR, "&Reflush Directory")
     MenuFile.Append(wx.ID_EXAMPLES, "&Examples")
     MenuFile.Append(wx.ID_EXIT, "&Exit\tCTRL+Q")
+    MenuFile.Append(wx.ID_CLOSE, "&Close\tCTRL+W")
     MenuFile.AppendSeparator()
     return MenuFile
 
 def create_Edit_Menu():
+    """Inits a Edit menu and his buttons (Copy, Paste, Find,...)
+
+    :return: the Edit menu filled by buttons
+    :rtype: wx.Menu see https://wxpython.org/Phoenix/docs/html/wx.Menu.html
+    """    
     MenuEdit = wx.Menu(style = wx.MENU_TEAROFF)
     MenuEdit.Append(wx.ID_COPY, "&Copy\tCTRL+C")
     MenuEdit.Append(wx.ID_CUT, "&Cut\tCTRL+X")
@@ -39,7 +61,16 @@ def create_Edit_Menu():
     return MenuEdit
 
 class TopMenu(wx.MenuBar):
-    def __init__(self, parent):       
+    """TopMenu class which contains the Edit and File Menus
+
+    :param wx.MenuBar: Parent class to contain menus see  https://wxpython.org/Phoenix/docs/html/wx.MenuBar.html
+    """    
+    def __init__(self, parent):
+        """Constructor which append the Edit and File Menus on the Menubar and bind related events
+
+        :param parent: Parent class (in this case MainWindow)
+        :type parent: class Mainwindow
+        """        
         wx.MenuBar.__init__(self, wx.ID_TOP)
         self.parent = parent
         self.MenuFile = create_File_Menu()
@@ -52,12 +83,23 @@ class TopMenu(wx.MenuBar):
         self.Bind(wx.EVT_MENU,  self.OnCopy, id=wx.ID_COPY)
         self.Bind(wx.EVT_MENU,  self.OnPaste, id=wx.ID_PASTE)
         self.Bind(wx.EVT_MENU,  self.OnFindReplace, id=wx.ID_FIND)
-
+        self.Bind(wx.EVT_MENU,  self.OnAddPage, id=wx.ID_NEW)
+        self.Bind(wx.EVT_MENU,  self.OnClosePage, id=wx.ID_CLOSE)
 
     def OnExit(self, evt):
+        """Quit the app
+
+        :param evt: always to get the macrocode
+        :type evt: (wx.event ?)
+        """        
         self.Parent.Destroy()
 
     def OnSave(self, evt):
+        """Save the current page of the notebook
+
+        :param evt: always to get the macrocode
+        :type evt: (wx.event ?)
+        """   
         notebookP = self.parent.MyNotebook
         # Check if save is required
         if (notebookP.GetCurrentPage().GetValue() 
@@ -99,6 +141,11 @@ class TopMenu(wx.MenuBar):
             notebookP.GetCurrentPage().saved = True
 
     def OnSaveAs(self, evt):
+        """Open a wx.filedialog to Save as a file the text of the current editor
+
+        :param evt: always to get the macrocode
+        :type evt: (wx.event ?)
+        """   
         notebookP = self.parent.MyNotebook
         dialog = wx.FileDialog(self, 
                                "Choose a file", 
@@ -123,6 +170,11 @@ class TopMenu(wx.MenuBar):
         dialog.Destroy()
 
     def OnOpen(self, evt):
+            """Open a wx.filedialog to open a file on a editor 
+
+            :param evt: always to get the macrocode
+            :type evt: (wx.event ?)
+            """  
             notebookP = self.parent.MyNotebook
             dialog = wx.FileDialog(self, 
                                "Choose a File", 
@@ -158,42 +210,90 @@ class TopMenu(wx.MenuBar):
             dialog.Destroy()
 
     def OnCopy(self, event):
+        """Copy the selection on the clipboard
+
+        :param evt: always to get the macrocode
+        :type evt: (wx.event ?)
+        """  
         self.parent.MyNotebook.GetCurrentPage().Copy()
 
     def OnPaste(self, event):
+        """Paste the content of the clipboard
+
+        :param evt: always to get the macrocode
+        :type evt: (wx.event ?)
+        """  
         self.parent.MyNotebook.GetCurrentPage().Paste()
 
     def OnRedo(self, event):
+        """Redo
+
+        :param evt: always to get the macrocode
+        :type evt: (wx.event ?)
+        """  
         self.parent.MyNotebook.GetCurrentPage().Redo()
 
     def OnUndo(self, event):
+        """Undo
+
+        :param evt: always to get the macrocode
+        :type evt: (wx.event ?)
+        """  
         self.parent.MyNotebook.GetCurrentPage().Undo()
 
     def OnFindReplace(self, event):
+        """Open a wx.FindReplaceDialog to find and/, replace text in the current editor
+
+        :param evt: always to get the macrocode
+        :type evt: (wx.event ?)
+        """  
         notebookP = self.parent.MyNotebook
         notebookP.data = wx.FindReplaceData()   # initializes and holds search parameters
         notebookP.dlg = wx.FindReplaceDialog(notebookP.GetCurrentPage(), notebookP.data, 'Find')
         notebookP.dlg.Show()
         data = notebookP.GetCurrentPage().OnFindReplace()
 
+    def OnAddPage(self, event):
+        """Add a new page on the notebook
+
+        :param evt: always to get the macrocode
+        :type evt: (wx.event ?)
+        """  
+        new_tab = MyEditor(self.parent.MyNotebook)
+        notebookP = self.parent.MyNotebook
+        notebookP.tab_num += 1
+        new_tab = notebookP.AddPage(new_tab, "Tab %s" % notebookP.tab_num)
+
+    def OnClosePage(self, event):
+        dataNoteBook = self.parent.MyNotebook
+        page = dataNoteBook.GetCurrentPage()
+        pageTitle = dataNoteBook.GetPageText()
+        for index in range(dataNoteBook.GetPageCount()):
+            print (dataNoteBook.GetPageText(index))
+            if dataNoteBook.GetPageText(index) == pageTitle:
+                dataNoteBook.DeletePage(index)
+                break
 class ToolBar(wx.ToolBar):
-    def __init__(self, parent, ):       
+    """MOMENT : Derivated class to set A toolbar maybe we'll erase this derivated class
+
+    :param wx.ToolBar: see https://wxpython.org/Phoenix/docs/html/wx.ToolBar.html
+    """    
+    def __init__(self, parent, ):
+        """constructor for ToolBar 
+
+        :param parent: Parent class generally the main window
+        :type parent: MainWindow (generally)
+        """           
         wx.ToolBar.__init__(self, parent=parent, style= wx.TB_RIGHT)
         self.CentreOnParent()
         self.parent = parent
         #self.AddTool(wx.ID_NEW, '', load_img('./img/save.png'))
         #self.AddTool(wx.ID_OPEN, '', load_img('./img/save.png'))
         #self.AddTool(wx.ID_SAVE, '', load_img('./img/save.png'))
-        # self.AddTool(wx.ID_DOWNLOAD_RUN, '', load_img('./img/save.png'))
-        # self.AddTool(wx.ID_DOWNLOAD_RUN, '', load_img('./img/save.png'))
+        #self.AddTool(wx.ID_DOWNLOAD_RUN, '', load_img('./img/save.png'))
+        #self.AddTool(wx.ID_DOWNLOAD_RUN, '', load_img('./img/save.png'))
         self.SetBackgroundColour("Orange")
         self.Realize()
-        self.Bind(wx.EVT_MENU, self.OnAddPage, id=wx.ID_NEW)
+        self.Bind(wx.EVT_MENU, parent.top_menu.OnAddPage, id=wx.ID_NEW)
         self.Bind(wx.EVT_MENU, parent.top_menu.OnOpen, id=wx.ID_OPEN)
         self.Bind(wx.EVT_MENU, parent.top_menu.OnSave, id=wx.ID_SAVE)
-
-    def OnAddPage(self, event):
-        new_tab = MyEditor(self.parent.MyNotebook)
-        notebookP = self.parent.MyNotebook
-        notebookP.AddPage(new_tab, "Tab %s" % notebookP.tab_num)
-        notebookP.tab_num += 1    
