@@ -6,45 +6,69 @@ import wx.py as pysh
 import wx.lib.agw.flatnotebook as fnb
 
 #TODO: continue les themes
-#themes = [th_1, th_2, th_3, th_4, th_5]
-#th = [default]
-#th_1
 
-
-#self.StyleSetSpec(wx.stc.STC_P_COMMENTLINE,"fore:#007F00")
-#self.StyleSetSpec(stc.STC_STYLE_LINENUMBER, "fore:#ff007f, size:100")
-#self.StyleSetBackground(wx.stc.STC_STYLE_DEFAULT, "Grey")
+stc_style = [stc.STC_STYLE_BRACEBAD,
+             stc.STC_STYLE_BRACELIGHT,
+             stc.STC_STYLE_CALLTIP,
+             stc.STC_STYLE_CONTROLCHAR,
+             stc.STC_STYLE_DEFAULT,
+             stc.STC_STYLE_FOLDDISPLAYTEXT,
+             stc.STC_STYLE_INDENTGUIDE,
+             stc.STC_STYLE_LASTPREDEFINED,
+             stc.STC_STYLE_MAX
+             ]
 
 def Init_Editor_base(editor):
     """Init settings for Editor
 
     :param editor: editorWindow
     :type editor: [type]
-    """    
+    """
+    editor.SetIndentationGuides(stc.STC_IV_LOOKFORWARD)
+    editor.SetEOLMode(stc.STC_EOL_CRLF)
     editor.setDisplayLineNumbers(True)
     editor.SetLexer(wx.stc.STC_LEX_PYTHON)
     editor.SetFontQuality(stc.STC_EFF_QUALITY_LCD_OPTIMIZED)
     editor.SetUseAntiAliasing(True)
 
+def Custom_Tree_Ctrl(tree, theme):
+    tree.StyleSetBackground(wx.DIRCTRL_DEFAULT_STYLE, 'Black')
+    
+def Custom_Notebook(notebook, theme):
+    notebook.SetBackgroundColour('Black')
 
 #checker des styles 
-def Change_lexer_style(editor):
-    """Chnage theme of the editor
+def Change_Theme(editor, theme, py_style):
+    """Chnage theme of the window
 
     :param editor: editwindow
     :type editor: [type]
-    """    
-    editor.StyleSetBold(wx.stc.STC_STYLE_DEFAULT, True)
-    #editor.StyleSetForeground(wx.stc.STC_STYLE_DEFAULT,wx.Colour(0, 0, 0))
-    editor.StyleSetForeground(wx.stc.STC_P_DEFNAME, wx.Colour(51, 51, 255))
-    editor.StyleSetForeground(wx.stc.STC_P_STRING, wx.Colour(51, 51, 255))
-    editor.StyleSetForeground(wx.stc.STC_P_CHARACTER, wx.Colour(51, 51, 255))
-    editor.StyleSetForeground(wx.stc.STC_P_CLASSNAME, wx.Colour(51, 51, 255))
-    editor.StyleSetForeground(wx.stc.STC_P_COMMENTBLOCK, wx.Colour(51, 51, 255))
-    editor.StyleSetForeground(wx.stc.STC_P_COMMENTLINE, wx.Colour(51, 51, 255))
-    editor.StyleSetForeground(wx.stc.STC_P_DECORATOR, wx.Colour(51, 51, 255))
-    editor.StyleSetForeground(wx.stc.STC_P_IDENTIFIER, wx.Colour(51, 51, 255))
-    editor.StyleSetForeground(wx.stc.STC_P_NUMBER, wx.Colour(51, 51, 255))
-    editor.StyleSetForeground(wx.stc.STC_P_WORD, wx.Colour(51, 51, 255))
-    
-    #editor.StyleSetForeground(wx.stc.STC_STYLE_LINENUMBER,wx.Colour(0, 230, 250))
+    """
+    editor.SetCaretForeground(theme[1][1])
+    #default
+    # editor.StyleSetSpec(stc.STC_STYLE_DEFAULT,'fore:#0000AA,back:#00000')
+    # editor.StyleSetSpec(wx.stc.STC_STYLE_LINENUMBER,'fore:#FFFF00,back:#0000A')
+    # editor.StyleSetSpec(wx.stc.STC_STYLE_BRACELIGHT,'fore:#FFFF00,back:#0000A')
+    font = wx.Font(pointSize = 10,
+                family = wx.FONTFAMILY_SWISS,
+                style = wx.FONTSTYLE_SLANT,
+                weight = wx.FONTWEIGHT_BOLD,  
+                underline = False,
+                faceName ="",
+                encoding = 0)
+    for i in stc_style:
+        editor.StyleSetFont(i, font)
+    for i in stc_style:
+        editor.StyleSetBackground(i, theme[1][0])
+    for i in stc_style:
+        editor.StyleSetForeground(i, theme[1][1])
+    #Lexer style
+    x = 0
+    for i in py_style:
+        editor.StyleSetFont(i,font)
+    for i in py_style:
+        editor.StyleSetBackground(i, theme[1][0])
+    for i in py_style:
+        editor.StyleSetForeground(i, theme[0][x])
+        print(editor.StyleGetForeground(i))
+        x += 1

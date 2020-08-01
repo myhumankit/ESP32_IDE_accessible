@@ -1,11 +1,24 @@
 import wx
 from Panels import *
 from Utilitaries import load_img
+import wx.lib.agw.flatmenu as FM
+import Find_Replace as FIND_R
 
 wx.ID_REFLUSH_DIR = 250
 wx.ID_EXAMPLES = 251
 wx.ID_SYNTAX_CHECK = 252
 wx.ID_DOWNLOAD_RUN = 253
+wx.ID_SERIAL = wx.NewId()
+wx.ID_BOARD = wx.NewId()
+wx.ID_DOWNLOAD = wx.NewId()
+wx.ID_DOWNLOAD_RUN = wx.NewId()
+wx.ID_BURN_FIRMWARE = wx.NewId()
+wx.ID_INIT = wx.NewId()
+wx.ID_ESP32_CHOICE = wx.NewId()
+wx.ID_PYBOARD_CHOICE = wx.NewId()
+wx.ID_DARK_THEME = wx.NewId()
+wx.ID_LIGHT_THEME = wx.NewId()
+wx.ID_ASTRO_THEME = wx.NewId()
 
 def Init_Top_Menu(frame):
     """Inits and place the top menu
@@ -15,6 +28,7 @@ def Init_Top_Menu(frame):
     """    
     frame.top_menu = TopMenu(frame)
     frame.SetMenuBar(frame.top_menu)
+    return frame.top_menu
 
 def Init_ToolBar(frame):
     """Inits and place the toolbar
@@ -31,7 +45,7 @@ def create_File_Menu():
     :return: the File menu filled by buttons
     :rtype: wx.Menu see https://wxpython.org/Phoenix/docs/html/wx.Menu.html
     """    
-    MenuFile = wx.Menu(style = wx.MENU_TEAROFF)
+    MenuFile = wx.Menu()
     MenuFile.Append(wx.ID_NEW, "&New\tCTRL+N")
     MenuFile.Append(wx.ID_SAVE, "&Save\tCTRL+S")
     MenuFile.Append(wx.ID_SAVEAS, "&Save as\tCTRL+A")
@@ -49,7 +63,7 @@ def create_Edit_Menu():
     :return: the Edit menu filled by buttons
     :rtype: wx.Menu see https://wxpython.org/Phoenix/docs/html/wx.Menu.html
     """    
-    MenuEdit = wx.Menu(style = wx.MENU_TEAROFF)
+    MenuEdit = wx.Menu()
     MenuEdit.Append(wx.ID_COPY, "&Copy\tCTRL+C")
     MenuEdit.Append(wx.ID_CUT, "&Cut\tCTRL+X")
     MenuEdit.Append(wx.ID_PASTE, "&Paste\tCTRL+V")
@@ -60,6 +74,32 @@ def create_Edit_Menu():
     MenuEdit.AppendSeparator()
     return MenuEdit
 
+def create_Board_Menu():
+    MenuTools = wx.Menu()
+    MenuTools.Append(wx.ID_ESP32_CHOICE, "&ESP32")
+    MenuTools.Append(wx.ID_PYBOARD_CHOICE, "&PYboard")
+    return MenuTools
+
+def create_Themes_Menu():
+    MenuTools = wx.Menu()
+    MenuTools.Append(wx.ID_DARK_THEME, "&Dark")
+    MenuTools.Append(wx.ID_LIGHT_THEME, "&Light")
+    MenuTools.Append(wx.ID_ASTRO_THEME, "&Astro")
+    return MenuTools
+    
+def create_Tools_Menu():
+    MenuTools = wx.Menu()
+    MenuTools.Append(wx.ID_SERIAL, "&Serial")
+    MenuTools.Append(wx.ID_BOARD, "&Board", create_Board_Menu())
+    MenuTools.Append(wx.ID_DOWNLOAD, "&Download")
+    MenuTools.Append(wx.ID_DOWNLOAD_RUN, "&DownloadandRun\tF5")
+    MenuTools.Append(wx.ID_STOP, "&Stop")
+    MenuTools.Append(wx.ID_BURN_FIRMWARE, "&BurnFirmware")
+    MenuTools.Append(wx.ID_INIT, "Initconfig")
+    MenuTools.Append(wx.ID_BOARD, "&Themes", create_Themes_Menu())
+    MenuTools.AppendSeparator()
+    return MenuTools
+    
 class TopMenu(wx.MenuBar):
     """TopMenu class which contains the Edit and File Menus
 
@@ -71,12 +111,14 @@ class TopMenu(wx.MenuBar):
         :param parent: Parent class (in this case MainWindow)
         :type parent: class Mainwindow
         """        
-        wx.MenuBar.__init__(self, wx.ID_TOP)
+        wx.MenuBar.__init__(self)
         self.parent = parent
         self.MenuFile = create_File_Menu()
         self.MenuEdit = create_Edit_Menu()
+        self.MenuTools = create_Tools_Menu()
         self.Append(self.MenuFile, "&File")
         self.Append(self.MenuEdit, "&Edit")
+        self.Append(self.MenuTools, "&Tools")
         self.Bind(wx.EVT_MENU,  self.OnExit, id=wx.ID_EXIT)
         self.Bind(wx.EVT_MENU,  self.OnOpen, id=wx.ID_OPEN)
         self.Bind(wx.EVT_MENU,  self.OnSaveAs, id=wx.ID_SAVEAS)
@@ -85,6 +127,9 @@ class TopMenu(wx.MenuBar):
         self.Bind(wx.EVT_MENU,  self.OnFindReplace, id=wx.ID_FIND)
         self.Bind(wx.EVT_MENU,  self.OnAddPage, id=wx.ID_NEW)
         self.Bind(wx.EVT_MENU,  self.OnClosePage, id=wx.ID_CLOSE)
+        self.Bind(wx.EVT_MENU,  self.OnChangeTheme, id=wx.ID_LIGHT_THEME)
+        self.Bind(wx.EVT_MENU,  self.OnChangeTheme, id=wx.ID_DARK_THEME)
+        self.Bind(wx.EVT_MENU,  self.OnChangeTheme, id=wx.ID_ASTRO_THEME)
 
     def OnExit(self, evt):
         """Quit the app
@@ -196,6 +241,7 @@ class TopMenu(wx.MenuBar):
                     notebookP.GetCurrentPage().saved = True
                 else:
                     print("")
+                    notebookP.tab_num += 1
                     new_tab = MyEditor(notebookP)
                     new_tab.filename = filename
                     new_tab.directory = directory
@@ -248,31 +294,58 @@ class TopMenu(wx.MenuBar):
         :type evt: (wx.event ?)
         """  
         notebookP = self.parent.MyNotebook
-        notebookP.data = wx.FindReplaceData()   # initializes and holds search parameters
-        notebookP.dlg = wx.FindReplaceDialog(notebookP.GetCurrentPage(), notebookP.data, 'Find')
-        notebookP.dlg.Show()
-        data = notebookP.GetCurrentPage().OnFindReplace()
+        page = notebookP.GetCurrentPage()
+        if page == None:
+            return
+        page.OnShowFindReplace()
 
     def OnAddPage(self, event):
         """Add a new page on the notebook
 
         :param evt: always to get the macrocode
         :type evt: (wx.event ?)
-        """  
-        new_tab = MyEditor(self.parent.MyNotebook)
+        """
         notebookP = self.parent.MyNotebook
         notebookP.tab_num += 1
-        new_tab = notebookP.AddPage(new_tab, "Tab %s" % notebookP.tab_num)
+        new_tab = MyEditor(self.parent.MyNotebook)
+        new_tab = notebookP.AddPage(new_tab, "Tab %s" % notebookP.tab_num, select=True)
 
     def OnClosePage(self, event):
+        """Close the current page and update id order
+
+        :param evt: always to get the macrocode
+        :type evt: (wx.event ?)
+        """  
         dataNoteBook = self.parent.MyNotebook
         page = dataNoteBook.GetCurrentPage()
-        pageTitle = dataNoteBook.GetPageText()
-        for index in range(dataNoteBook.GetPageCount()):
-            print (dataNoteBook.GetPageText(index))
-            if dataNoteBook.GetPageText(index) == pageTitle:
-                dataNoteBook.DeletePage(index)
+        print("Deleted page: " + str(page.id))
+        print(dataNoteBook.GetPageText(page.id - 1))
+        dataNoteBook.DeletePage(page.id - 1)
+        dataNoteBook.tab_num -= 1
+        #Update Ids 
+        i = 1
+        maxi = dataNoteBook.GetPageCount()
+        print("Maxi : " + str(maxi))
+        while i <= maxi:
+            page_a = dataNoteBook.GetPage(i)
+            if page_a.id > page.id:
+                page_a.id -= 1
+            print("Id = " + str(page_a.id))
+            i += 1
+    
+    def OnChangeTheme(self, event):
+        menuId = event.Id
+        i = 0
+        list = [wx.ID_DARK_THEME, wx.ID_LIGHT_THEME, wx.ID_ASTRO_THEME]
+        for x in list:
+            if x == menuId:
+                print('Theme = ' + str(i))
                 break
+            i += 1
+        Change_Theme(self.parent.MyNotebook.GetCurrentPage(), themes[i], py_style)
+        Change_Theme(self.parent.Shell, themes[i], py_style)
+        self.parent.MyNotebook.theme = i
+        
 class ToolBar(wx.ToolBar):
     """MOMENT : Derivated class to set A toolbar maybe we'll erase this derivated class
 
