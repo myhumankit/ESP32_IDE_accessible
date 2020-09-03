@@ -1,6 +1,23 @@
 import wx
 
-class Find_Replace_dlg(wx.FindReplaceDialog):
-    def __init__(self, parent, data):
-        wx.FindReplaceDialog.__init__(parent, data, title="Find/Replace")
-        self.BackgroundColour = "Red"
+def find_next(editor, evt):
+    findTxt = evt.GetFindString()
+    editor.pos = editor.txt.find(findTxt, editor.pos)
+    if editor.pos == -1:
+        print("String not found")
+        editor.pos = 0
+        editor.ClearSelections()
+        return
+        editor.size = len(findTxt)
+        editor.SetSelection(editor.pos, editor.pos+editor.size)
+        editor.pos += editor.size
+
+def replace(editor, evt):
+    if editor.GetSelectedText() == "":
+        return
+    replaceTxt = evt.GetReplaceString()
+    editor.size = len(replaceTxt)
+    start = editor.GetSelectionStart()
+    end = editor.GetSelectionEnd()
+    editor.Replace(start, end, replaceTxt)
+    editor.txt = editor.GetValue()

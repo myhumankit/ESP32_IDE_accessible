@@ -12,7 +12,7 @@ stc_style = [stc.STC_STYLE_BRACEBAD,
              stc.STC_STYLE_CALLTIP,
              stc.STC_STYLE_CONTROLCHAR,
              stc.STC_STYLE_DEFAULT,
-             stc.STC_STYLE_FOLDDISPLAYTEXT,
+             #stc.STC_STYLE_FOLDDISPLAYTEXT,
              stc.STC_STYLE_INDENTGUIDE,
              stc.STC_STYLE_LASTPREDEFINED,
              stc.STC_STYLE_MAX
@@ -28,8 +28,8 @@ def Init_Editor_base(editor):
     editor.SetEOLMode(stc.STC_EOL_CRLF)
     editor.setDisplayLineNumbers(True)
     editor.SetLexer(wx.stc.STC_LEX_PYTHON)
-    editor.SetFontQuality(stc.STC_EFF_QUALITY_LCD_OPTIMIZED)
-    editor.SetUseAntiAliasing(True)
+    #editor.SetFontQuality(stc.STC_EFF_QUALITY_LCD_OPTIMIZED)
+    #editor.SetUseAntiAliasing(True)
 
 def Custom_Tree_Ctrl(tree, theme):
     tree.StyleSetBackground(wx.DIRCTRL_DEFAULT_STYLE, 'Black')

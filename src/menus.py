@@ -3,6 +3,12 @@ from Panels import *
 from Utilitaries import load_img
 import wx.lib.agw.flatmenu as FM
 import Find_Replace as FIND_R
+from api import main as CheckPySyntax
+import os
+import sys
+
+rootDirectoryPath  =os.path.expanduser("~")
+rootDirectoryPath  =rootDirectoryPath.replace("\\","/")
 
 wx.ID_REFLUSH_DIR = 250
 wx.ID_EXAMPLES = 251
@@ -125,6 +131,7 @@ class TopMenu(wx.MenuBar):
         self.Bind(wx.EVT_MENU,  self.OnCopy, id=wx.ID_COPY)
         self.Bind(wx.EVT_MENU,  self.OnPaste, id=wx.ID_PASTE)
         self.Bind(wx.EVT_MENU,  self.OnFindReplace, id=wx.ID_FIND)
+        self.Bind(wx.EVT_MENU,  self.OnSyntaxCheck, id=wx.ID_SYNTAX_CHECK)
         self.Bind(wx.EVT_MENU,  self.OnAddPage, id=wx.ID_NEW)
         self.Bind(wx.EVT_MENU,  self.OnClosePage, id=wx.ID_CLOSE)
         self.Bind(wx.EVT_MENU,  self.OnChangeTheme, id=wx.ID_LIGHT_THEME)
@@ -345,7 +352,87 @@ class TopMenu(wx.MenuBar):
         Change_Theme(self.parent.MyNotebook.GetCurrentPage(), themes[i], py_style)
         Change_Theme(self.parent.Shell, themes[i], py_style)
         self.parent.MyNotebook.theme = i
+    
+    def OnSyntaxCheck(self, event):
+        page = self.parent.MyNotebook.GetCurrentPage()
         
+        syntaxCheckFilePath="%s/AppData/Local/uPyCraft/temp/syntaxCheck.py"%rootDirectoryPath
+        syntaxCheckFileText=page.GetValue()
+
+        filehandle=open(syntaxCheckFilePath,"wb")
+        syntaxCheckFileText=syntaxCheckFileText.split("\r")
+        nocheck=0
+        for i in syntaxCheckFileText:
+            if i.find("'''")>=0 and nocheck==0:
+                nocheck=1
+            elif i.find("'''")>=0 and nocheck==1:
+                nocheck=0
+
+            if nocheck==1:
+                if i=="":
+                    filehandle.write('\r'.encode('utf-8'))
+                    continue
+                else:
+                    filehandle.write(i.encode('utf-8'))
+                    filehandle.write('\r'.encode('utf-8'))
+                    continue
+            elif i=="":
+                filehandle.write('\r'.encode('utf-8'))
+                continue
+            filehandle.write(i.encode('utf-8'))
+            filehandle.write('\r'.encode('utf-8'))
+        
+        filehandle.close()
+
+        backStdout=sys.stdout
+        backStderr=sys.stderr
+        stdoutFilePath="%s/AppData/Local/uPyCraft/temp/stdout.py"%rootDirectoryPath
+        stderrFilePath="%s/AppData/Local/uPyCraft/temp/stderr.py"%rootDirectoryPath
+        stdoutFile=open(stdoutFilePath,'w')
+        stderrFile=open(stderrFilePath,'w')
+        sys.stdout=stdoutFile
+        sys.stderr=stderrFile
+        CheckPySyntax(None,str(syntaxCheckFilePath))
+        sys.stdout=backStdout
+        sys.stderr=backStderr
+        stdoutFile.close()
+        stderrFile.close()
+        
+        stdoutFile=open(stdoutFilePath,'r')
+        stderrFile=open(stderrFilePath,'r')
+        stdout = stdoutFile.read()
+        stderr = stderrFile.read()
+        stdoutFile.close()
+        stderrFile.close()
+        
+        appendMsg=page.filename
+        
+        if str(stdout)=="" and str(stderr)=="":
+            pass
+        else:
+            if stdout!="":
+                stdout=stdout.split("\n")
+                for i in stdout:
+                    if i=="":
+                        continue
+                    if i.find("syntaxCheck.py")>0:
+                        i=i[len(syntaxCheckFilePath):]
+                    appendMsg=appendMsg + i + "\n"
+                self.parent.Shell.SetValue(appendMsg)
+            if stderr=="":
+                pass
+            else:
+                stderr=stderr.split("\n")
+                for i in stderr:
+                    if i=="":
+                        continue
+                    if i.find("syntaxCheck.py")>0:
+                        i=i[len(syntaxCheckFilePath):]
+                    appendMsg=appendMsg + "\n" + i
+                self.parent.Shell.SetValue(appendMsg)
+            #self.parent.Shell.SetValue("syntax finish.")
+
+    
 class ToolBar(wx.ToolBar):
     """MOMENT : Derivated class to set A toolbar maybe we'll erase this derivated class
 
@@ -360,11 +447,11 @@ class ToolBar(wx.ToolBar):
         wx.ToolBar.__init__(self, parent=parent, style= wx.TB_RIGHT)
         self.CentreOnParent()
         self.parent = parent
-        #self.AddTool(wx.ID_NEW, '', load_img('./img/save.png'))
-        #self.AddTool(wx.ID_OPEN, '', load_img('./img/save.png'))
-        #self.AddTool(wx.ID_SAVE, '', load_img('./img/save.png'))
-        #self.AddTool(wx.ID_DOWNLOAD_RUN, '', load_img('./img/save.png'))
-        #self.AddTool(wx.ID_DOWNLOAD_RUN, '', load_img('./img/save.png'))
+        self.AddTool(wx.ID_NEW, '', load_img('./img/save.png'))
+        self.AddTool(wx.ID_OPEN, '', load_img('./img/save.png'))
+        self.AddTool(wx.ID_SAVE, '', load_img('./img/save.png'))
+        self.AddTool(wx.ID_DOWNLOAD_RUN, '', load_img('./img/save.png'))
+        self.AddTool(wx.ID_DOWNLOAD_RUN, '', load_img('./img/save.png'))
         self.SetBackgroundColour("Orange")
         self.Realize()
         self.Bind(wx.EVT_MENU, parent.top_menu.OnAddPage, id=wx.ID_NEW)

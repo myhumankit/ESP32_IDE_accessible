@@ -6,7 +6,6 @@ from Panels import *
 
 wx.ID_MOVE = 455
 
-
 def InitShortcuts(frame):
     """Initiate shortcuts of the Application with wx.Accelerator Table
     
@@ -72,7 +71,6 @@ class MainWindow(wx.Frame):
         Init_Panels(self)
         InitShortcuts(self)
         
-        
         #self.SetSizer(main_sizer)
         #main_sizer.Layout()
 
@@ -125,5 +123,6 @@ class Myapp(wx.App):
         self.SetTopWindow(window)
         return True
 
-app = Myapp()
-app.MainLoop()
+if __name__ == "__main__":
+    app = Myapp()
+    app.MainLoop()

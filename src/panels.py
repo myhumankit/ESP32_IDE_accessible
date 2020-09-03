@@ -103,13 +103,7 @@ py_style = [
 
 def Init_Panels(frame):
     """Inits the three differents regions(treeCtrl, Notebook, Shell) in the MainWindow
-        ------------------
-        |  |             |
-        |  |     1       |
-        | 3|-------------|
-        |  |     2       |
-        |  |             |
-        ------------------
+    
     :param frame: MainWindow or window to split
     :type frame: MainWindow or other panel
     """    
@@ -148,7 +142,7 @@ class MyEditor(pysh.editwindow.EditWindow):
         ###############################################
         
         self.findData = wx.FindReplaceData()
-        self.txt = self.GetValue()
+        self.txt = ""
         self.pos = 0
         self.size = 0
 
@@ -164,7 +158,9 @@ class MyEditor(pysh.editwindow.EditWindow):
         self.BindFindEvents(dlg)
         dlg.Show(True)
 
+#TODO: separate in some functions
     def OnFind(self, evt):
+        self.txt = self.GetValue()
         map = {
             wx.wxEVT_COMMAND_FIND : "FIND",
             wx.wxEVT_COMMAND_FIND_NEXT : "FIND_NEXT",
@@ -177,28 +173,37 @@ class MyEditor(pysh.editwindow.EditWindow):
         if et in map:
             evtType = map[et]
         if et in [wx.wxEVT_COMMAND_FIND_NEXT]:
+            print("Find next BEGIN")
             findTxt = evt.GetFindString()
+            print("Texte = %s"%self.txt)
+            print("findTxt = %s"%findTxt)
             self.pos = self.txt.find(findTxt, self.pos)
             if self.pos == -1:
                 print("String not found")
                 self.pos = 0
+                self.ClearSelections()
+                return
             self.size = len(findTxt)
-            print("POS =")
+            print("self.pos =%s self.size=%s"%(self.pos,self.size))
+            print("Find next END")
             self.SetSelection(self.pos, self.pos+self.size)
             self.pos += self.size
         if et in [wx.wxEVT_COMMAND_FIND_REPLACE]:
+            if self.GetSelectedText() == "":
+                return
+            print("Replace")
             replaceTxt = evt.GetReplaceString()
+            print("replace Txt = %s"%replaceTxt)
             self.size = len(replaceTxt)
-            self.Replace(self.pos, self.pos+self.size, replaceTxt)
+            start = self.GetSelectionStart()
+            end = self.GetSelectionEnd()
+            self.Replace(start, end, replaceTxt)
+            self.txt = self.GetValue()
         if et in [wx.wxEVT_COMMAND_FIND_REPLACE_ALL]:
             while self.pos != -1:
                 print("")
         else:
             replaceTxt = ""
-
-        #print("%s -- Find text: %s   Replace text: %s  Flags: %d  \n" %
-                       #(evtType, evt.GetFindString(), replaceTxt, evt.GetFlags()))
-
     def OnFindClose(self, evt):
         print("FindReplaceDialog closing...\n")
         evt.GetDialog().Destroy()
@@ -227,7 +232,7 @@ class FileTreePanel(wx.GenericDirCtrl):
         :param training_dir: path of training directory with subdirectories
          '/ham' and '/spam'
         """
-        wx.GenericDirCtrl.__init__(self, parent = parent, style=wx.DIRCTRL_DEFAULT_STYLE)
+        wx.GenericDirCtrl.__init__(self, parent = parent)
         self.frame = frame
         self.Bind(wx.EVT_DIRCTRL_FILEACTIVATED, self.OnOpenFile)
         font = wx.Font(pointSize = 20, family = wx.FONTFAMILY_SWISS, style = wx.FONTSTYLE_SLANT, weight = wx.FONTWEIGHT_BOLD,  
@@ -268,14 +273,14 @@ class FileTreePanel(wx.GenericDirCtrl):
         
 #TODO: add context menu
 
-class ShellPanel(wx.py.shell.Shell):
+class ShellPanel(pysh.editwindow.EditWindow):
     def __init__(self, parent):
         """ inits Spamfilter with training data
         
         :param training_dir: path of training directory with subdirectories
          '/ham' and '/spam'
         """
-        pysh.shell.Shell.__init__(self, parent=parent)
+        pysh.editwindow.EditWindow.__init__(self, parent=parent)
         self.SetName("Python Shell")
         self.ClearDocumentStyle()
         #self.StyleClearAll()

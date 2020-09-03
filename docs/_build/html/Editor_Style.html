@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Editor_Style module &mdash; TEstIDE  documentation</title>
+  <title>Editor_Style module &mdash; BlindIDE  documentation</title>
   
 
   
@@ -36,7 +36,7 @@
     
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Main module" href="Main.html" />
+    <link rel="next" title="Find_Replace module" href="Find_Replace.html" />
     <link rel="prev" title="src" href="modules.html" /> 
 </head>
 
@@ -51,7 +51,7 @@
           
 
           
-            <a href="index.html" class="icon icon-home" alt="Documentation Home"> TEstIDE
+            <a href="index.html" class="icon icon-home" alt="Documentation Home"> BlindIDE
           
 
           
@@ -86,6 +86,7 @@
 <ul class="current">
 <li class="toctree-l1 current"><a class="reference internal" href="modules.html">src</a><ul class="current">
 <li class="toctree-l2 current"><a class="current reference internal" href="#">Editor_Style module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Find_Replace.html">Find_Replace module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="Main.html">Main module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="Menus.html">Menus module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="Panels.html">Panels module</a></li>
@@ -107,7 +108,7 @@
       <nav class="wy-nav-top" aria-label="top navigation">
         
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="index.html">TEstIDE</a>
+          <a href="index.html">BlindIDE</a>
         
       </nav>
 
@@ -161,15 +162,21 @@
             
   <div class="section" id="module-Editor_Style">
 <span id="editor-style-module"></span><h1>Editor_Style module<a class="headerlink" href="#module-Editor_Style" title="Permalink to this headline">¶</a></h1>
-<p><strong>Functions</strong></p>
+<p><strong>Functions:</strong></p>
 <table class="longtable docutils align-default">
 <colgroup>
 <col style="width: 10%" />
 <col style="width: 90%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="#Editor_Style.Change_lexer_style" title="Editor_Style.Change_lexer_style"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Change_lexer_style</span></code></a>(editor)</p></td>
-<td><p>Chnage theme of the editor</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#Editor_Style.Change_Theme" title="Editor_Style.Change_Theme"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Change_Theme</span></code></a>(editor, theme, py_style)</p></td>
+<td><p>Chnage theme of the window</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#Editor_Style.Custom_Notebook" title="Editor_Style.Custom_Notebook"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Custom_Notebook</span></code></a>(notebook, theme)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#Editor_Style.Custom_Tree_Ctrl" title="Editor_Style.Custom_Tree_Ctrl"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Custom_Tree_Ctrl</span></code></a>(tree, theme)</p></td>
+<td><p></p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="#Editor_Style.Init_Editor_base" title="Editor_Style.Init_Editor_base"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Init_Editor_base</span></code></a>(editor)</p></td>
 <td><p>Init settings for Editor</p></td>
@@ -177,15 +184,25 @@
 </tbody>
 </table>
 <dl class="py function">
-<dt id="Editor_Style.Change_lexer_style">
-<code class="sig-prename descclassname">Editor_Style.</code><code class="sig-name descname">Change_lexer_style</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">editor</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Editor_Style.Change_lexer_style" title="Permalink to this definition">¶</a></dt>
-<dd><p>Chnage theme of the editor</p>
+<dt id="Editor_Style.Change_Theme">
+<code class="sig-prename descclassname">Editor_Style.</code><code class="sig-name descname">Change_Theme</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">editor</span></em>, <em class="sig-param"><span class="n">theme</span></em>, <em class="sig-param"><span class="n">py_style</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Editor_Style.Change_Theme" title="Permalink to this definition">¶</a></dt>
+<dd><p>Chnage theme of the window</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>editor</strong> (<em>[</em><em>type</em><em>]</em>) – editwindow</p>
 </dd>
 </dl>
 </dd></dl>
+
+<dl class="py function">
+<dt id="Editor_Style.Custom_Notebook">
+<code class="sig-prename descclassname">Editor_Style.</code><code class="sig-name descname">Custom_Notebook</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">notebook</span></em>, <em class="sig-param"><span class="n">theme</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Editor_Style.Custom_Notebook" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt id="Editor_Style.Custom_Tree_Ctrl">
+<code class="sig-prename descclassname">Editor_Style.</code><code class="sig-name descname">Custom_Tree_Ctrl</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">tree</span></em>, <em class="sig-param"><span class="n">theme</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Editor_Style.Custom_Tree_Ctrl" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
 
 <dl class="py function">
 <dt id="Editor_Style.Init_Editor_base">
@@ -208,7 +225,7 @@
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="Main.html" class="btn btn-neutral float-right" title="Main module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="Find_Replace.html" class="btn btn-neutral float-right" title="Find_Replace module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
         <a href="modules.html" class="btn btn-neutral float-left" title="src" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
@@ -221,7 +238,7 @@
   <div role="contentinfo">
     <p>
         
-        &copy; Copyright 2020, e
+        &copy; Copyright 2020, @MyHumanKit
 
     </p>
   </div>

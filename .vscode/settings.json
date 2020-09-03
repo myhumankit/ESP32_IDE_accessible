@@ -1,3 +1,5 @@
 {
     "autoDocstring.docstringFormat": "sphinx"
+    "editor.fontFamily": "Fira Code",
+    "editor.fontLigatures": true,
 }

@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Main module &mdash; TEstIDE  documentation</title>
+  <title>Main module &mdash; BlindIDE  documentation</title>
   
 
   
@@ -37,7 +37,7 @@
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="Menus module" href="Menus.html" />
-    <link rel="prev" title="Editor_Style module" href="Editor_Style.html" /> 
+    <link rel="prev" title="Find_Replace module" href="Find_Replace.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -51,7 +51,7 @@
           
 
           
-            <a href="index.html" class="icon icon-home" alt="Documentation Home"> TEstIDE
+            <a href="index.html" class="icon icon-home" alt="Documentation Home"> BlindIDE
           
 
           
@@ -86,6 +86,7 @@
 <ul class="current">
 <li class="toctree-l1 current"><a class="reference internal" href="modules.html">src</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="Editor_Style.html">Editor_Style module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Find_Replace.html">Find_Replace module</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">Main module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="Menus.html">Menus module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="Panels.html">Panels module</a></li>
@@ -107,7 +108,7 @@
       <nav class="wy-nav-top" aria-label="top navigation">
         
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="index.html">TEstIDE</a>
+          <a href="index.html">BlindIDE</a>
         
       </nav>
 
@@ -161,30 +162,87 @@
             
   <div class="section" id="module-Main">
 <span id="main-module"></span><h1>Main module<a class="headerlink" href="#module-Main" title="Permalink to this headline">¶</a></h1>
-<p><strong>Functions</strong></p>
+<p><strong>Functions:</strong></p>
 <table class="longtable docutils align-default">
 <colgroup>
 <col style="width: 10%" />
 <col style="width: 90%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="#Main.InitShortcuts" title="Main.InitShortcuts"><code class="xref py py-obj docutils literal notranslate"><span class="pre">InitShortcuts</span></code></a>(frame)</p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">Change_Theme</span></code>(editor, theme, py_style)</p></td>
+<td><p>Chnage theme of the window</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">Custom_Notebook</span></code>(notebook, theme)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">Custom_Tree_Ctrl</span></code>(tree, theme)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#Main.InitShortcuts" title="Main.InitShortcuts"><code class="xref py py-obj docutils literal notranslate"><span class="pre">InitShortcuts</span></code></a>(frame)</p></td>
 <td><p>Initiate shortcuts of the Application with wx.Accelerator Table</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">Init_Editor_base</span></code>(editor)</p></td>
+<td><p>Init settings for Editor</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">Init_Panels</span></code>(frame)</p></td>
+<td><p>Inits the three differents regions(treeCtrl, Notebook, Shell) in the MainWindow</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">Init_ToolBar</span></code>(frame)</p></td>
+<td><p>Inits and place the toolbar</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">Init_Top_Menu</span></code>(frame)</p></td>
+<td><p>Inits and place the top menu</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">create_Board_Menu</span></code>()</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">create_Edit_Menu</span></code>()</p></td>
+<td><p>Inits a Edit menu and his buttons (Copy, Paste, Find,…)</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">create_File_Menu</span></code>()</p></td>
+<td><p>Inits a File menu and his buttons (Save, Open,…)</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">create_Themes_Menu</span></code>()</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">create_Tools_Menu</span></code>()</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">load_img</span></code>(path)</p></td>
+<td><p></p></td>
 </tr>
 </tbody>
 </table>
-<p><strong>Classes</strong></p>
+<p><strong>Classes:</strong></p>
 <table class="longtable docutils align-default">
 <colgroup>
 <col style="width: 10%" />
 <col style="width: 90%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="#Main.MainWindow" title="Main.MainWindow"><code class="xref py py-obj docutils literal notranslate"><span class="pre">MainWindow</span></code></a>(name, size)</p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">FileTreePanel</span></code>(parent, frame)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#Main.MainWindow" title="Main.MainWindow"><code class="xref py py-obj docutils literal notranslate"><span class="pre">MainWindow</span></code></a>(name, size)</p></td>
 <td><p>MainWindow of the app which will contains all the children classes and custom functions</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">MyEditor</span></code>(parent)</p></td>
+<td><p>Customizable Editor page</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="#Main.Myapp" title="Main.Myapp"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Myapp</span></code></a>([redirect, filename, useBestVisual, …])</p></td>
 <td><p>Minimal class to launch the app</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">NotebookPanel</span></code>(parent)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">ShellPanel</span></code>(parent)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">ToolBar</span></code>(parent)</p></td>
+<td><p>MOMENT : Derivated class to set A toolbar maybe we’ll erase this derivated class</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">TopMenu</span></code>(parent)</p></td>
+<td><p>TopMenu class which contains the Edit and File Menus</p></td>
 </tr>
 </tbody>
 </table>
@@ -212,7 +270,7 @@
 <dd class="field-odd"><p><strong>wx.Frame</strong> – see <a class="reference external" href="https://wxpython.org/Phoenix/docs/html/wx.Frame.html">https://wxpython.org/Phoenix/docs/html/wx.Frame.html</a></p>
 </dd>
 </dl>
-<p><strong>Methods</strong></p>
+<p><strong>Methods:</strong></p>
 <table class="longtable docutils align-default">
 <colgroup>
 <col style="width: 10%" />
@@ -221,6 +279,12 @@
 <tbody>
 <tr class="row-odd"><td><p><a class="reference internal" href="#Main.MainWindow.OnChangeFocus" title="Main.MainWindow.OnChangeFocus"><code class="xref py py-obj docutils literal notranslate"><span class="pre">OnChangeFocus</span></code></a>(event)</p></td>
 <td><p>Allow to navigate in the differents region of the Frame after an event</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#Main.MainWindow.OnZoomIn" title="Main.MainWindow.OnZoomIn"><code class="xref py py-obj docutils literal notranslate"><span class="pre">OnZoomIn</span></code></a>(evt)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#Main.MainWindow.OnZoomOut" title="Main.MainWindow.OnZoomOut"><code class="xref py py-obj docutils literal notranslate"><span class="pre">OnZoomOut</span></code></a>(evt)</p></td>
+<td><p></p></td>
 </tr>
 </tbody>
 </table>
@@ -235,6 +299,16 @@
 </dl>
 </dd></dl>
 
+<dl class="py method">
+<dt id="Main.MainWindow.OnZoomIn">
+<code class="sig-name descname">OnZoomIn</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">evt</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Main.MainWindow.OnZoomIn" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="Main.MainWindow.OnZoomOut">
+<code class="sig-name descname">OnZoomOut</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">evt</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Main.MainWindow.OnZoomOut" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
 </dd></dl>
 
 <dl class="py class">
@@ -247,7 +321,7 @@
 <dd class="field-odd"><p><strong>wx.App</strong> – <a class="reference external" href="https://wxpython.org/Phoenix/docs/html/wx.App.html">https://wxpython.org/Phoenix/docs/html/wx.App.html</a></p>
 </dd>
 </dl>
-<p><strong>Methods</strong></p>
+<p><strong>Methods:</strong></p>
 <table class="longtable docutils align-default">
 <colgroup>
 <col style="width: 10%" />
@@ -290,7 +364,7 @@
         <a href="Menus.html" class="btn btn-neutral float-right" title="Menus module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="Editor_Style.html" class="btn btn-neutral float-left" title="Editor_Style module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="Find_Replace.html" class="btn btn-neutral float-left" title="Find_Replace module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   
@@ -300,7 +374,7 @@
   <div role="contentinfo">
     <p>
         
-        &copy; Copyright 2020, e
+        &copy; Copyright 2020, @MyHumanKit
 
     </p>
   </div>
