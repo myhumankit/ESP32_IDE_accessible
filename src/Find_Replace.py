@@ -7,10 +7,11 @@ def find_next(editor, evt):
         print("String not found")
         editor.pos = 0
         editor.ClearSelections()
-        return
-        editor.size = len(findTxt)
-        editor.SetSelection(editor.pos, editor.pos+editor.size)
-        editor.pos += editor.size
+        return False
+    editor.size = len(findTxt)
+    editor.SetSelection(editor.pos, editor.pos+editor.size)
+    editor.pos += editor.size
+    return True
 
 def replace(editor, evt):
     if editor.GetSelectedText() == "":

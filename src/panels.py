@@ -5,6 +5,7 @@ import os
 import wx.py as pysh
 import wx.lib.agw.flatnotebook as fnb
 from Editor_Style import *
+from Find_Replace import *
 
 
 #black #FFFF00 
@@ -129,22 +130,22 @@ class MyEditor(pysh.editwindow.EditWindow):
         """
         pysh.editwindow.EditWindow.__init__(self, parent=parent)
         self.id = parent.tab_num
-        self.SetMarginType(1, stc.STC_MARGIN_NUMBER)
-        self.SetMarginWidth(1, 25)
         self.filename = ""
         self.directory = ""
         self.saved = False
         self.last_save = ""
         self.theme = parent.theme
-        print("PARENT THEME = " + str(parent.theme))
-        Init_Editor_base(self)
-        Change_Theme(self, themes[self.theme], py_style)
-        ###############################################
-        
         self.findData = wx.FindReplaceData()
         self.txt = ""
         self.pos = 0
         self.size = 0
+        
+        print("PARENT THEME = " + str(parent.theme))
+        self.SetMarginType(1, stc.STC_MARGIN_NUMBER)
+        self.SetMarginWidth(1, 25)
+        Init_Editor_base(self)
+        Change_Theme(self, themes[self.theme], py_style)
+        ###############################################
 
     def BindFindEvents(self, win):
         win.Bind(wx.EVT_FIND, self.OnFind)
@@ -155,6 +156,7 @@ class MyEditor(pysh.editwindow.EditWindow):
 
     def OnShowFindReplace(self, evt=None):
         dlg = wx.FindReplaceDialog(self, self.findData, "Find & Replace", wx.FR_REPLACEDIALOG)
+
         self.BindFindEvents(dlg)
         dlg.Show(True)
 
@@ -173,35 +175,12 @@ class MyEditor(pysh.editwindow.EditWindow):
         if et in map:
             evtType = map[et]
         if et in [wx.wxEVT_COMMAND_FIND_NEXT]:
-            print("Find next BEGIN")
-            findTxt = evt.GetFindString()
-            print("Texte = %s"%self.txt)
-            print("findTxt = %s"%findTxt)
-            self.pos = self.txt.find(findTxt, self.pos)
-            if self.pos == -1:
-                print("String not found")
-                self.pos = 0
-                self.ClearSelections()
-                return
-            self.size = len(findTxt)
-            print("self.pos =%s self.size=%s"%(self.pos,self.size))
-            print("Find next END")
-            self.SetSelection(self.pos, self.pos+self.size)
-            self.pos += self.size
+            find_next(self, evt)
         if et in [wx.wxEVT_COMMAND_FIND_REPLACE]:
-            if self.GetSelectedText() == "":
-                return
-            print("Replace")
-            replaceTxt = evt.GetReplaceString()
-            print("replace Txt = %s"%replaceTxt)
-            self.size = len(replaceTxt)
-            start = self.GetSelectionStart()
-            end = self.GetSelectionEnd()
-            self.Replace(start, end, replaceTxt)
-            self.txt = self.GetValue()
+            replace(self, evt)
         if et in [wx.wxEVT_COMMAND_FIND_REPLACE_ALL]:
-            while self.pos != -1:
-                print("")
+            while find_next(self, evt) == True:
+                replace(self, evt)
         else:
             replaceTxt = ""
     def OnFindClose(self, evt):
