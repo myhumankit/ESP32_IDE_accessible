@@ -6,6 +6,7 @@ import Find_Replace as FIND_R
 from api import main as CheckPySyntax
 import os
 import sys
+import InitConfig
 
 rootDirectoryPath  =os.path.expanduser("~")
 rootDirectoryPath  =rootDirectoryPath.replace("\\","/")
@@ -102,6 +103,8 @@ def create_Tools_Menu():
     MenuTools.Append(wx.ID_STOP, "&Stop")
     MenuTools.Append(wx.ID_BURN_FIRMWARE, "&BurnFirmware")
     MenuTools.Append(wx.ID_INIT, "Initconfig")
+    MenuTools.Append(wx.ID_PREFERENCES, "Preferences")
+    MenuTools.Append(ID_SETTINGS, "&Port Settings...", "", wx.ITEM_NORMAL)
     MenuTools.Append(wx.ID_BOARD, "&Themes", create_Themes_Menu())
     MenuTools.AppendSeparator()
     return MenuTools
@@ -125,6 +128,9 @@ class TopMenu(wx.MenuBar):
         self.Append(self.MenuFile, "&File")
         self.Append(self.MenuEdit, "&Edit")
         self.Append(self.MenuTools, "&Tools")
+        self.__attach_events__()
+        
+    def __attach_events__(self):
         self.Bind(wx.EVT_MENU,  self.OnExit, id=wx.ID_EXIT)
         self.Bind(wx.EVT_MENU,  self.OnOpen, id=wx.ID_OPEN)
         self.Bind(wx.EVT_MENU,  self.OnSaveAs, id=wx.ID_SAVEAS)
@@ -134,6 +140,7 @@ class TopMenu(wx.MenuBar):
         self.Bind(wx.EVT_MENU,  self.OnSyntaxCheck, id=wx.ID_SYNTAX_CHECK)
         self.Bind(wx.EVT_MENU,  self.OnAddPage, id=wx.ID_NEW)
         self.Bind(wx.EVT_MENU,  self.OnClosePage, id=wx.ID_CLOSE)
+        self.Bind(wx.EVT_MENU, self.OnPortSettings, id=ID_SETTINGS)
         self.Bind(wx.EVT_MENU,  self.OnChangeTheme, id=wx.ID_LIGHT_THEME)
         self.Bind(wx.EVT_MENU,  self.OnChangeTheme, id=wx.ID_DARK_THEME)
         self.Bind(wx.EVT_MENU,  self.OnChangeTheme, id=wx.ID_ASTRO_THEME)
@@ -314,7 +321,7 @@ class TopMenu(wx.MenuBar):
         """
         notebookP = self.parent.MyNotebook
         notebookP.tab_num += 1
-        new_tab = MyEditor(self.parent.MyNotebook)
+        new_tab = MyEditor(self.parent.MyNotebook, self.parent)
         new_tab = notebookP.AddPage(new_tab, "Tab %s" % notebookP.tab_num, select=True)
 
     def OnClosePage(self, event):
@@ -418,7 +425,7 @@ class TopMenu(wx.MenuBar):
                     if i.find("syntaxCheck.py")>0:
                         i=i[len(syntaxCheckFilePath):]
                     appendMsg=appendMsg + i + "\n"
-                self.parent.Shell.SetValue(appendMsg)
+                self.parent.Shell.append(appendMsg)
             if stderr=="":
                 pass
             else:
@@ -429,10 +436,53 @@ class TopMenu(wx.MenuBar):
                     if i.find("syntaxCheck.py")>0:
                         i=i[len(syntaxCheckFilePath):]
                     appendMsg=appendMsg + "\n" + i
-                self.parent.Shell.SetValue(appendMsg)
-            #self.parent.Shell.SetValue("syntax finish.")
-
+                self.parent.Shell.append(appendMsg)
+            #self.parent.Shell.append("syntax finish.")
     
+    def OnPreferences(self, event):
+        self.parent.preferences.Show()
+    
+    def OnPortSettings(self, event):
+        """
+        Show the port settings dialog. The reader thread is stopped for the
+        settings change.
+        """
+        print("BANANA")
+        ok = False
+        parent = self.parent
+        while not ok:
+            with wxSerialConfigDialog.SerialConfigDialog(
+                    self,
+                    -1,
+                    "",
+                    show=wxSerialConfigDialog.SHOW_BAUDRATE | wxSerialConfigDialog.SHOW_FORMAT | wxSerialConfigDialog.SHOW_FLOW,
+                    serial=parent.serial) as dialog_serial_cfg:
+                dialog_serial_cfg.CenterOnParent()
+                result = dialog_serial_cfg.ShowModal()
+            # open port if not called on startup, open it on startup and OK too
+            if result == wx.ID_OK or event is not None:
+                try:
+                    parent.serial.open()
+                except serial.SerialException as e:
+                    with wx.MessageDialog(self, str(e), "Serial Port Error", wx.OK | wx.ICON_ERROR)as dlg:
+                        dlg.ShowModal()
+                else:
+                    parent.StartThread()
+                    dialog_serial_cfg.SetTitle("Serial Terminal on {} [{},{},{},{}{}{}]".format(
+                        parent.serial.portstr,
+                        parent.serial.baudrate,
+                        parent.serial.bytesize,
+                        parent.serial.parity,
+                        parent.serial.stopbits,
+                        ' RTS/CTS' if parent.serial.rtscts else '',
+                        ' Xon/Xoff' if parent.serial.xonxoff else '',
+                        ))
+                    ok = True
+            else:
+                # on startup, dialog aborted
+                parent.alive.clear()
+                ok = True
+        
 class ToolBar(wx.ToolBar):
     """MOMENT : Derivated class to set A toolbar maybe we'll erase this derivated class
 

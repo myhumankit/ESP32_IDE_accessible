@@ -1,7 +1,9 @@
 import wx
 from Menus import *
-from Panels import * 
-
+from Panels import *
+from Serial import *
+from InitConfig import Preferences
+import queue
 #TODO: change focus when new editor tab
 
 wx.ID_MOVE = 455
@@ -62,17 +64,389 @@ class MainWindow(wx.Frame):
         :type size: tuple(int, int)
         """              
         wx.Frame.__init__(self, None, 1, title = name, size = size)
+        
+        self.SetIcon(wx.Icon("./img/Icone.png"))
+        self.__set_properties__()
+        
+    def __set_properties__(self):
+        self.serial = serial.Serial()
+        self.serial.timeout = 0.5   # make sure that the alive event can be checked from time to time
+        self.settings = TerminalSetup()  # placeholder for the settings
+        self.thread = None
+        self.alive = threading.Event()
+        #####
+        self.messycode=b''
+        self.keyPressMsg=''
+        self.recvdata=""
+        #####
         self.who_is_focus = 0
-        #main_sizer = wx.BoxSizer(wx.VERTICAL)
-        #main_sizer.Add(Init_Top_Menu(self), 0, wx.EXPAND)
-        #self.SetIcon(wx.Icon("./img/Icone.png"))
         self.top_menu = Init_Top_Menu(self)
+        self.preferences = Preferences(self)
+        self.status_connection = "connected"
+        self.statusbar = MyStatusBar(self)
         Init_ToolBar(self)
         Init_Panels(self)
         InitShortcuts(self)
+        self.__attach_events()
+         
+    def __attach_events(self):
+        self.Bind(EVT_SERIALRX, self.OnSerialRead)
+        self.Shell.Bind(wx.EVT_CHAR, self.OnKey)
+
+    def StartThread(self):
+        """Start the receiver thread"""
+        self.thread = threading.Thread(target=self.ComPortThread)
+        self.thread.setDaemon(1)
+        self.alive.set()
+        self.thread.start()
+        self.serial.rts = True
+        self.serial.dtr = True
+        #self.frame_terminal_menubar.Check(ID_RTS, self.serial.rts)
+        #self.frame_terminal_menubar.Check(ID_DTR, self.serial.dtr)
+
+    def StopThread(self):
+        """Stop the receiver thread, wait until it's finished."""
+        if self.thread is not None:
+            self.alive.clear()          # clear alive event for thread
+            self.thread.join()          # wait until thread has finished
+            self.thread = None
+
+    def OnKey(self, event):
+        """\
+        Key event handler. If the key is in the ASCII range, write it to the
+        serial port. Newline handling is also done here.
+        """
+        code = event.GetUnicodeKey()
+        if code < 256:   # XXX bug in some versions of wx returning only capital letters
+            code = event.GetKeyCode()
+            print("CODE = " + str(code))
+        if code == 13:                      # is it a newline? (check for CR which is the RETURN key)
+            self.serial.write(b'\n')     # send LF
+        if code == wx.WXK_BACK:
+            print("BACKSPACEEEE")
+            code = code.decode()
+            self.Shell.AppendText('\b')
+            return
+        else:
+            char = chr(code)
+            print("CHR = " + str(char))
+            self.serial.write(char.encode('UTF-8', 'replace'))         # send the character
+    def WriteText(self, text):
+        #text = ''.join([c if (c >= ' ' and c != '\x7f') else chr(0x2400 + ord(c)) for c in text])
+        self.Shell.AppendText(text)
+
+    def OnSerialRead(self, event):#uiRecvFromUart(self,data)
+        """Handle input from the serial port."""
+        data = event.data
+        print("Text red = " + data.decode('UTF-8', 'replace'))
+        #self.WriteText(event.data)
+        self.WriteText(event.data.decode('UTF-8', 'ignore'))
         
-        #self.SetSizer(main_sizer)
-        #main_sizer.Layout()
+        # if data=="" or data==b'':
+        #     return
+
+        # if (type(data) is bytes) and (str(data).find("b'\\xe")>=0):
+        #     self.keyPressMsg="else"
+        #     self.messycode=b''
+        #     self.isChinese=1
+        # if self.isChinese==1:
+        #     if type(data) is bytes:
+        #         try:
+        #             self.messycode+=data
+        #         except:
+        #             self.messycode+=data.decode("utf-8")
+
+        #         if len(self.messycode)<3:
+        #             return
+        #         else:
+        #             try:
+        #                 self.insertPlainText(self.messycode.decode("utf-8"))
+        #             except Exception as e:
+        #                 print(e)
+        #             self.isChinese=0
+        #             return
+        #     else:
+        #         self.isChinese=0
+        #         self.messycode=b''
+        
+        # if self.keyPressMsg=="\x08" and self.ui.cursor.atEnd()==True:#Backspace
+        #     mycursor=self.textCursor()
+        #     self.recvdata+=data
+        #     if self.recvdata.find("\x08\x1b\x5b\x4b")==0:
+        #         mycursor.deletePreviousChar()
+        #         self.recvdata=""
+        #     elif self.recvdata.find("\x08\x1b\x5b\x4b")>0:
+        #         for i in range(self.recvdata.find("\x08\x1b\x5b\x4b")+1):
+        #             if self.recvdata[i]=="\x08":
+        #                 mycursor.deletePreviousChar()
+        #         self.recvdata=""
+        # elif self.keyPressMsg=="\x08" and not self.ui.cursor.atEnd():#Backspace
+        #     mycursor=self.textCursor()
+        #     self.recvdata+=data
+        #     if self.currentBoard=="microbit":
+        #         if len(self.recvdata)>5:
+        #             if self.recvdata[-2:]=="\x08\x08":
+        #                 pass
+        #             elif self.recvdata[-1]=="\x08" and self.recvdata[-2]!="\x20":
+        #                 for i in range(self.recvdata.find("\x20")):
+        #                     mycursor.deletePreviousChar()
+        #                 self.recvdata=""
+        #                 self.keyPressMsg="else"
+        #             else:
+        #                 pass
+        #         else:
+        #             pass
+        #     else:
+        #         if self.recvdata.find("\x1b\x5b")>0 and self.recvdata[-1]=="\x08":
+        #             for i in range(self.recvdata.find("\x1b\x5b")):
+        #                 if self.recvdata[i]=="\x08":
+        #                     mycursor.deletePreviousChar()
+        #             self.recvdata="" 
+        #             self.keyPressMsg="else"
+        #         elif self.recvdata.count("\x1b\x5b")==2 and self.recvdata[-1]=="\x44":
+        #             for i in range(self.recvdata.find("\x1b\x5b")):
+        #                 if self.recvdata[i]=="\x08":
+        #                     mycursor.deletePreviousChar()
+        #             self.recvdata=""
+        #         #else:
+        #         #    print("9999")
+        # elif self.keyPressMsg=="\x09" and not self.ui.cursor.atEnd():#debug
+        #     self.recvdata+=data
+        #     if self.recvdata=="\x08":
+        #         lastLineCursorNum=self.ui.cursor.columnNumber()
+        #         allMsg=self.toPlainText()
+        #         showMsg=""
+        #         movecursorNum=0
+        #         allMsg=allMsg.split("\n")
+        #         for i in allMsg:
+        #             if i==allMsg[-1]:
+        #                 showMsg+=i[0:-1]
+        #                 movecursorNum=len(i[lastLineCursorNum:])
+        #             else:
+        #                 showMsg+=i+"\n"
+        #         self.setPlainText(showMsg)
+                
+        #         self.ui.cursorLeftOrRight-=movecursorNum
+        #         self.ui.cursor=self.textCursor()
+        #         self.moveCursor(QTextCursor.Left,QTextCursor.MoveAnchor)
+        #         self.recvdata=""
+        #     elif self.recvdata[0]=="\x1b":
+        #         if self.recvdata[-1]=="\x44":
+        #             movecursorNum=int(self.recvdata[self.recvdata.find("\x1b")+2:-1])
+        #             lastLineCursorNum=self.ui.cursor.columnNumber()
+        #             allMsg=self.toPlainText()
+        #             showMsg=""
+        #             allMsg=allMsg.split("\n")
+        #             for i in allMsg:
+        #                 if i==allMsg[-1]:
+        #                     showMsg+=i[0:lastLineCursorNum]
+        #                 else:
+        #                     showMsg+=i+"\n"
+        #             self.setPlainText(showMsg)
+        #             self.keyPressMsg="else"
+        #             self.recvdata=""
+
+        #             self.ui.cursorLeftOrRight-=movecursorNum
+        #             self.ui.cursor=self.textCursor()
+        #             self.moveCursor(QTextCursor.Left,QTextCursor.MoveAnchor)
+        #     else:
+        #         self.ui.cursor.insertText(self.recvdata)
+        #         self.recvdata=""
+        # elif self.keyPressMsg=="\x1b\x5b\x33\x7e" and not self.ui.cursor.atEnd():#Delete
+        #     self.recvdata+=data
+        #     allMsg=self.toPlainText()
+        #     allMsg=allMsg.split("\n")
+        #     showMsg=""
+        #     lastLineCursorNum=self.ui.cursor.columnNumber()
+
+        #     if self.currentBoard=="microbit":
+        #         if (len(allMsg[-1])-lastLineCursorNum==1) and self.recvdata=="\x20\x08":
+        #             self.ui.cursor.deleteChar()
+        #             self.keyPressMsg="else"
+        #             self.recvdata=""
+        #         else:
+        #             if self.recvdata[-2:]=="\x08\x08":
+        #                 pass
+        #             elif self.recvdata[-1]=="\x08" and self.recvdata[-2]!="\x20":
+        #                 self.ui.cursor.deleteChar()
+        #                 self.keyPressMsg="else"
+        #                 self.recvdata=""
+        #             else:
+        #                 pass
+        #     else:
+        #         if self.recvdata=="\x1b\x5b\x4b" and (len(allMsg[-1])-lastLineCursorNum==1):
+        #             self.ui.cursor.deleteChar()
+        #             self.keyPressMsg="else"
+        #             self.recvdata=""
+        #         elif len(self.recvdata)>3 and self.recvdata[-1]=="\x08":#这里，不应该让keypressmsg=else
+        #             self.ui.cursor.deleteChar()
+        #             self.keyPressMsg="else"
+        #             self.recvdata=""
+        #         elif len(self.recvdata)>3 and self.recvdata[3:].find("\x1b\x5b")>0 and self.recvdata[-1]=="\x44":
+        #             self.ui.cursor.deleteChar()
+        #             self.keyPressMsg="else"
+        #             self.recvdata=""
+        #         elif self.recvdata=="\x08":
+        #             self.recvdata=""
+        #         else:
+        #             pass
+        # elif self.keyPressMsg=="\x1b\x5b\x44":#Key_Left
+        #     if data=="\x08":
+        #         self.ui.cursorLeftOrRight-=1
+        #         self.ui.cursor=self.textCursor()
+        #         self.moveCursor(QTextCursor.Left,QTextCursor.MoveAnchor)
+        # elif self.keyPressMsg=="\x1b\x5b\x43":#Key_Right
+        #     self.ui.cursorLeftOrRight+=1
+        #     self.ui.cursor=self.textCursor()
+        #     self.moveCursor(QTextCursor.Right, QTextCursor.MoveAnchor)
+        # elif self.keyPressMsg=="\x1b\x5b\x41":#Key_Up
+        #     if data == "\x08":
+        #         myBottomMsg=self.toPlainText()
+        #         msgNum=self.document().lineCount()
+        #         plainMsg=""
+        #         mySplite=myBottomMsg.split("\n")
+        #         for mysplite in mySplite:
+        #             msgNum-=1
+        #             if msgNum != 0:
+        #                 plainMsg+=mysplite+"\n"
+        #         plainMsg+=">>> "
+        #         self.setPlainText(plainMsg)
+        #     elif data == "\x1b" or self.recvdata.find("\x1b")>=0:
+        #         self.recvdata+=data
+        #         if self.recvdata.find("[K")>=0:
+        #             self.recvdata=""
+        #             myBottomMsg=self.toPlainText()
+        #             msgNum=self.document().lineCount()
+        #             plainMsg=""
+        #             mySplite=myBottomMsg.split("\n")
+        #             for mysplite in mySplite:
+        #                 msgNum-=1
+        #                 if msgNum != 0:
+        #                     plainMsg+=mysplite+"\n"
+        #             plainMsg+=">>> "
+        #             self.setPlainText(plainMsg)
+        #         elif self.recvdata.find("D")>=0:
+        #             self.recvdata=""
+        #             myBottomMsg=self.toPlainText()
+        #             msgNum=self.document().lineCount()
+        #             plainMsg=""
+        #             mySplite=myBottomMsg.split("\n")
+        #             for mysplite in mySplite:
+        #                 msgNum-=1
+        #                 if msgNum != 0:
+        #                     plainMsg+=mysplite+"\n"
+        #             plainMsg+=">>> "
+        #             self.setPlainText(plainMsg)
+        #     else:
+        #         self.ui.cursor.insertText(data)
+        # elif self.keyPressMsg=="\x1b\x5b\x42":#Key_Down
+        #     if data == "\x08":
+        #         myBottomMsg=self.toPlainText()
+        #         msgNum=self.document().lineCount()
+        #         plainMsg=""
+        #         mySplite=myBottomMsg.split("\n")
+        #         for mysplite in mySplite:
+        #             msgNum-=1
+        #             if msgNum != 0:
+        #                 plainMsg+=mysplite+"\n"
+        #         plainMsg+=">>> "
+        #         self.setPlainText(plainMsg)
+        #     elif data == "\x1b" or self.recvdata.find("\x1b")>=0:
+        #         self.recvdata+=data
+        #         if self.recvdata.find("D")>=0:
+        #             self.recvdata=""
+        #             myBottomMsg=self.toPlainText()
+        #             msgNum=self.document().lineCount()
+        #             plainMsg=""
+        #             mySplite=myBottomMsg.split("\n")
+        #             for mysplite in mySplite:
+        #                 msgNum-=1
+        #                 if msgNum != 0:
+        #                     plainMsg+=mysplite+"\n"
+        #             plainMsg+=">>> "
+        #             self.setPlainText(plainMsg)
+        #         elif self.recvdata.find("[K")>=0:
+        #             self.recvdata=""
+        #             myBottomMsg=self.toPlainText()
+        #             msgNum=self.document().lineCount()
+        #             plainMsg=""
+        #             mySplite=myBottomMsg.split("\n")
+        #             for mysplite in mySplite:
+        #                 msgNum-=1
+        #                 if msgNum != 0:
+        #                     plainMsg+=mysplite+"\n"
+        #             plainMsg+=">>> "
+        #             self.setPlainText(plainMsg)
+        #     else:
+        #         self.ui.cursor.insertText(data) 
+        # else:
+        #     if not self.ui.cursor.atEnd():
+        #         self.recvdata+=data
+        #         if self.recvdata.find("\x08")>=0 and len(self.recvdata)>1 and self.recvdata[1:].find("\x08")>=0:
+        #             if self.messycode!=b'':
+        #                 self.recvdata=''
+        #                 self.messycode=b''
+        #                 return
+        #             self.recvdata=self.recvdata[0]
+        #             self.ui.cursor.insertText(self.recvdata)
+        #             self.recvdata=""
+        #         elif self.recvdata=="\x08":
+        #             self.recvdata=""
+        #         elif self.recvdata.find("[")>0 and self.recvdata[-1]=="\x44":
+        #             if self.messycode!=b'':
+        #                 self.recvdata=''
+        #                 self.messycode=b''
+        #                 return
+        #             self.recvdata=self.recvdata[0]
+        #             self.ui.cursor.insertText(self.recvdata)
+        #             self.recvdata=""
+        #         elif self.recvdata=="\x1b\x5b\x4b":
+        #             self.keyPressMsg="\x1b\x5b\x33\x7e"
+        #     else:
+        #         if data=="\n":
+        #             data=""
+        #         try:
+        #             self.insertPlainText(data)
+        #         except:
+        #             print('recv unexpected word.')
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+
+    def ComPortThread(self):
+        """\
+        Thread that handles the incoming traffic. Does the basic input
+        transformation (newlines) and generates an SerialRxEvent
+        """
+        while self.alive.isSet():
+            b = self.serial.read(self.serial.in_waiting or 1)
+            if b:
+                # newline transformation
+                if self.settings.newline == NEWLINE_CR:
+                    b = b.replace(b'\r', b'\n')
+                elif self.settings.newline == NEWLINE_LF:
+                    pass
+                elif self.settings.newline == NEWLINE_CRLF:
+                    b = b.replace(b'\r\n', b'\n')
+                event = SerialRxEvent(self.GetId(), b)
+                self.GetEventHandler().AddPendingEvent(event)
+
+    def ChangeStatus(self, evt):
+        print("SALUT MON POTE")
+        page = self.MyNotebook.GetCurrentPage()
+        line = page.GetCurrentLine()
+        margin = page.GetLineIndentation(line)
+        end = page.GetLineIndentPosition(line)
+        print(line)
+        self.statusbar.SetStatusText("%s/%s"%(margin, end), 1)
 
     def OnChangeFocus(self, event):
         """Allow to navigate in the differents region of the Frame after an event
@@ -118,9 +492,10 @@ class Myapp(wx.App):
             --if False exit or error
             --if True the app works
         """        
-        window = MainWindow("Blind-IDE", (1920, 1080))
-        window.Show()
+        wx.InitAllImageHandlers()
+        window = MainWindow("Blind-IDE", (800, 600))
         self.SetTopWindow(window)
+        window.Show()
         return True
 
 if __name__ == "__main__":

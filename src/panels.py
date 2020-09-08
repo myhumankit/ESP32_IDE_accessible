@@ -7,6 +7,21 @@ import wx.lib.agw.flatnotebook as fnb
 from Editor_Style import *
 from Find_Replace import *
 
+import codecs
+import serial
+import threading
+import wxSerialConfigDialog
+
+NEWLINE_CR = 0
+NEWLINE_LF = 1
+NEWLINE_CRLF = 2
+ID_CLEAR = wx.NewId()
+ID_SAVEAS = wx.NewId()
+ID_SETTINGS = wx.NewId()
+ID_TERM = wx.NewId()
+ID_EXIT = wx.NewId()
+ID_RTS = wx.NewId()
+ID_DTR = wx.NewId()
 
 #black #FFFF00 
 #orange #FF9933
@@ -111,9 +126,9 @@ def Init_Panels(frame):
     style = wx.SP_3D | wx.SP_NO_XP_THEME | wx.SP_PERMIT_UNSPLIT | wx.SP_LIVE_UPDATE
     frame.splitter_v = wx.SplitterWindow(frame, style=style, name="Dimension")
     frame.splitter_h = wx.SplitterWindow(frame.splitter_v, style=style, name="DIMENSION ALL")
-    frame.MyNotebook = NotebookPanel(frame.splitter_h)
+    frame.MyNotebook = NotebookPanel(frame.splitter_h, frame)
     frame.FileTree = FileTreePanel(frame.splitter_v, frame)
-    frame.Shell = ShellPanel(frame.splitter_h)
+    frame.Shell = ShellPanel(frame.splitter_h, frame)
     frame.splitter_v.SplitVertically(frame.FileTree , frame.splitter_h, 200)
     frame.splitter_h.SplitHorizontally(frame.MyNotebook, frame.Shell, 400)
 
@@ -123,12 +138,13 @@ class MyEditor(pysh.editwindow.EditWindow):
     :param pysh.edit ...: Editor Model customizable
     :type pysh: 
     """    
-    def __init__(self, parent):
+    def __init__(self, parent , topwindow):
         """ Constructor of a Tab from Notebook
         
         :param parent: NotebookPanel class
         """
         pysh.editwindow.EditWindow.__init__(self, parent=parent)
+        self.topwindow = topwindow
         self.id = parent.tab_num
         self.filename = ""
         self.directory = ""
@@ -140,11 +156,15 @@ class MyEditor(pysh.editwindow.EditWindow):
         self.pos = 0
         self.size = 0
         
+        
         print("PARENT THEME = " + str(parent.theme))
         self.SetMarginType(1, stc.STC_MARGIN_NUMBER)
         self.SetMarginWidth(1, 25)
         Init_Editor_base(self)
         Change_Theme(self, themes[self.theme], py_style)
+        self.Bind(wx.EVT_TEXT, self.topwindow.ChangeStatus)
+        self.Bind(wx.EVT_TEXT_ENTER, self.topwindow.ChangeStatus)
+        
         ###############################################
 
     def BindFindEvents(self, win):
@@ -160,7 +180,6 @@ class MyEditor(pysh.editwindow.EditWindow):
         self.BindFindEvents(dlg)
         dlg.Show(True)
 
-#TODO: separate in some functions
     def OnFind(self, evt):
         self.txt = self.GetValue()
         map = {
@@ -183,12 +202,13 @@ class MyEditor(pysh.editwindow.EditWindow):
                 replace(self, evt)
         else:
             replaceTxt = ""
+
     def OnFindClose(self, evt):
         print("FindReplaceDialog closing...\n")
         evt.GetDialog().Destroy()
 
 class NotebookPanel(fnb.FlatNotebook):
-    def __init__(self, parent):
+    def __init__(self, parent, topwindow):
         """ constructor to create a notebook multi-tabs
         
         :param parent: path of training
@@ -197,6 +217,7 @@ class NotebookPanel(fnb.FlatNotebook):
         style = fnb.FNB_FF2
         fnb.FlatNotebook.__init__(self, parent=parent, style=style, name="COUCOU")
         self.parent = parent
+        self.topwindow = topwindow
         self.tab_num = 0
         self.data = ""
         self.dlg = None
@@ -250,17 +271,42 @@ class FileTreePanel(wx.GenericDirCtrl):
             notebookP.SetPageText(notebookP.GetSelection(), filename)
             filehandle.close()
         
-#TODO: add context menu
+#TODO: add Set focus raccourci = maj + fin(flèche)
+def MyStatusBar(frame):
+    statusbar = frame.CreateStatusBar(2, style= wx.STB_ELLIPSIZE_MIDDLE)
+    statusbar.SetBackgroundColour("RED")
+    statusbar.SetStatusText("Status:%s"%frame.status_connection, 1)
 
-class ShellPanel(pysh.editwindow.EditWindow):
-    def __init__(self, parent):
+class TerminalSetup:
+    """
+    Placeholder for various terminal settings. Used to pass the
+    options to the TerminalSettingsDialog.
+    """
+    def __init__(self):
+        self.echo = False
+        self.unprintable = False
+        self.newline = NEWLINE_CRLF
+
+class ShellPanel(wx.TextCtrl):
+    def __init__(self, parent, frame):
         """ inits Spamfilter with training data
-        
+
         :param training_dir: path of training directory with subdirectories
          '/ham' and '/spam'
         """
-        pysh.editwindow.EditWindow.__init__(self, parent=parent)
+        wx.TextCtrl.__init__(self, parent=parent, style=wx.TE_MULTILINE | wx.TE_READONLY)
+        self.__set_properties__(frame)
+        self.cursor = self.GetCaret()
+
+    def __set_properties__(self, frame):
+        self.top_window = frame
         self.SetName("Python Shell")
-        self.ClearDocumentStyle()
-        #self.StyleClearAll()
-        Change_Theme(self, themes[0], py_style)
+        self.SetFont(wx.Font(9, wx.MODERN, wx.NORMAL, wx.NORMAL, 0, ""))
+        #self.StyleSetBackground(wx.DIRCTRL_DEFAULT_STYLE, theme[0])
+        #Change_Theme(self, themes[0], py_style)
+
+    def append(self, text):
+        #self.SetReadOnly(False)
+        #self.SetValue(text)
+        self.AddText(text)
+        #self.SetReadOnly(True)

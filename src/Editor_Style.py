@@ -32,7 +32,7 @@ def Init_Editor_base(editor):
     #editor.SetUseAntiAliasing(True)
 
 def Custom_Tree_Ctrl(tree, theme):
-    tree.StyleSetBackground(wx.DIRCTRL_DEFAULT_STYLE, 'Black')
+    tree.StyleSetBackground(wx.DIRCTRL_DEFAULT_STYLE, theme[0])
     
 def Custom_Notebook(notebook, theme):
     notebook.SetBackgroundColour('Black')
