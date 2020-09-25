@@ -1,0 +1,13 @@
+import wx
+import os
+import speech
+import queue
+import time
+import sys
+import Serial
+import InitConfig
+import random
+import codecs
+import serial
+import threading
+import wxSerialConfigDialog

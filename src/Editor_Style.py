@@ -1,22 +1,11 @@
-import wx
-import random
+from Packages import wx, random, os
+from Constantes import *
+
 import wx.stc as stc
-import os
 import wx.py as pysh
 import wx.lib.agw.flatnotebook as fnb
 
 #TODO: continue les themes
-
-stc_style = [stc.STC_STYLE_BRACEBAD,
-             stc.STC_STYLE_BRACELIGHT,
-             stc.STC_STYLE_CALLTIP,
-             stc.STC_STYLE_CONTROLCHAR,
-             stc.STC_STYLE_DEFAULT,
-             #stc.STC_STYLE_FOLDDISPLAYTEXT,
-             stc.STC_STYLE_INDENTGUIDE,
-             stc.STC_STYLE_LASTPREDEFINED,
-             stc.STC_STYLE_MAX
-             ]
 
 def Init_Editor_base(editor):
     """Init settings for Editor
@@ -31,13 +20,7 @@ def Init_Editor_base(editor):
     #editor.SetFontQuality(stc.STC_EFF_QUALITY_LCD_OPTIMIZED)
     #editor.SetUseAntiAliasing(True)
 
-def Custom_Tree_Ctrl(tree, theme):
-    tree.StyleSetBackground(wx.DIRCTRL_DEFAULT_STYLE, theme[0])
-    
-def Custom_Notebook(notebook, theme):
-    notebook.SetBackgroundColour('Black')
 
-#checker des styles 
 def Change_Theme(editor, theme, py_style):
     """Chnage theme of the window
 

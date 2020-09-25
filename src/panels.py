@@ -1,121 +1,10 @@
-import wx
-import random
+from Packages import random, os, codecs, threading, wxSerialConfigDialog, serial
 import wx.stc as stc
-import os
 import wx.py as pysh
 import wx.lib.agw.flatnotebook as fnb
 from Editor_Style import *
 from Find_Replace import *
-
-import codecs
-import serial
-import threading
-import wxSerialConfigDialog
-
-NEWLINE_CR = 0
-NEWLINE_LF = 1
-NEWLINE_CRLF = 2
-ID_CLEAR = wx.NewId()
-ID_SAVEAS = wx.NewId()
-ID_SETTINGS = wx.NewId()
-ID_TERM = wx.NewId()
-ID_EXIT = wx.NewId()
-ID_RTS = wx.NewId()
-ID_DTR = wx.NewId()
-
-#black #FFFF00 
-#orange #FF9933
-#white #FFFFFF
-#violet #ea2cd8
-#vert #07cc1e
-#jaune #f0f20f
-#bleu foncé #434885
-th_dark = [
-        '#f0f20f', #strings editor 0 
-        '#07cc1e', #class editor 1
-        '#ea2cd8', #word editor 2
-        '#00ffdf', #character editor 3
-        '#07cc1e', #def editor 4
-        '#ea2cd8', #decorator editor 5
-        '#FFFFFF', #default editor 6
-        '#FFFFFF', #identifier editor 7
-        '#FF9933', #Number editor 8
-        '#ea2cd8', #Operator editor 9
-        wx.YELLOW, #str EOL editor 11
-        '#f0f20f', #triple editor 10
-        '#f0f20f', #triple double editor 12
-        '#ea2cd8', #word 2 13
-        '#434885', #CommentLine 14
-        '#f0f20f', #Comment block + strings 15
-        ]
-
-frame_dark = ["Black", #Background
-           "White" #font linenumber
-           ]
-
-th_light = [
-        '#44ea1e', #strings editor 0 
-        '#d08c25', #class editor 1
-        '#db62f2', #word editor 2
-        '#131313', #character editor 3
-        '#1626ff', #def editor 4
-        '#1626ff', #decorator editor 5
-        '#131313', #default editor 6
-        '#131313', #identifier editor 7
-        '#d08c25', #Number editor 8
-        '#131313', #Operator editor 9
-        '#44ea1e', #str EOL editor 11
-        '#44ea1e', #triple editor 10
-        '#44ea1e', #triple double editor 12
-        '#db62f2', #word 2 13
-        '#9798a3', #CommentLine 14
-        '#44ea1e', #Comment block + strings 15
-]
-frame_light = ["White" , "Black"]
-
-th_astro = [
-        '#2e8942', #strings editor 0 
-        '#d08c25', #class editor 1
-        '#db62f2', #word editor 2
-        '#131313', #character editor 3
-        '#1626ff', #def editor 4
-        '#1626ff', #decorator editor 5
-        '#131313', #default editor 6
-        '#131313', #identifier editor 7
-        '#d08c25', #Number editor 8
-        '#131313', #Operator editor 9
-        '#2e8942', #str EOL editor 11
-        '#2e8942', #triple editor 10
-        '#2e8942', #triple double editor 12
-        '#db62f2', #word 2 13
-        '#9798a3', #CommentLine 14
-        '#2e8942', #Comment block + strings 15
-]
-frame_astro = ["White", "Black"]
-
-themes = [[th_dark, frame_dark],
-          [th_light, frame_light],
-          [th_astro, frame_astro]
-          ]
- 
-py_style = [
-            wx.stc.STC_P_STRING,
-            wx.stc.STC_P_CLASSNAME,
-            wx.stc.STC_P_WORD,
-            wx.stc.STC_P_CHARACTER,
-            wx.stc.STC_P_DEFNAME,
-            wx.stc.STC_P_DECORATOR,
-            wx.stc.STC_P_DEFAULT,
-            wx.stc.STC_P_IDENTIFIER,
-            wx.stc.STC_P_NUMBER,
-            wx.stc.STC_P_OPERATOR,
-            wx.stc.STC_P_STRINGEOL,
-            wx.stc.STC_P_TRIPLE,
-            wx.stc.STC_P_TRIPLEDOUBLE,
-            wx.stc.STC_P_WORD2,
-            wx.stc.STC_P_COMMENTLINE,
-            wx.stc.STC_P_COMMENTBLOCK,
-            ]
+from Constantes import *
 
 def Init_Panels(frame):
     """Inits the three differents regions(treeCtrl, Notebook, Shell) in the MainWindow
@@ -130,6 +19,7 @@ def Init_Panels(frame):
     frame.FileTree = FileTreePanel(frame.splitter_v, frame)
     frame.Shell = ShellPanel(frame.splitter_h, frame)
     frame.splitter_v.SplitVertically(frame.FileTree , frame.splitter_h, 200)
+    frame.splitter_v.SetBackgroundColour("Red")
     frame.splitter_h.SplitHorizontally(frame.MyNotebook, frame.Shell, 400)
 
 class MyEditor(pysh.editwindow.EditWindow):
@@ -144,29 +34,35 @@ class MyEditor(pysh.editwindow.EditWindow):
         :param parent: NotebookPanel class
         """
         pysh.editwindow.EditWindow.__init__(self, parent=parent)
-        self.topwindow = topwindow
-        self.id = parent.tab_num
-        self.filename = ""
-        self.directory = ""
-        self.saved = False
-        self.last_save = ""
-        self.theme = parent.theme
-        self.findData = wx.FindReplaceData()
-        self.txt = ""
-        self.pos = 0
-        self.size = 0
-        
-        
+
+        self.__set_properties(parent, topwindow)
+        self.__set_style(parent)
+        self.__attach_events()
+    
+    def __set_properties(self, parent, topwindow):
+            self.topwindow = topwindow
+            self.id = parent.tab_num
+            self.filename = ""
+            self.directory = ""
+            self.saved = False
+            self.last_save = ""
+            self.theme = parent.theme
+            self.findData = wx.FindReplaceData()
+            self.txt = ""
+            self.pos = 0
+            self.size = 0
+
+    def __set_style(self, parent):
         print("PARENT THEME = " + str(parent.theme))
         self.SetMarginType(1, stc.STC_MARGIN_NUMBER)
         self.SetMarginWidth(1, 25)
         Init_Editor_base(self)
         Change_Theme(self, themes[self.theme], py_style)
+
+    def __attach_events(self):
         self.Bind(wx.EVT_TEXT, self.topwindow.ChangeStatus)
         self.Bind(wx.EVT_TEXT_ENTER, self.topwindow.ChangeStatus)
         
-        ###############################################
-
     def BindFindEvents(self, win):
         win.Bind(wx.EVT_FIND, self.OnFind)
         win.Bind(wx.EVT_FIND_NEXT, self.OnFind)
@@ -212,18 +108,36 @@ class NotebookPanel(fnb.FlatNotebook):
         """ constructor to create a notebook multi-tabs
         
         :param parent: path of training
-         '/ham' and '/spam'
+        '/ham' and '/spam'
         """
-        style = fnb.FNB_FF2
+        style = fnb.FNB_FF2 | wx.FULL_REPAINT_ON_RESIZE | fnb.FNB_COLOURFUL_TABS
         fnb.FlatNotebook.__init__(self, parent=parent, style=style, name="COUCOU")
+        self.__set_properties(parent, topwindow)
+        self.SetBackgroundStyle(wx.BG_STYLE_PAINT)
+        self.Bind(wx.EVT_PAINT, self.on_paint)
+    
+    def on_paint(self, event):
+        # establish the painting canvas
+        self.dc = wx.PaintDC(self)
+        x = 0
+        y = 0
+        w, h = self.GetSize()
+        self.dc.GradientFillLinear((x, y, w, h), themes[self.theme][1][4],themes[self.theme][1][5])
+
+    def __set_properties(self, parent, topwindow):
         self.parent = parent
         self.topwindow = topwindow
         self.tab_num = 0
         self.data = ""
         self.dlg = None
         self.theme = 0
-        self.SetTabAreaColour(wx.BLACK)
-        Custom_Notebook(self, themes[self.theme][0])
+        self.Custom_Notebook(themes[self.theme])
+        
+    def Custom_Notebook(self, theme):
+        self.SetActiveTabColour(theme[1][1])
+        self.SetTabAreaColour(theme[1][3])
+        self.SetActiveTabTextColour(theme[1][0])
+        self.SetNonActiveTabTextColour(theme[1][7])
         
 class FileTreePanel(wx.GenericDirCtrl):
     def __init__(self, parent, frame):
@@ -233,14 +147,24 @@ class FileTreePanel(wx.GenericDirCtrl):
          '/ham' and '/spam'
         """
         wx.GenericDirCtrl.__init__(self, parent = parent)
+        
+        self.__set_properties(frame)
+        self.__attach_events()
+
+    def __set_properties(self, frame):
         self.frame = frame
-        self.Bind(wx.EVT_DIRCTRL_FILEACTIVATED, self.OnOpenFile)
-        font = wx.Font(pointSize = 20, family = wx.FONTFAMILY_SWISS, style = wx.FONTSTYLE_SLANT, weight = wx.FONTWEIGHT_BOLD,  
+        self.theme = frame.MyNotebook.theme
+        self.tree = self.GetTreeCtrl()
+        self.font = wx.Font(pointSize = 10, family = wx.FONTFAMILY_SWISS, style = wx.FONTSTYLE_SLANT, weight = wx.FONTWEIGHT_BOLD,  
                       underline = False, faceName ="", encoding = 0)
-        self.SetFont(font)
-        theme = frame.MyNotebook.theme
-        self.BackgroundColour = 'sky blue'
-        #Custom_Tree_Ctrl(self, themes[theme][0])
+        self.Custom_Tree_Ctrl(themes[self.theme])
+
+    def __attach_events(self):
+        self.Bind(wx.EVT_DIRCTRL_FILEACTIVATED, self.OnOpenFile)
+        
+    def Custom_Tree_Ctrl(self, theme):
+        self.tree.SetBackgroundColour(theme[1][1])
+        self.tree.SetFont(self.font)
 
     def OnOpenFile(self, evt):
         notebookP = self.frame.MyNotebook
@@ -259,7 +183,7 @@ class FileTreePanel(wx.GenericDirCtrl):
                 notebookP.GetCurrentPage().saved = True
         else:
             notebookP.tab_num += 1
-            new_tab = MyEditor(notebookP)
+            new_tab = MyEditor(notebookP, self.frame)
             new_tab.filename = filename
             new_tab.directory = directory
             notebookP.AddPage(new_tab, filename, select = True)
@@ -272,9 +196,10 @@ class FileTreePanel(wx.GenericDirCtrl):
             filehandle.close()
         
 #TODO: add Set focus raccourci = maj + fin(flèche)
+
 def MyStatusBar(frame):
     statusbar = frame.CreateStatusBar(2, style= wx.STB_ELLIPSIZE_MIDDLE)
-    statusbar.SetBackgroundColour("RED")
+    statusbar.SetBackgroundColour("Grey")
     statusbar.SetStatusText("Status:%s"%frame.status_connection, 1)
 
 class TerminalSetup:
@@ -294,19 +219,20 @@ class ShellPanel(wx.TextCtrl):
         :param training_dir: path of training directory with subdirectories
          '/ham' and '/spam'
         """
-        wx.TextCtrl.__init__(self, parent=parent, style=wx.TE_MULTILINE | wx.TE_READONLY)
+        wx.TextCtrl.__init__(self, parent=parent, style=wx.TE_MULTILINE | wx.TE_READONLY |wx.TE_RICH2)
+
         self.__set_properties__(frame)
-        self.cursor = self.GetCaret()
 
     def __set_properties__(self, frame):
         self.top_window = frame
         self.SetName("Python Shell")
-        self.SetFont(wx.Font(9, wx.MODERN, wx.NORMAL, wx.NORMAL, 0, ""))
-        #self.StyleSetBackground(wx.DIRCTRL_DEFAULT_STYLE, theme[0])
-        #Change_Theme(self, themes[0], py_style)
+        self.theme = frame.MyNotebook.theme
+        self.Custom_Shell(themes[self.theme])
 
-    def append(self, text):
-        #self.SetReadOnly(False)
-        #self.SetValue(text)
-        self.AddText(text)
-        #self.SetReadOnly(True)
+    def Custom_Shell(self, theme):
+        self.SetBackgroundColour("white")
+        self.font = wx.Font(9, wx.MODERN, wx.NORMAL, wx.NORMAL, 0, "")
+        self.SetFont(self.font)
+        #font = wx.Font(pointSize = 10, family = wx.FONTFAMILY_SWISS, style = wx.FONTSTYLE_SLANT, weight = wx.FONTWEIGHT_BOLD,  
+        #              underline = False, faceName ="", encoding = 0)
+        #self.SetFont(font)

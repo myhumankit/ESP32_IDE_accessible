@@ -12,7 +12,6 @@ from pyflakes import reporter as modReporter
 
 __all__ = ['check', 'checkPath', 'checkRecursive', 'iterSourceCode', 'main']
 
-
 def check(codeString, filename, reporter=None):
     """
     Check the Python source given by C{codeString} for flakes.
@@ -72,7 +71,6 @@ def check(codeString, filename, reporter=None):
         reporter.flake(warning)
     return len(w.messages)
 
-
 def checkPath(filename, reporter=None):
     """
     Check the given path, printing out any warnings detected.
@@ -107,7 +105,6 @@ def checkPath(filename, reporter=None):
         return 1
     return check(codestr, filename, reporter)
 
-
 def iterSourceCode(paths):
     """
     Iterate over all Python source files in C{paths}.
@@ -125,7 +122,6 @@ def iterSourceCode(paths):
         else:
             yield path
 
-
 def checkRecursive(paths, reporter):
     """
     Recursively check all source files in C{paths}.
@@ -140,7 +136,6 @@ def checkRecursive(paths, reporter):
     for sourcePath in iterSourceCode(paths):
         warnings += checkPath(sourcePath, reporter)
     return warnings
-
 
 def _exitOnSignal(sigName, message):
     """Handles a signal with sys.exit.
@@ -168,7 +163,6 @@ def _exitOnSignal(sigName, message):
         # this case, signal.signal raises ValueError.
         pass
 
-
 def main(prog=None, args=None):
     """Entry point for the script "pyflakes"."""
     import optparse
@@ -193,21 +187,3 @@ def main(prog=None, args=None):
     else:
         warnings = check(sys.stdin.read(), '<stdin>', reporter)
     raise SystemExit(warnings > 0)
-'''  
-def main(prog=None, args=None):
-    """Entry point for the script "pyflakes"."""
-    import optparse
-    # Handle "Keyboard Interrupt" and "Broken pipe" gracefully
-    _exitOnSignal('SIGINT', '... stopped')
-    _exitOnSignal('SIGPIPE', 1)
-
-    parser = optparse.OptionParser(prog=prog, version=__version__)
-    (__, args) = parser.parse_args(args=args)
-    reporter = modReporter._makeDefaultReporter()
-
-    if args:
-        warnings = checkRecursive(args, reporter)
-    else:
-        warnings = check(sys.stdin.read(), '<stdin>', reporter)
-    raise SystemExit(warnings > 0)
-'''

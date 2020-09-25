@@ -1,31 +1,9 @@
-import wx
-from Panels import *
-from Utilitaries import load_img
-import wx.lib.agw.flatmenu as FM
-import Find_Replace as FIND_R
+from Packages import wx, os, sys, time, speech, Serial, InitConfig
+from panels import *
+from Utilitaries import load_img, speak
 from api import main as CheckPySyntax
-import os
-import sys
-import InitConfig
-
-rootDirectoryPath  =os.path.expanduser("~")
-rootDirectoryPath  =rootDirectoryPath.replace("\\","/")
-
-wx.ID_REFLUSH_DIR = 250
-wx.ID_EXAMPLES = 251
-wx.ID_SYNTAX_CHECK = 252
-wx.ID_DOWNLOAD_RUN = 253
-wx.ID_SERIAL = wx.NewId()
-wx.ID_BOARD = wx.NewId()
-wx.ID_DOWNLOAD = wx.NewId()
-wx.ID_DOWNLOAD_RUN = wx.NewId()
-wx.ID_BURN_FIRMWARE = wx.NewId()
-wx.ID_INIT = wx.NewId()
-wx.ID_ESP32_CHOICE = wx.NewId()
-wx.ID_PYBOARD_CHOICE = wx.NewId()
-wx.ID_DARK_THEME = wx.NewId()
-wx.ID_LIGHT_THEME = wx.NewId()
-wx.ID_ASTRO_THEME = wx.NewId()
+from Serial import SerialRxEvent
+from Constantes import *
 
 def Init_Top_Menu(frame):
     """Inits and place the top menu
@@ -99,16 +77,16 @@ def create_Tools_Menu():
     MenuTools.Append(wx.ID_SERIAL, "&Serial")
     MenuTools.Append(wx.ID_BOARD, "&Board", create_Board_Menu())
     MenuTools.Append(wx.ID_DOWNLOAD, "&Download")
-    MenuTools.Append(wx.ID_DOWNLOAD_RUN, "&DownloadandRun\tF5")
+    MenuTools.Append(wx.ID_EXECUTE, "&DownloadandRun\tF5")
     MenuTools.Append(wx.ID_STOP, "&Stop")
     MenuTools.Append(wx.ID_BURN_FIRMWARE, "&BurnFirmware")
     MenuTools.Append(wx.ID_INIT, "Initconfig")
     MenuTools.Append(wx.ID_PREFERENCES, "Preferences")
-    MenuTools.Append(ID_SETTINGS, "&Port Settings...", "", wx.ITEM_NORMAL)
+    MenuTools.Append(wx.ID_SETTINGS, "&Port Settings\tF2", "", wx.ITEM_NORMAL)
     MenuTools.Append(wx.ID_BOARD, "&Themes", create_Themes_Menu())
     MenuTools.AppendSeparator()
     return MenuTools
-    
+
 class TopMenu(wx.MenuBar):
     """TopMenu class which contains the Edit and File Menus
 
@@ -134,13 +112,19 @@ class TopMenu(wx.MenuBar):
         self.Bind(wx.EVT_MENU,  self.OnExit, id=wx.ID_EXIT)
         self.Bind(wx.EVT_MENU,  self.OnOpen, id=wx.ID_OPEN)
         self.Bind(wx.EVT_MENU,  self.OnSaveAs, id=wx.ID_SAVEAS)
+        self.Bind(wx.EVT_MENU,  self.OnSave, id=wx.ID_SAVE)
         self.Bind(wx.EVT_MENU,  self.OnCopy, id=wx.ID_COPY)
         self.Bind(wx.EVT_MENU,  self.OnPaste, id=wx.ID_PASTE)
+        self.Bind(wx.EVT_MENU,  self.OnCut, id=wx.ID_CUT)
         self.Bind(wx.EVT_MENU,  self.OnFindReplace, id=wx.ID_FIND)
+
         self.Bind(wx.EVT_MENU,  self.OnSyntaxCheck, id=wx.ID_SYNTAX_CHECK)
         self.Bind(wx.EVT_MENU,  self.OnAddPage, id=wx.ID_NEW)
         self.Bind(wx.EVT_MENU,  self.OnClosePage, id=wx.ID_CLOSE)
-        self.Bind(wx.EVT_MENU, self.OnPortSettings, id=ID_SETTINGS)
+        self.Bind(wx.EVT_MENU, self.OnPortSettings, id=wx.ID_SETTINGS)
+        self.Bind(wx.EVT_MENU, self.OnDownloadFile, id=wx.ID_DOWNLOAD)
+        self.Bind(wx.EVT_MENU, self.OnRun, id=wx.ID_EXECUTE)
+
         self.Bind(wx.EVT_MENU,  self.OnChangeTheme, id=wx.ID_LIGHT_THEME)
         self.Bind(wx.EVT_MENU,  self.OnChangeTheme, id=wx.ID_DARK_THEME)
         self.Bind(wx.EVT_MENU,  self.OnChangeTheme, id=wx.ID_ASTRO_THEME)
@@ -160,23 +144,22 @@ class TopMenu(wx.MenuBar):
         :type evt: (wx.event ?)
         """   
         notebookP = self.parent.MyNotebook
+        page = notebookP.GetCurrentPage()
         # Check if save is required
-        if (notebookP.GetCurrentPage().GetValue() 
-            != notebookP.GetCurrentPage().last_save):
-            notebookP.GetCurrentPage().saved = False
+        if (page.GetValue() != page.last_save):
+            page.saved = False
 
         # Check if Save should bring up FileDialog
-        if (notebookP.GetCurrentPage().saved == False 
-            and notebookP.GetCurrentPage().last_save == ""): 
+        if (page.saved == False and page.last_save == ""): 
             dialog = wx.FileDialog(self, 
                                    "Choose a file", 
-                                   notebookP.GetCurrentPage().directory, 
+                                   page.directory, 
                                    "", 
                                    "*", 
                                    wx.FD_SAVE | wx.FD_OVERWRITE_PROMPT)
             if dialog.ShowModal() == wx.ID_OK:
                 # Grab the content to be saved
-                save_as_file_contents = notebookP.GetCurrentPage().GetValue()
+                save_as_file_contents = page.GetValue()
 
                 # Open, Write & Close File
                 save_as_name = dialog.GetFilename()
@@ -185,19 +168,20 @@ class TopMenu(wx.MenuBar):
                 filehandle.write(save_as_file_contents)
                 filehandle.close()
                 notebookP.SetPageText(notebookP.GetSelection(), save_as_name)
-                notebookP.GetCurrentPage().filename = save_as_name
-                notebookP.GetCurrentPage().directory = save_as_directory
-                notebookP.GetCurrentPage().last_save = save_as_file_contents
-                notebookP.GetCurrentPage().saved = True
+                page.filename = save_as_name
+                page.directory = save_as_directory
+                page.last_save = save_as_file_contents
+                page.saved = True
         else:
             # Grab the content to be saved
-            save_as_file_contents = notebookP.GetCurrentPage().GetValue()
-            filehandle=open(os.path.join(notebookP.GetCurrentPage().directory, 
-                                         notebookP.GetCurrentPage().filename), 'w')
+            save_as_file_contents = page.GetValue()
+            filehandle=open(os.path.join(page.directory, page.filename), 'w')
             filehandle.write(save_as_file_contents)
             filehandle.close()
-            notebookP.GetCurrentPage().last_save = save_as_file_contents
-            notebookP.GetCurrentPage().saved = True
+            page.last_save = save_as_file_contents
+            page.saved = True
+        self.parent.Shell.AppendText("Content Saved\n")
+        speak(self.parent, "Content Saved")
 
     def OnSaveAs(self, evt):
         """Open a wx.filedialog to Save as a file the text of the current editor
@@ -206,15 +190,16 @@ class TopMenu(wx.MenuBar):
         :type evt: (wx.event ?)
         """   
         notebookP = self.parent.MyNotebook
+        page = notebookP.GetCurrentPage()
         dialog = wx.FileDialog(self, 
                                "Choose a file", 
-                               notebookP.GetCurrentPage().directory, 
+                               page.directory, 
                                "", 
                                "*.py*", 
                                wx.FD_SAVE | wx.FD_OVERWRITE_PROMPT)
         if dialog.ShowModal() == wx.ID_OK:
             # Grab the content to be saved
-            save_as_file_contents = notebookP.GetCurrentPage().GetValue()
+            save_as_file_contents = page.GetValue()
             # Open, Write & Close File
             save_as_name = dialog.GetFilename()
             save_as_directory = dialog.GetDirectory()
@@ -222,10 +207,11 @@ class TopMenu(wx.MenuBar):
             filehandle.write(save_as_file_contents)
             filehandle.close()
             notebookP.SetPageText(notebookP.GetSelection(), save_as_name)
-            notebookP.GetCurrentPage().filename = save_as_name
-            notebookP.GetCurrentPage().directory = save_as_directory
-            notebookP.GetCurrentPage().last_save = save_as_file_contents
-            notebookP.GetCurrentPage().saved = True
+            page.filename = save_as_name
+            page.directory = save_as_directory
+            page.last_save = save_as_file_contents
+            page.saved = True
+            speak(self.parent, "Content Saved")
         dialog.Destroy()
 
     def OnOpen(self, evt):
@@ -285,6 +271,14 @@ class TopMenu(wx.MenuBar):
         """  
         self.parent.MyNotebook.GetCurrentPage().Paste()
 
+    def OnCut(self, event):
+        """Cut the selection on the clipboard
+
+        :param evt: always to get the macrocode
+        :type evt: (wx.event ?)
+        """  
+        self.parent.MyNotebook.GetCurrentPage().Cut()
+
     def OnRedo(self, event):
         """Redo
 
@@ -330,6 +324,8 @@ class TopMenu(wx.MenuBar):
         :param evt: always to get the macrocode
         :type evt: (wx.event ?)
         """  
+        #TODO: ajouter un choix de sauvegarde si saved = False
+        
         dataNoteBook = self.parent.MyNotebook
         page = dataNoteBook.GetCurrentPage()
         print("Deleted page: " + str(page.id))
@@ -356,8 +352,11 @@ class TopMenu(wx.MenuBar):
                 print('Theme = ' + str(i))
                 break
             i += 1
+        
         Change_Theme(self.parent.MyNotebook.GetCurrentPage(), themes[i], py_style)
-        Change_Theme(self.parent.Shell, themes[i], py_style)
+        self.parent.Shell.Custom_Shell(themes[i])
+        self.parent.TreeCtrl.Custom_Tree_Ctrl(themes[i])
+        self.parent.MyNotebook.Custom_Notebook(themes[i])
         self.parent.MyNotebook.theme = i
     
     def OnSyntaxCheck(self, event):
@@ -415,8 +414,10 @@ class TopMenu(wx.MenuBar):
         appendMsg=page.filename
         
         if str(stdout)=="" and str(stderr)=="":
+            speak(self.parent, "No Error Detected !")
             pass
         else:
+            speak(self.parent, "Some Errors or Warnings Detected, check")
             if stdout!="":
                 stdout=stdout.split("\n")
                 for i in stdout:
@@ -425,7 +426,7 @@ class TopMenu(wx.MenuBar):
                     if i.find("syntaxCheck.py")>0:
                         i=i[len(syntaxCheckFilePath):]
                     appendMsg=appendMsg + i + "\n"
-                self.parent.Shell.append(appendMsg)
+                self.parent.Shell.AppendText(appendMsg)
             if stderr=="":
                 pass
             else:
@@ -436,8 +437,8 @@ class TopMenu(wx.MenuBar):
                     if i.find("syntaxCheck.py")>0:
                         i=i[len(syntaxCheckFilePath):]
                     appendMsg=appendMsg + "\n" + i
-                self.parent.Shell.append(appendMsg)
-            #self.parent.Shell.append("syntax finish.")
+                self.parent.Shell.AppendText(appendMsg)
+        self.parent.Shell.AppendText("Syntax terminated.\n")
     
     def OnPreferences(self, event):
         self.parent.preferences.Show()
@@ -466,6 +467,7 @@ class TopMenu(wx.MenuBar):
                 except serial.SerialException as e:
                     with wx.MessageDialog(self, str(e), "Serial Port Error", wx.OK | wx.ICON_ERROR)as dlg:
                         dlg.ShowModal()
+                        ok = True
                 else:
                     parent.StartThread()
                     dialog_serial_cfg.SetTitle("Serial Terminal on {} [{},{},{},{}{}{}]".format(
@@ -482,28 +484,129 @@ class TopMenu(wx.MenuBar):
                 # on startup, dialog aborted
                 parent.alive.clear()
                 ok = True
-        
+        if parent.serial.isOpen() == True:
+            parent.FileTree.Update()
+            #TODO: change status Barre
+            parent.serial.flush()
+            parent.serial_manager.put_cmd('import os\r\n')
+            speak(parent, "Device Connected")
+            
+    def OnDownloadFile(self, event):
+        parent = self.parent
+        notebookP = self.parent.MyNotebook
+        page = notebookP.GetCurrentPage()
+        if parent.serial.isOpen()==False:
+            parent.Shell.AppendText('Please open serial')
+            return False
+        parent.serial.write('\x03'.encode('utf-8'))
+        self.parent.show_cmd = False
+        time.sleep(0.05)
+
+        if page == None:
+            parent.Shell.AppendText('Please choose file or input something')
+            return False
+        print("dir = %s %s"%(page.directory, page.filename))
+        if page.directory[len(page.directory) - 1] == '/':
+            pathfile=page.directory + page.filename
+        else:
+            pathfile=page.directory + '/' + page.filename
+        if page.saved == False:
+            parent.Shell.append('Please save the file before download')
+            return False
+        elif str(pathfile).find(":")>=0:
+            parent.serial_manager.downloadFile(pathfile, page.filename)
+            time.sleep(1)
+            #self.parent.Shell.Clear()
+            self.parent.Shell.SetValue("Downloaded file : " + page.filename)
+            #TODO:Transformer en fonction les 2 lignes suiv
+            event = SerialRxEvent(self.parent.GetId(), "show_cmd")
+            self.parent.GetEventHandler().AddPendingEvent(event)
+            self.parent.Shell.SetFocus()
+            self.serial_manager.put_cmd('\r\n')
+            return True
+    
+        return False
+
+    def OnRun(self, event):
+        parent = self.parent
+        notebookP = self.parent.MyNotebook
+        page = notebookP.GetCurrentPage()
+        if parent.serial.isOpen()==False:
+            parent.Shell.AppendText('Please open serial')
+            return False
+        parent.serial.write('\x03'.encode('utf-8'))
+        self.parent.show_cmd = False
+        time.sleep(0.05)
+
+        if page == None:
+            parent.Shell.AppendText('Please choose file or input something')
+            return False
+        print("dir = %s %s"%(page.directory, page.filename))
+        if page.saved == False:
+            parent.Shell.append('Please save the file before download')
+            return False
+        if page.directory[len(page.directory) - 1] == '/':
+            pathfile=page.directory + page.filename
+        else:
+            pathfile=page.directory + '/' + page.filename
+        if str(pathfile).find(":")>=0:
+            parent.serial_manager.downloadFile(pathfile, page.filename)
+            time.sleep(1)
+            self.parent.Shell.SetValue("Downloaded file : " + page.filename)
+            #TODO:Transformer en fonction les 2 lignes suiv
+            event = SerialRxEvent(self.parent.GetId(), "show_cmd")
+            self.parent.GetEventHandler().AddPendingEvent(event)
+            self.parent.Shell.SetFocus()
+            self.parent.serial_manager.downloadRun(page.filename)
+            return True
+        return False
+
 class ToolBar(wx.ToolBar):
     """MOMENT : Derivated class to set A toolbar maybe we'll erase this derivated class
 
     :param wx.ToolBar: see https://wxpython.org/Phoenix/docs/html/wx.ToolBar.html
     """    
-    def __init__(self, parent, ):
+    def __init__(self, parent):
         """constructor for ToolBar 
 
         :param parent: Parent class generally the main window
         :type parent: MainWindow (generally)
         """           
-        wx.ToolBar.__init__(self, parent=parent, style= wx.TB_RIGHT)
+        wx.ToolBar.__init__(self, parent=parent, style= wx.TB_RIGHT | wx.TB_DOCKABLE | wx.FULL_REPAINT_ON_RESIZE)
         self.CentreOnParent()
         self.parent = parent
-        self.AddTool(wx.ID_NEW, '', load_img('./img/save.png'))
-        self.AddTool(wx.ID_OPEN, '', load_img('./img/save.png'))
+        
+        self.AddTools()
+        self.__set_properties()
+        self.__attach_events(parent)
+
+    def AddTools(self):
+        self.AddTool(wx.ID_NEW, '', load_img('./img/newfile.png'))
+        self.AddTool(wx.ID_OPEN, '', load_img('./img/fileopen.png'))
         self.AddTool(wx.ID_SAVE, '', load_img('./img/save.png'))
-        self.AddTool(wx.ID_DOWNLOAD_RUN, '', load_img('./img/save.png'))
-        self.AddTool(wx.ID_DOWNLOAD_RUN, '', load_img('./img/save.png'))
-        self.SetBackgroundColour("Orange")
+        self.AddTool(wx.ID_EXECUTE, '', load_img('./img/downloadandrun.png'))
+        #TODO: ajouter disconnectg with boolean
+        self.AddTool(wx.ID_CONNECT, '', load_img('./img/serialConnect.png'))
+        self.AddTool(wx.ID_STOP, '', load_img('./img/stop.png'))
+        self.AddTool(wx.ID_UNDO, '', load_img('./img/undo.png'))
+        self.AddTool(wx.ID_REDO, '', load_img('./img/redo.png'))
+        self.AddTool(wx.ID_SYNTAX_CHECK, '', load_img('./img/syntaxCheck.png'))
+        self.AddTool(wx.ID_CLEAR, '', load_img('./img/clear.png'))
+
+    def __set_properties(self):
         self.Realize()
+        self.SetBackgroundColour("black")
+
+    def __attach_events(self, parent):
         self.Bind(wx.EVT_MENU, parent.top_menu.OnAddPage, id=wx.ID_NEW)
         self.Bind(wx.EVT_MENU, parent.top_menu.OnOpen, id=wx.ID_OPEN)
         self.Bind(wx.EVT_MENU, parent.top_menu.OnSave, id=wx.ID_SAVE)
+        self.Bind(wx.EVT_MENU, parent.top_menu.OnRun, id=wx.ID_EXECUTE)
+        self.Bind(wx.EVT_MENU, parent.top_menu.OnSyntaxCheck, id=wx.ID_SYNTAX_CHECK)
+        self.Bind(wx.EVT_MENU, self.OnClear, id=wx.ID_CLEAR)
+        self.Bind(wx.EVT_MENU, parent.top_menu.OnUndo, id=wx.ID_UNDO)
+        self.Bind(wx.EVT_MENU, parent.top_menu.OnRedo, id=wx.ID_REDO)
+        
+    def OnClear(self, event):
+        self.parent.Shell.Clear()
+        speak(self.parent, "Terminal Cleared")
