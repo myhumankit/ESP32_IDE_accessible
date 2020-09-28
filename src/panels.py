@@ -150,6 +150,7 @@ class FileTreePanel(wx.GenericDirCtrl):
         
         self.__set_properties(frame)
         self.__attach_events()
+        self.ReCreateTree()
 
     def __set_properties(self, frame):
         self.frame = frame
@@ -200,7 +201,11 @@ class FileTreePanel(wx.GenericDirCtrl):
 def MyStatusBar(frame):
     statusbar = frame.CreateStatusBar(2, style= wx.STB_ELLIPSIZE_MIDDLE)
     statusbar.SetBackgroundColour("Grey")
-    statusbar.SetStatusText("Status:%s"%frame.status_connection, 1)
+    if frame.connected:
+        statusbar.SetStatusText("Status: Connected", 1)
+    else: 
+        statusbar.SetStatusText("Status: Not Connected", 1)
+    return statusbar
 
 class TerminalSetup:
     """

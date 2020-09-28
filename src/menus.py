@@ -1,6 +1,6 @@
 from Packages import wx, os, sys, time, speech, Serial, InitConfig
 from panels import *
-from Utilitaries import load_img, speak
+from Utilitaries import load_img, speak, ConnectSerial
 from api import main as CheckPySyntax
 from Serial import SerialRxEvent
 from Constantes import *
@@ -74,15 +74,12 @@ def create_Themes_Menu():
     
 def create_Tools_Menu():
     MenuTools = wx.Menu()
-    MenuTools.Append(wx.ID_SERIAL, "&Serial")
-    MenuTools.Append(wx.ID_BOARD, "&Board", create_Board_Menu())
+    MenuTools.Append(wx.ID_SETTINGS, "&Port Settings\tF2", "", wx.ITEM_NORMAL)
+    #MenuTools.Append(wx.ID_BOARD, "&Board", create_Board_Menu())
     MenuTools.Append(wx.ID_DOWNLOAD, "&Download")
     MenuTools.Append(wx.ID_EXECUTE, "&DownloadandRun\tF5")
     MenuTools.Append(wx.ID_STOP, "&Stop")
     MenuTools.Append(wx.ID_BURN_FIRMWARE, "&BurnFirmware")
-    MenuTools.Append(wx.ID_INIT, "Initconfig")
-    MenuTools.Append(wx.ID_PREFERENCES, "Preferences")
-    MenuTools.Append(wx.ID_SETTINGS, "&Port Settings\tF2", "", wx.ITEM_NORMAL)
     MenuTools.Append(wx.ID_BOARD, "&Themes", create_Themes_Menu())
     MenuTools.AppendSeparator()
     return MenuTools
@@ -124,6 +121,8 @@ class TopMenu(wx.MenuBar):
         self.Bind(wx.EVT_MENU, self.OnPortSettings, id=wx.ID_SETTINGS)
         self.Bind(wx.EVT_MENU, self.OnDownloadFile, id=wx.ID_DOWNLOAD)
         self.Bind(wx.EVT_MENU, self.OnRun, id=wx.ID_EXECUTE)
+        self.Bind(wx.EVT_MENU, self.OnStop, id=wx.ID_STOP)
+        
 
         self.Bind(wx.EVT_MENU,  self.OnChangeTheme, id=wx.ID_LIGHT_THEME)
         self.Bind(wx.EVT_MENU,  self.OnChangeTheme, id=wx.ID_DARK_THEME)
@@ -469,7 +468,6 @@ class TopMenu(wx.MenuBar):
                         dlg.ShowModal()
                         ok = True
                 else:
-                    parent.StartThread()
                     dialog_serial_cfg.SetTitle("Serial Terminal on {} [{},{},{},{}{}{}]".format(
                         parent.serial.portstr,
                         parent.serial.baudrate,
@@ -485,10 +483,15 @@ class TopMenu(wx.MenuBar):
                 parent.alive.clear()
                 ok = True
         if parent.serial.isOpen() == True:
-            parent.FileTree.Update()
+            if not ConnectSerial(parent):
+                print("FAIL")
+                return
+            parent.FileTree.ReCreateTree()
             #TODO: change status Barre
             parent.serial.flush()
             parent.serial_manager.put_cmd('import os\r\n')
+            parent.connected = True
+            self.parent.statusbar.SetStatusText("Status: Connected", 1)
             speak(parent, "Device Connected")
             
     def OnDownloadFile(self, event):
@@ -561,6 +564,26 @@ class TopMenu(wx.MenuBar):
             return True
         return False
 
+    def OnDisconnect(self, event):
+        if not self.parent.serial.ser.isOpen():
+            self.parent.Shell.AppendText("already close.")
+            return
+
+        self.parent.serial_manager.put_cmd('\x03')
+        time.sleep(0.1)
+        self.parent.serial.ser.close()
+        self.parent.connected = False
+        self.parent.statusbar.SetStatusText("Status: Not Connected", 1)
+        parent.FileTree.ReCreateTree()
+        self.parent.Shell.setReadOnly(True)
+        speak(self.parent, "Device Disconnected")
+
+    def OnStop(self, event):
+        if self.parent.serial.ser.isOpen():
+            self.parent.serial_manager.put_cmd('\x03')
+        else:
+            self.parent.Shell.AppendText("serial not open")
+        
 class ToolBar(wx.ToolBar):
     """MOMENT : Derivated class to set A toolbar maybe we'll erase this derivated class
 
@@ -585,8 +608,6 @@ class ToolBar(wx.ToolBar):
         self.AddTool(wx.ID_OPEN, '', load_img('./img/fileopen.png'))
         self.AddTool(wx.ID_SAVE, '', load_img('./img/save.png'))
         self.AddTool(wx.ID_EXECUTE, '', load_img('./img/downloadandrun.png'))
-        #TODO: ajouter disconnectg with boolean
-        self.AddTool(wx.ID_CONNECT, '', load_img('./img/serialConnect.png'))
         self.AddTool(wx.ID_STOP, '', load_img('./img/stop.png'))
         self.AddTool(wx.ID_UNDO, '', load_img('./img/undo.png'))
         self.AddTool(wx.ID_REDO, '', load_img('./img/redo.png'))
@@ -602,6 +623,7 @@ class ToolBar(wx.ToolBar):
         self.Bind(wx.EVT_MENU, parent.top_menu.OnOpen, id=wx.ID_OPEN)
         self.Bind(wx.EVT_MENU, parent.top_menu.OnSave, id=wx.ID_SAVE)
         self.Bind(wx.EVT_MENU, parent.top_menu.OnRun, id=wx.ID_EXECUTE)
+        self.Bind(wx.EVT_MENU, parent.top_menu.OnStop, id=wx.ID_STOP)
         self.Bind(wx.EVT_MENU, parent.top_menu.OnSyntaxCheck, id=wx.ID_SYNTAX_CHECK)
         self.Bind(wx.EVT_MENU, self.OnClear, id=wx.ID_CLEAR)
         self.Bind(wx.EVT_MENU, parent.top_menu.OnUndo, id=wx.ID_UNDO)

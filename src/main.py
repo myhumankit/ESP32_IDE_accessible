@@ -77,11 +77,11 @@ class MainWindow(wx.Frame):
         self.keyPressMsg=''
         self.recvdata=""
         self.show_cmd = True
+        self.connected = False
         #####
         self.who_is_focus = 0
         self.top_menu = Init_Top_Menu(self)
         self.preferences = Preferences(self)
-        self.status_connection = "connected"
         self.statusbar = MyStatusBar(self)
         self.serial_manager = ManageConnection(self)
         self.voice_on = True
