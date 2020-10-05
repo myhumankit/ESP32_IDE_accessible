@@ -1,0 +1,347 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>FileTree module &mdash; IDE_MicroPython_accessible  documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+
+  
+  
+  
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Find_Replace module" href="Find_Replace.html" />
+    <link rel="prev" title="Editor_Style module" href="Editor_Style.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="index.html" class="icon icon-home" alt="Documentation Home"> IDE_MicroPython_accessible
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">IDE_MicroPython_Accessible</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="Constantes.html">Constantes module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Editor_Style.html">Editor_Style module</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">FileTree module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Find_Replace.html">Find_Replace module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Packages.html">Packages module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Serial.html">Serial module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Shortcuts.html">Shortcuts module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Utilitaries.html">Utilitaries module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api.html">api module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="main.html">main module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="menus.html">menus module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="panels.html">panels module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="wxSerialConfigDialog.html">wxSerialConfigDialog module</a></li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">IDE_MicroPython_accessible</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="modules.html">IDE_MicroPython_Accessible</a> &raquo;</li>
+        
+      <li>FileTree module</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/FileTree.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="module-FileTree">
+<span id="filetree-module"></span><h1>FileTree module<a class="headerlink" href="#module-FileTree" title="Permalink to this headline">¶</a></h1>
+<p>Module which contains the DeviceTree class
+which is builded in according with the contain of the card</p>
+<p><strong>Classes:</strong></p>
+<table class="longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#FileTree.DeviceTree" title="FileTree.DeviceTree"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DeviceTree</span></code></a>(parent, frame, paths, name)</p></td>
+<td><p></p></td>
+</tr>
+</tbody>
+</table>
+<dl class="py class">
+<dt id="FileTree.DeviceTree">
+<em class="property">class </em><code class="sig-prename descclassname">FileTree.</code><code class="sig-name descname">DeviceTree</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">parent</span></em>, <em class="sig-param"><span class="n">frame</span></em>, <em class="sig-param"><span class="n">paths</span></em>, <em class="sig-param"><span class="n">name</span></em><span class="sig-paren">)</span><a class="headerlink" href="#FileTree.DeviceTree" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">wx._core.TreeCtrl</span></code></p>
+<p><strong>Methods:</strong></p>
+<table class="longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#FileTree.DeviceTree.Custom_Tree_Ctrl" title="FileTree.DeviceTree.Custom_Tree_Ctrl"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Custom_Tree_Ctrl</span></code></a>(theme)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#FileTree.DeviceTree.OnActivate" title="FileTree.DeviceTree.OnActivate"><code class="xref py py-obj docutils literal notranslate"><span class="pre">OnActivate</span></code></a>(event)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#FileTree.DeviceTree.OnBeginEdit" title="FileTree.DeviceTree.OnBeginEdit"><code class="xref py py-obj docutils literal notranslate"><span class="pre">OnBeginEdit</span></code></a>(event)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#FileTree.DeviceTree.OnEndEdit" title="FileTree.DeviceTree.OnEndEdit"><code class="xref py py-obj docutils literal notranslate"><span class="pre">OnEndEdit</span></code></a>(event)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#FileTree.DeviceTree.OnItemCollapsed" title="FileTree.DeviceTree.OnItemCollapsed"><code class="xref py py-obj docutils literal notranslate"><span class="pre">OnItemCollapsed</span></code></a>(event)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#FileTree.DeviceTree.OnItemExpanded" title="FileTree.DeviceTree.OnItemExpanded"><code class="xref py py-obj docutils literal notranslate"><span class="pre">OnItemExpanded</span></code></a>(event)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#FileTree.DeviceTree.OnLeftDClick" title="FileTree.DeviceTree.OnLeftDClick"><code class="xref py py-obj docutils literal notranslate"><span class="pre">OnLeftDClick</span></code></a>(event)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#FileTree.DeviceTree.OnRightDown" title="FileTree.DeviceTree.OnRightDown"><code class="xref py py-obj docutils literal notranslate"><span class="pre">OnRightDown</span></code></a>(event)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#FileTree.DeviceTree.OnRightUp" title="FileTree.DeviceTree.OnRightUp"><code class="xref py py-obj docutils literal notranslate"><span class="pre">OnRightUp</span></code></a>(event)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#FileTree.DeviceTree.OnSelChanged" title="FileTree.DeviceTree.OnSelChanged"><code class="xref py py-obj docutils literal notranslate"><span class="pre">OnSelChanged</span></code></a>(event)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#FileTree.DeviceTree.recurse_listdir" title="FileTree.DeviceTree.recurse_listdir"><code class="xref py py-obj docutils literal notranslate"><span class="pre">recurse_listdir</span></code></a>(paths, root)</p></td>
+<td><p></p></td>
+</tr>
+</tbody>
+</table>
+<dl class="py method">
+<dt id="FileTree.DeviceTree.Custom_Tree_Ctrl">
+<code class="sig-name descname">Custom_Tree_Ctrl</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">theme</span></em><span class="sig-paren">)</span><a class="headerlink" href="#FileTree.DeviceTree.Custom_Tree_Ctrl" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="FileTree.DeviceTree.OnActivate">
+<code class="sig-name descname">OnActivate</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">event</span></em><span class="sig-paren">)</span><a class="headerlink" href="#FileTree.DeviceTree.OnActivate" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="FileTree.DeviceTree.OnBeginEdit">
+<code class="sig-name descname">OnBeginEdit</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">event</span></em><span class="sig-paren">)</span><a class="headerlink" href="#FileTree.DeviceTree.OnBeginEdit" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="FileTree.DeviceTree.OnEndEdit">
+<code class="sig-name descname">OnEndEdit</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">event</span></em><span class="sig-paren">)</span><a class="headerlink" href="#FileTree.DeviceTree.OnEndEdit" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="FileTree.DeviceTree.OnItemCollapsed">
+<code class="sig-name descname">OnItemCollapsed</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">event</span></em><span class="sig-paren">)</span><a class="headerlink" href="#FileTree.DeviceTree.OnItemCollapsed" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="FileTree.DeviceTree.OnItemExpanded">
+<code class="sig-name descname">OnItemExpanded</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">event</span></em><span class="sig-paren">)</span><a class="headerlink" href="#FileTree.DeviceTree.OnItemExpanded" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="FileTree.DeviceTree.OnLeftDClick">
+<code class="sig-name descname">OnLeftDClick</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">event</span></em><span class="sig-paren">)</span><a class="headerlink" href="#FileTree.DeviceTree.OnLeftDClick" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="FileTree.DeviceTree.OnRightDown">
+<code class="sig-name descname">OnRightDown</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">event</span></em><span class="sig-paren">)</span><a class="headerlink" href="#FileTree.DeviceTree.OnRightDown" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="FileTree.DeviceTree.OnRightUp">
+<code class="sig-name descname">OnRightUp</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">event</span></em><span class="sig-paren">)</span><a class="headerlink" href="#FileTree.DeviceTree.OnRightUp" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="FileTree.DeviceTree.OnSelChanged">
+<code class="sig-name descname">OnSelChanged</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">event</span></em><span class="sig-paren">)</span><a class="headerlink" href="#FileTree.DeviceTree.OnSelChanged" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="FileTree.DeviceTree.recurse_listdir">
+<code class="sig-name descname">recurse_listdir</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">paths</span></em>, <em class="sig-param"><span class="n">root</span></em><span class="sig-paren">)</span><a class="headerlink" href="#FileTree.DeviceTree.recurse_listdir" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="Find_Replace.html" class="btn btn-neutral float-right" title="Find_Replace module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="Editor_Style.html" class="btn btn-neutral float-left" title="Editor_Style module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        
+        &copy; Copyright 2020, @MyHumanKit
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

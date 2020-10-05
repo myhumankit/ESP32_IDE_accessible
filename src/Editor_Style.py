@@ -1,3 +1,7 @@
+"""
+Module to Customize Panels with differents themes
+"""
+
 from Packages import wx, random, os
 from Constantes import *
 
@@ -5,13 +9,13 @@ import wx.stc as stc
 import wx.py as pysh
 import wx.lib.agw.flatnotebook as fnb
 
-#TODO: continue les themes
+#TODO: finir les thèmes
 
 def Init_Editor_base(editor):
-    """Init settings for Editor
+    """Init some settings for Editor Window
 
     :param editor: editorWindow
-    :type editor: [type]
+    :type editor: wx.py.editwindow.EditWindow
     """
     editor.SetIndentationGuides(stc.STC_IV_LOOKFORWARD)
     editor.SetEOLMode(stc.STC_EOL_CRLF)
@@ -20,12 +24,13 @@ def Init_Editor_base(editor):
     #editor.SetFontQuality(stc.STC_EFF_QUALITY_LCD_OPTIMIZED)
     #editor.SetUseAntiAliasing(True)
 
+def Change_Theme(editor, theme):
+    """Change theme of the window
 
-def Change_Theme(editor, theme, py_style):
-    """Chnage theme of the window
-
-    :param editor: editwindow
-    :type editor: [type]
+    :param editor: EditWindow to customize
+    :type editor: wx.py.editwindow.EditWindow
+    :param theme: Theme to apply on the EditWindow
+    :type theme: list
     """
     editor.SetCaretForeground(theme[1][1])
     #default
@@ -39,13 +44,40 @@ def Change_Theme(editor, theme, py_style):
                 underline = False,
                 faceName ="",
                 encoding = 0)
+    change_lexer_stcstyle(editor, theme, font)
+    change_lexer_pystyle(editor, theme, font)
+
+def change_lexer_stcstyle(editor, theme, font):
+    """Change lexer words stc style by applying 
+    the theme and the font gived in parameters
+
+    :param editor: EditWindow to apply the style
+    :type editor: wx.py.editwindow.EditWindow
+    :param theme: Theme to apply on the EditWindow lexer
+    :type theme: list
+    :param font: font to apply on lexer
+    :type font: wx.Font
+    """
     for i in stc_style:
         editor.StyleSetFont(i, font)
     for i in stc_style:
         editor.StyleSetBackground(i, theme[1][0])
     for i in stc_style:
         editor.StyleSetForeground(i, theme[1][1])
+
     #Lexer style
+
+def change_lexer_pystyle(editor, theme, font):
+    """Change lexer python words by applying 
+    the theme and the font gived in parameters
+
+    :param editor: EditWindow to apply the style
+    :type editor: wx.py.editwindow.EditWindow
+    :param theme: Theme to apply on the EditWindow python lexer
+    :type theme: list
+    :param font: font to apply on lexer
+    :type font: wx.Font
+    """
     x = 0
     for i in py_style:
         editor.StyleSetFont(i,font)
@@ -55,3 +87,4 @@ def Change_Theme(editor, theme, py_style):
         editor.StyleSetForeground(i, theme[0][x])
         print(editor.StyleGetForeground(i))
         x += 1
+        

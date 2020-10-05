@@ -1,0 +1,285 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>wxSerialConfigDialog module &mdash; IDE_MicroPython_accessible  documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+
+  
+  
+  
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="panels module" href="panels.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="index.html" class="icon icon-home" alt="Documentation Home"> IDE_MicroPython_accessible
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">IDE_MicroPython_Accessible</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="Constantes.html">Constantes module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Editor_Style.html">Editor_Style module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="FileTree.html">FileTree module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Find_Replace.html">Find_Replace module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Packages.html">Packages module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Serial.html">Serial module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Shortcuts.html">Shortcuts module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Utilitaries.html">Utilitaries module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api.html">api module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="main.html">main module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="menus.html">menus module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="panels.html">panels module</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">wxSerialConfigDialog module</a></li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">IDE_MicroPython_accessible</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="modules.html">IDE_MicroPython_Accessible</a> &raquo;</li>
+        
+      <li>wxSerialConfigDialog module</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/wxSerialConfigDialog.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="module-wxSerialConfigDialog">
+<span id="wxserialconfigdialog-module"></span><h1>wxSerialConfigDialog module<a class="headerlink" href="#module-wxSerialConfigDialog" title="Permalink to this headline">¶</a></h1>
+<p><strong>Classes:</strong></p>
+<table class="longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#wxSerialConfigDialog.SerialConfigDialog" title="wxSerialConfigDialog.SerialConfigDialog"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SerialConfigDialog</span></code></a>(*args, **kwds)</p></td>
+<td><p>Serial Port configuration dialog, to be used with pySerial 2.0+ When instantiating a class of this dialog, then the “serial” keyword argument is mandatory.</p></td>
+</tr>
+</tbody>
+</table>
+<dl class="py class">
+<dt id="wxSerialConfigDialog.SerialConfigDialog">
+<em class="property">class </em><code class="sig-prename descclassname">wxSerialConfigDialog.</code><code class="sig-name descname">SerialConfigDialog</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">*</span><span class="n">args</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwds</span></em><span class="sig-paren">)</span><a class="headerlink" href="#wxSerialConfigDialog.SerialConfigDialog" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">wx._core.Dialog</span></code></p>
+<p>Serial Port configuration dialog, to be used with pySerial 2.0+
+When instantiating a class of this dialog, then the “serial” keyword
+argument is mandatory. It is a reference to a serial.Serial instance.
+the optional “show” keyword argument can be used to show/hide different
+settings. The default is SHOW_ALL which corresponds to
+SHOW_BAUDRATE|SHOW_FORMAT|SHOW_FLOW|SHOW_TIMEOUT. All constants can be
+found in this module (not the class).</p>
+<p><strong>Methods:</strong></p>
+<table class="longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#wxSerialConfigDialog.SerialConfigDialog.OnCancel" title="wxSerialConfigDialog.SerialConfigDialog.OnCancel"><code class="xref py py-obj docutils literal notranslate"><span class="pre">OnCancel</span></code></a>(events)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#wxSerialConfigDialog.SerialConfigDialog.OnOK" title="wxSerialConfigDialog.SerialConfigDialog.OnOK"><code class="xref py py-obj docutils literal notranslate"><span class="pre">OnOK</span></code></a>(events)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#wxSerialConfigDialog.SerialConfigDialog.OnTimeout" title="wxSerialConfigDialog.SerialConfigDialog.OnTimeout"><code class="xref py py-obj docutils literal notranslate"><span class="pre">OnTimeout</span></code></a>(events)</p></td>
+<td><p></p></td>
+</tr>
+</tbody>
+</table>
+<dl class="py method">
+<dt id="wxSerialConfigDialog.SerialConfigDialog.OnCancel">
+<code class="sig-name descname">OnCancel</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">events</span></em><span class="sig-paren">)</span><a class="headerlink" href="#wxSerialConfigDialog.SerialConfigDialog.OnCancel" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="wxSerialConfigDialog.SerialConfigDialog.OnOK">
+<code class="sig-name descname">OnOK</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">events</span></em><span class="sig-paren">)</span><a class="headerlink" href="#wxSerialConfigDialog.SerialConfigDialog.OnOK" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="wxSerialConfigDialog.SerialConfigDialog.OnTimeout">
+<code class="sig-name descname">OnTimeout</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">events</span></em><span class="sig-paren">)</span><a class="headerlink" href="#wxSerialConfigDialog.SerialConfigDialog.OnTimeout" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+      
+        <a href="panels.html" class="btn btn-neutral float-left" title="panels module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        
+        &copy; Copyright 2020, @MyHumanKit
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

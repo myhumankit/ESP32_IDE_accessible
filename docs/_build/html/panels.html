@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Panels module &mdash; BlindIDE  documentation</title>
+  <title>panels module &mdash; IDE_MicroPython_accessible  documentation</title>
   
 
   
@@ -36,8 +36,8 @@
     
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Utilitaries module" href="Utilitaries.html" />
-    <link rel="prev" title="Menus module" href="Menus.html" /> 
+    <link rel="next" title="wxSerialConfigDialog module" href="wxSerialConfigDialog.html" />
+    <link rel="prev" title="menus module" href="menus.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -51,7 +51,7 @@
           
 
           
-            <a href="index.html" class="icon icon-home" alt="Documentation Home"> BlindIDE
+            <a href="index.html" class="icon icon-home" alt="Documentation Home"> IDE_MicroPython_accessible
           
 
           
@@ -84,13 +84,20 @@
             
               <p class="caption"><span class="caption-text">Contents:</span></p>
 <ul class="current">
-<li class="toctree-l1 current"><a class="reference internal" href="modules.html">src</a><ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">IDE_MicroPython_Accessible</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="Constantes.html">Constantes module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="Editor_Style.html">Editor_Style module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="FileTree.html">FileTree module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="Find_Replace.html">Find_Replace module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="Main.html">Main module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="Menus.html">Menus module</a></li>
-<li class="toctree-l2 current"><a class="current reference internal" href="#">Panels module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Packages.html">Packages module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Serial.html">Serial module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Shortcuts.html">Shortcuts module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="Utilitaries.html">Utilitaries module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api.html">api module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="main.html">main module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="menus.html">menus module</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">panels module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="wxSerialConfigDialog.html">wxSerialConfigDialog module</a></li>
 </ul>
 </li>
 </ul>
@@ -108,7 +115,7 @@
       <nav class="wy-nav-top" aria-label="top navigation">
         
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="index.html">BlindIDE</a>
+          <a href="index.html">IDE_MicroPython_accessible</a>
         
       </nav>
 
@@ -139,15 +146,15 @@
     
       <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
         
-          <li><a href="modules.html">src</a> &raquo;</li>
+          <li><a href="modules.html">IDE_MicroPython_Accessible</a> &raquo;</li>
         
-      <li>Panels module</li>
+      <li>panels module</li>
     
     
       <li class="wy-breadcrumbs-aside">
         
             
-            <a href="_sources/Panels.rst.txt" rel="nofollow"> View page source</a>
+            <a href="_sources/panels.rst.txt" rel="nofollow"> View page source</a>
           
         
       </li>
@@ -160,8 +167,8 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="module-Panels">
-<span id="panels-module"></span><h1>Panels module<a class="headerlink" href="#module-Panels" title="Permalink to this headline">¶</a></h1>
+  <div class="section" id="module-panels">
+<span id="panels-module"></span><h1>panels module<a class="headerlink" href="#module-panels" title="Permalink to this headline">¶</a></h1>
 <p><strong>Functions:</strong></p>
 <table class="longtable docutils align-default">
 <colgroup>
@@ -169,20 +176,29 @@
 <col style="width: 90%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">Change_Theme</span></code>(editor, theme, py_style)</p></td>
-<td><p>Chnage theme of the window</p></td>
-</tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">Custom_Notebook</span></code>(notebook, theme)</p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">Custom_Tree_Ctrl</span></code>(tree, theme)</p></td>
-<td><p></p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">Change_Theme</span></code>(editor, theme)</p></td>
+<td><p>Change theme of the window</p></td>
 </tr>
 <tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">Init_Editor_base</span></code>(editor)</p></td>
-<td><p>Init settings for Editor</p></td>
+<td><p>Init some settings for Editor Window</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#Panels.Init_Panels" title="Panels.Init_Panels"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Init_Panels</span></code></a>(frame)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#panels.Init_Panels" title="panels.Init_Panels"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Init_Panels</span></code></a>(frame)</p></td>
 <td><p>Inits the three differents regions(treeCtrl, Notebook, Shell) in the MainWindow</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#panels.MyStatusBar" title="panels.MyStatusBar"><code class="xref py py-obj docutils literal notranslate"><span class="pre">MyStatusBar</span></code></a>(frame)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">change_lexer_pystyle</span></code>(editor, theme, font)</p></td>
+<td><p>Change lexer python words by applying  the theme and the font gived in parameters</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">change_lexer_stcstyle</span></code>(editor, theme, font)</p></td>
+<td><p>Change lexer words stc style by applying  the theme and the font gived in parameters</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">find_next</span></code>(editor, evt)</p></td>
+<td><p>Useful function to find the next occurence of a word on the EditWindow panel</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">replace</span></code>(editor, evt)</p></td>
+<td><p>Useful function to replace a the selected text by an other word on the EditWindow panel</p></td>
 </tr>
 </tbody>
 </table>
@@ -193,23 +209,58 @@
 <col style="width: 90%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="#Panels.FileTreePanel" title="Panels.FileTreePanel"><code class="xref py py-obj docutils literal notranslate"><span class="pre">FileTreePanel</span></code></a>(parent, frame)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#panels.ChooseWorkspace" title="panels.ChooseWorkspace"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ChooseWorkspace</span></code></a>(parent, frame)</p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#Panels.MyEditor" title="Panels.MyEditor"><code class="xref py py-obj docutils literal notranslate"><span class="pre">MyEditor</span></code></a>(parent)</p></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">DeviceTree</span></code>(parent, frame, paths, name)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#panels.FileTreePanel" title="panels.FileTreePanel"><code class="xref py py-obj docutils literal notranslate"><span class="pre">FileTreePanel</span></code></a>(parent, frame)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#panels.MyEditor" title="panels.MyEditor"><code class="xref py py-obj docutils literal notranslate"><span class="pre">MyEditor</span></code></a>(parent, topwindow)</p></td>
 <td><p>Customizable Editor page</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#Panels.NotebookPanel" title="Panels.NotebookPanel"><code class="xref py py-obj docutils literal notranslate"><span class="pre">NotebookPanel</span></code></a>(parent)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#panels.NotebookPanel" title="panels.NotebookPanel"><code class="xref py py-obj docutils literal notranslate"><span class="pre">NotebookPanel</span></code></a>(parent, topwindow)</p></td>
+<td><p>Customized Notebook class</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#panels.ShellPanel" title="panels.ShellPanel"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ShellPanel</span></code></a>(parent, frame)</p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#Panels.ShellPanel" title="Panels.ShellPanel"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ShellPanel</span></code></a>(parent)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#panels.TerminalSetup" title="panels.TerminalSetup"><code class="xref py py-obj docutils literal notranslate"><span class="pre">TerminalSetup</span></code></a>()</p></td>
+<td><p>Placeholder for various terminal settings.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#panels.WorkspaceTree" title="panels.WorkspaceTree"><code class="xref py py-obj docutils literal notranslate"><span class="pre">WorkspaceTree</span></code></a>(parent, frame)</p></td>
 <td><p></p></td>
 </tr>
 </tbody>
 </table>
 <dl class="py class">
-<dt id="Panels.FileTreePanel">
-<em class="property">class </em><code class="sig-prename descclassname">Panels.</code><code class="sig-name descname">FileTreePanel</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">parent</span></em>, <em class="sig-param"><span class="n">frame</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Panels.FileTreePanel" title="Permalink to this definition">¶</a></dt>
+<dt id="panels.ChooseWorkspace">
+<em class="property">class </em><code class="sig-prename descclassname">panels.</code><code class="sig-name descname">ChooseWorkspace</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">parent</span></em>, <em class="sig-param"><span class="n">frame</span></em><span class="sig-paren">)</span><a class="headerlink" href="#panels.ChooseWorkspace" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">wx._core.DirPickerCtrl</span></code></p>
+<p><strong>Methods:</strong></p>
+<table class="longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#panels.ChooseWorkspace.changeWorkspace" title="panels.ChooseWorkspace.changeWorkspace"><code class="xref py py-obj docutils literal notranslate"><span class="pre">changeWorkspace</span></code></a>(evt)</p></td>
+<td><p></p></td>
+</tr>
+</tbody>
+</table>
+<dl class="py method">
+<dt id="panels.ChooseWorkspace.changeWorkspace">
+<code class="sig-name descname">changeWorkspace</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">evt</span></em><span class="sig-paren">)</span><a class="headerlink" href="#panels.ChooseWorkspace.changeWorkspace" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="panels.FileTreePanel">
+<em class="property">class </em><code class="sig-prename descclassname">panels.</code><code class="sig-name descname">FileTreePanel</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">parent</span></em>, <em class="sig-param"><span class="n">frame</span></em><span class="sig-paren">)</span><a class="headerlink" href="#panels.FileTreePanel" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">wx._core.GenericDirCtrl</span></code></p>
 <p><strong>Methods:</strong></p>
 <table class="longtable docutils align-default">
@@ -218,37 +269,45 @@
 <col style="width: 90%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="#Panels.FileTreePanel.OnOpenFile" title="Panels.FileTreePanel.OnOpenFile"><code class="xref py py-obj docutils literal notranslate"><span class="pre">OnOpenFile</span></code></a>(evt)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#panels.FileTreePanel.Custom_Tree_Ctrl" title="panels.FileTreePanel.Custom_Tree_Ctrl"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Custom_Tree_Ctrl</span></code></a>(theme)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#panels.FileTreePanel.OnOpenFile" title="panels.FileTreePanel.OnOpenFile"><code class="xref py py-obj docutils literal notranslate"><span class="pre">OnOpenFile</span></code></a>(evt)</p></td>
 <td><p></p></td>
 </tr>
 </tbody>
 </table>
 <dl class="py method">
-<dt id="Panels.FileTreePanel.OnOpenFile">
-<code class="sig-name descname">OnOpenFile</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">evt</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Panels.FileTreePanel.OnOpenFile" title="Permalink to this definition">¶</a></dt>
+<dt id="panels.FileTreePanel.Custom_Tree_Ctrl">
+<code class="sig-name descname">Custom_Tree_Ctrl</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">theme</span></em><span class="sig-paren">)</span><a class="headerlink" href="#panels.FileTreePanel.Custom_Tree_Ctrl" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="panels.FileTreePanel.OnOpenFile">
+<code class="sig-name descname">OnOpenFile</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">evt</span></em><span class="sig-paren">)</span><a class="headerlink" href="#panels.FileTreePanel.OnOpenFile" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
 
 <dl class="py function">
-<dt id="Panels.Init_Panels">
-<code class="sig-prename descclassname">Panels.</code><code class="sig-name descname">Init_Panels</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">frame</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Panels.Init_Panels" title="Permalink to this definition">¶</a></dt>
+<dt id="panels.Init_Panels">
+<code class="sig-prename descclassname">panels.</code><code class="sig-name descname">Init_Panels</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">frame</span></em><span class="sig-paren">)</span><a class="headerlink" href="#panels.Init_Panels" title="Permalink to this definition">¶</a></dt>
 <dd><p>Inits the three differents regions(treeCtrl, Notebook, Shell) in the MainWindow</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>frame</strong> (<a class="reference internal" href="Main.html#Main.MainWindow" title="Main.MainWindow"><em>MainWindow</em></a><em> or </em><em>other panel</em>) – MainWindow or window to split</p>
+<dd class="field-odd"><p><strong>frame</strong> (<a class="reference internal" href="main.html#main.MainWindow" title="main.MainWindow"><em>MainWindow</em></a><em> or </em><em>other panel</em>) – MainWindow or window to split</p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="py class">
-<dt id="Panels.MyEditor">
-<em class="property">class </em><code class="sig-prename descclassname">Panels.</code><code class="sig-name descname">MyEditor</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">parent</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Panels.MyEditor" title="Permalink to this definition">¶</a></dt>
+<dt id="panels.MyEditor">
+<em class="property">class </em><code class="sig-prename descclassname">panels.</code><code class="sig-name descname">MyEditor</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">parent</span></em>, <em class="sig-param"><span class="n">topwindow</span></em><span class="sig-paren">)</span><a class="headerlink" href="#panels.MyEditor" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">wx.py.editwindow.EditWindow</span></code></p>
 <p>Customizable Editor page</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>..</strong> (<em>pysh.edit</em>) – Editor Model customizable</p>
+<dd class="field-odd"><p><strong>pysh.editwindow.EditWindow</strong> (<em>wx.py.editwindow.EditWindow</em>) – see <a class="reference external" href="https://wxpython.org/Phoenix/docs/html/wx.py.html">https://wxpython.org/Phoenix/docs/html/wx.py.html</a></p>
 </dd>
 </dl>
 <p><strong>Methods:</strong></p>
@@ -258,52 +317,180 @@
 <col style="width: 90%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="#Panels.MyEditor.BindFindEvents" title="Panels.MyEditor.BindFindEvents"><code class="xref py py-obj docutils literal notranslate"><span class="pre">BindFindEvents</span></code></a>(win)</p></td>
-<td><p></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#panels.MyEditor.BindFindEvents" title="panels.MyEditor.BindFindEvents"><code class="xref py py-obj docutils literal notranslate"><span class="pre">BindFindEvents</span></code></a>(win)</p></td>
+<td><p>Bind events of the find and replace dialog</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#Panels.MyEditor.OnFind" title="Panels.MyEditor.OnFind"><code class="xref py py-obj docutils literal notranslate"><span class="pre">OnFind</span></code></a>(evt)</p></td>
-<td><p></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#panels.MyEditor.OnFind" title="panels.MyEditor.OnFind"><code class="xref py py-obj docutils literal notranslate"><span class="pre">OnFind</span></code></a>(evt)</p></td>
+<td><p>Method to find a string on the current tab editor</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#Panels.MyEditor.OnFindClose" title="Panels.MyEditor.OnFindClose"><code class="xref py py-obj docutils literal notranslate"><span class="pre">OnFindClose</span></code></a>(evt)</p></td>
-<td><p></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#panels.MyEditor.OnFindClose" title="panels.MyEditor.OnFindClose"><code class="xref py py-obj docutils literal notranslate"><span class="pre">OnFindClose</span></code></a>(evt)</p></td>
+<td><p>Close the find and replace dialog</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#Panels.MyEditor.OnShowFindReplace" title="Panels.MyEditor.OnShowFindReplace"><code class="xref py py-obj docutils literal notranslate"><span class="pre">OnShowFindReplace</span></code></a>([evt])</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#panels.MyEditor.OnShowFindReplace" title="panels.MyEditor.OnShowFindReplace"><code class="xref py py-obj docutils literal notranslate"><span class="pre">OnShowFindReplace</span></code></a>([evt])</p></td>
+<td><p>Show the Find and Replace dialog and call the BindFindEvents method</p></td>
+</tr>
+</tbody>
+</table>
+<dl class="py method">
+<dt id="panels.MyEditor.BindFindEvents">
+<code class="sig-name descname">BindFindEvents</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">win</span></em><span class="sig-paren">)</span><a class="headerlink" href="#panels.MyEditor.BindFindEvents" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bind events of the find and replace dialog</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>win</strong> (<em>MainWindow class</em>) – the main frame</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="panels.MyEditor.OnFind">
+<code class="sig-name descname">OnFind</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">evt</span></em><span class="sig-paren">)</span><a class="headerlink" href="#panels.MyEditor.OnFind" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method to find a string on the current tab editor</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>evt</strong> (<em>wx.Event</em>) – Event which decide to what execute</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="panels.MyEditor.OnFindClose">
+<code class="sig-name descname">OnFindClose</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">evt</span></em><span class="sig-paren">)</span><a class="headerlink" href="#panels.MyEditor.OnFindClose" title="Permalink to this definition">¶</a></dt>
+<dd><p>Close the find and replace dialog</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>evt</strong> (<em>wx.Event</em>) – Event to close the dialog</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="panels.MyEditor.OnShowFindReplace">
+<code class="sig-name descname">OnShowFindReplace</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">evt</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#panels.MyEditor.OnShowFindReplace" title="Permalink to this definition">¶</a></dt>
+<dd><p>Show the Find and Replace dialog and call the BindFindEvents method</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>evt</strong> (<em>wx.Event</em><em>, </em><em>optional</em>) – , defaults to None</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt id="panels.MyStatusBar">
+<code class="sig-prename descclassname">panels.</code><code class="sig-name descname">MyStatusBar</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">frame</span></em><span class="sig-paren">)</span><a class="headerlink" href="#panels.MyStatusBar" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py class">
+<dt id="panels.NotebookPanel">
+<em class="property">class </em><code class="sig-prename descclassname">panels.</code><code class="sig-name descname">NotebookPanel</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">parent</span></em>, <em class="sig-param"><span class="n">topwindow</span></em><span class="sig-paren">)</span><a class="headerlink" href="#panels.NotebookPanel" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">wx.lib.agw.flatnotebook.FlatNotebook</span></code></p>
+<p>Customized Notebook class</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>fnb.FlatNotebook</strong> (<em>wx.lib.agw.flatnotebook.FlatNotebook</em>) – A class of notebook to derivate</p>
+</dd>
+</dl>
+<p><strong>Methods:</strong></p>
+<table class="longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#panels.NotebookPanel.Custom_Notebook" title="panels.NotebookPanel.Custom_Notebook"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Custom_Notebook</span></code></a>(theme)</p></td>
+<td><p>Custom the Notebook according to the theme passed on args</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#panels.NotebookPanel.on_paint" title="panels.NotebookPanel.on_paint"><code class="xref py py-obj docutils literal notranslate"><span class="pre">on_paint</span></code></a>(event)</p></td>
+<td><p>Paint a gradient color on the Notebook background</p></td>
+</tr>
+</tbody>
+</table>
+<dl class="py method">
+<dt id="panels.NotebookPanel.Custom_Notebook">
+<code class="sig-name descname">Custom_Notebook</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">theme</span></em><span class="sig-paren">)</span><a class="headerlink" href="#panels.NotebookPanel.Custom_Notebook" title="Permalink to this definition">¶</a></dt>
+<dd><p>Custom the Notebook according to the theme passed on args</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>theme</strong> (<em>list</em>) – The theme to apply</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="panels.NotebookPanel.on_paint">
+<code class="sig-name descname">on_paint</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">event</span></em><span class="sig-paren">)</span><a class="headerlink" href="#panels.NotebookPanel.on_paint" title="Permalink to this definition">¶</a></dt>
+<dd><p>Paint a gradient color on the Notebook background</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>event</strong> (<em>wx.Event</em>) – Event to repaint the notebook background</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="panels.ShellPanel">
+<em class="property">class </em><code class="sig-prename descclassname">panels.</code><code class="sig-name descname">ShellPanel</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">parent</span></em>, <em class="sig-param"><span class="n">frame</span></em><span class="sig-paren">)</span><a class="headerlink" href="#panels.ShellPanel" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">wx._core.TextCtrl</span></code></p>
+<p><strong>Methods:</strong></p>
+<table class="longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#panels.ShellPanel.Custom_Shell" title="panels.ShellPanel.Custom_Shell"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Custom_Shell</span></code></a>(theme)</p></td>
 <td><p></p></td>
 </tr>
 </tbody>
 </table>
 <dl class="py method">
-<dt id="Panels.MyEditor.BindFindEvents">
-<code class="sig-name descname">BindFindEvents</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">win</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Panels.MyEditor.BindFindEvents" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt id="Panels.MyEditor.OnFind">
-<code class="sig-name descname">OnFind</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">evt</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Panels.MyEditor.OnFind" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt id="Panels.MyEditor.OnFindClose">
-<code class="sig-name descname">OnFindClose</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">evt</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Panels.MyEditor.OnFindClose" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt id="Panels.MyEditor.OnShowFindReplace">
-<code class="sig-name descname">OnShowFindReplace</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">evt</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Panels.MyEditor.OnShowFindReplace" title="Permalink to this definition">¶</a></dt>
+<dt id="panels.ShellPanel.Custom_Shell">
+<code class="sig-name descname">Custom_Shell</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">theme</span></em><span class="sig-paren">)</span><a class="headerlink" href="#panels.ShellPanel.Custom_Shell" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
 
 <dl class="py class">
-<dt id="Panels.NotebookPanel">
-<em class="property">class </em><code class="sig-prename descclassname">Panels.</code><code class="sig-name descname">NotebookPanel</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">parent</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Panels.NotebookPanel" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">wx.lib.agw.flatnotebook.FlatNotebook</span></code></p>
+<dt id="panels.TerminalSetup">
+<em class="property">class </em><code class="sig-prename descclassname">panels.</code><code class="sig-name descname">TerminalSetup</code><a class="headerlink" href="#panels.TerminalSetup" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Placeholder for various terminal settings. Used to pass the
+options to the TerminalSettingsDialog.</p>
 </dd></dl>
 
 <dl class="py class">
-<dt id="Panels.ShellPanel">
-<em class="property">class </em><code class="sig-prename descclassname">Panels.</code><code class="sig-name descname">ShellPanel</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">parent</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Panels.ShellPanel" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">wx.py.editwindow.EditWindow</span></code></p>
+<dt id="panels.WorkspaceTree">
+<em class="property">class </em><code class="sig-prename descclassname">panels.</code><code class="sig-name descname">WorkspaceTree</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">parent</span></em>, <em class="sig-param"><span class="n">frame</span></em><span class="sig-paren">)</span><a class="headerlink" href="#panels.WorkspaceTree" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">wx._core.GenericDirCtrl</span></code></p>
+<p><strong>Methods:</strong></p>
+<table class="longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#panels.WorkspaceTree.Custom_Tree_Ctrl" title="panels.WorkspaceTree.Custom_Tree_Ctrl"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Custom_Tree_Ctrl</span></code></a>(theme)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#panels.WorkspaceTree.OnOpenFile" title="panels.WorkspaceTree.OnOpenFile"><code class="xref py py-obj docutils literal notranslate"><span class="pre">OnOpenFile</span></code></a>(evt)</p></td>
+<td><p></p></td>
+</tr>
+</tbody>
+</table>
+<dl class="py method">
+<dt id="panels.WorkspaceTree.Custom_Tree_Ctrl">
+<code class="sig-name descname">Custom_Tree_Ctrl</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">theme</span></em><span class="sig-paren">)</span><a class="headerlink" href="#panels.WorkspaceTree.Custom_Tree_Ctrl" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="panels.WorkspaceTree.OnOpenFile">
+<code class="sig-name descname">OnOpenFile</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">evt</span></em><span class="sig-paren">)</span><a class="headerlink" href="#panels.WorkspaceTree.OnOpenFile" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
 </dd></dl>
 
 </div>
@@ -316,10 +503,10 @@
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="Utilitaries.html" class="btn btn-neutral float-right" title="Utilitaries module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="wxSerialConfigDialog.html" class="btn btn-neutral float-right" title="wxSerialConfigDialog module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="Menus.html" class="btn btn-neutral float-left" title="Menus module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="menus.html" class="btn btn-neutral float-left" title="menus module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   

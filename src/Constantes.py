@@ -1,3 +1,5 @@
+"""Constantes Module to stock main constants"""
+
 from Packages import os, wx
 
 import wx.stc as stc
@@ -7,10 +9,10 @@ rootDirectoryPath  =rootDirectoryPath.replace("\\","/")
 currentTempPath="%s/AppData/Local/uPyCraft/temp/"%rootDirectoryPath
 
 wx.ID_CONNECT = wx.NewId() #: New id to Connect the card
-wx.ID_REFLUSH_DIR = 250
-wx.ID_EXAMPLES = 251
-wx.ID_SYNTAX_CHECK = 252
-wx.ID_DOWNLOAD_RUN = 253
+wx.ID_REFLUSH_DIR = wx.NewId() #: New id to Connect the card
+wx.ID_EXAMPLES = wx.NewId() #: New id to Connect the card
+wx.ID_SYNTAX_CHECK = wx.NewId()
+wx.ID_DOWNLOAD_RUN = wx.NewId()
 wx.ID_SETTINGS = wx.NewId()
 wx.ID_SERIAL = wx.NewId()
 wx.ID_BOARD = wx.NewId()
@@ -23,34 +25,25 @@ wx.ID_PYBOARD_CHOICE = wx.NewId()
 wx.ID_DARK_THEME = wx.NewId()
 wx.ID_LIGHT_THEME = wx.NewId()
 wx.ID_ASTRO_THEME = wx.NewId()
+wx.ID_MOVE = wx.NewId()
+ID_CLEAR = wx.NewId()
+ID_SAVEAS = wx.NewId()
+ID_SETTINGS = wx.NewId()
+ID_TERM = wx.NewId()
+ID_EXIT = wx.NewId()
+ID_RTS = wx.NewId()
+ID_DTR = wx.NewId()
 
-wx.ID_MOVE = 455
+
 
 SERIALRX = wx.NewEventType()
 # bind to serial data receive events
 EVT_SERIALRX = wx.PyEventBinder(SERIALRX, 0)
-ID_CLEAR = wx.NewId()
-ID_SAVEAS = wx.NewId()
-ID_SETTINGS = wx.NewId()
-ID_TERM = wx.NewId()
-ID_EXIT = wx.NewId()
-ID_RTS = wx.NewId()
-ID_DTR = wx.NewId()
 
 NEWLINE_CR = 0
 NEWLINE_LF = 1
 NEWLINE_CRLF = 2
 
-NEWLINE_CR = 0
-NEWLINE_LF = 1
-NEWLINE_CRLF = 2
-ID_CLEAR = wx.NewId()
-ID_SAVEAS = wx.NewId()
-ID_SETTINGS = wx.NewId()
-ID_TERM = wx.NewId()
-ID_EXIT = wx.NewId()
-ID_RTS = wx.NewId()
-ID_DTR = wx.NewId()
 
 #black #FFFF00 
 #orange #FF9933
@@ -59,33 +52,35 @@ ID_DTR = wx.NewId()
 #vert #07cc1e
 #jaune #f0f20f
 #bleu foncé #434885
+
+
 th_dark = [
-        '#f0f20f', #strings editor 0 
-        '#07cc1e', #class editor 1
-        '#ea2cd8', #word editor 2
-        '#00ffdf', #character editor 3
-        '#07cc1e', #def editor 4
-        '#ea2cd8', #decorator editor 5
-        '#FFFFFF', #default editor 6
-        '#FFFFFF', #identifier editor 7
-        '#FF9933', #Number editor 8
-        '#ea2cd8', #Operator editor 9
-        wx.YELLOW, #str EOL editor 11
-        '#f0f20f', #triple editor 10
-        '#f0f20f', #triple double editor 12
-        '#ea2cd8', #word 2 13
-        '#434885', #CommentLine 14
-        '#f0f20f', #Comment block + strings 15
+        '#f0f20f', #:strings editor 0 
+        '#07cc1e', #:class editor 1
+        '#ea2cd8', #:word editor 2
+        '#00ffdf', #:character editor 3
+        '#07cc1e', #:def editor 4
+        '#ea2cd8', #:decorator editor 5
+        '#FFFFFF', #:default editor 6
+        '#FFFFFF', #:identifier editor 7
+        '#FF9933', #:Number editor 8
+        '#ea2cd8', #:Operator editor 9
+        wx.YELLOW, #:str EOL editor 11
+        '#f0f20f', #:triple editor 10
+        '#f0f20f', #:triple double editor 12
+        '#ea2cd8', #:word 2 13
+        '#434885', #:CommentLine 14
+        '#f0f20f', #:Comment block + strings 15
         ]
 
-frame_dark = ["Black", #Background
-           "White", #font linenumber
-           "Grey", #Background for Tree Ctrl
-           "grey" ,#Back Tab Area
-           "grey",#DCPaint
-           "black", #DcPaint
-           "white", #Active tab text
-           "black", #Non active tab text
+frame_dark = ["Black", #:Background
+           "White", #:font linenumber
+           "Grey", #:Background for Tree Ctrl
+           "grey" ,#:Back Tab Area
+           "grey",#:DCPaint
+           "black", #:DcPaint
+           "white", #:Active tab text
+           "black", #:Non active tab text
            ]
 
 th_light = [
@@ -128,11 +123,13 @@ th_astro = [
 ]
 frame_astro = ["White", "Black"]
 
+#: Themes lists with sub_themes[lexer, frames]
 themes = [[th_dark, frame_dark],
           [th_light, frame_light],
           [th_astro, frame_astro]
           ]
  
+#: List about lexer styles
 py_style = [
             wx.stc.STC_P_STRING,
             wx.stc.STC_P_CLASSNAME,
@@ -152,6 +149,7 @@ py_style = [
             wx.stc.STC_P_COMMENTBLOCK,
             ]
 
+#: List about stc.editwindow styles
 stc_style = [stc.STC_STYLE_BRACEBAD,
              stc.STC_STYLE_BRACELIGHT,
              stc.STC_STYLE_CALLTIP,

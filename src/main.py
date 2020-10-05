@@ -2,52 +2,11 @@ from Packages import *
 from menus import *
 from panels import *
 from Serial import *
-from InitConfig import Preferences
 from Constantes import *
+from Utilitaries import *
+from Shortcuts import InitShortcuts
 
 #TODO: change focus when new editor tab
-
-def InitShortcuts(frame):
-    """Initiate shortcuts of the Application with wx.Accelerator Table
-    
-        :param frame: parent class to bind events)
-        :Type frame: MainWindow()
-    """
-    def InitF6(frame):
-        """F6 to navigate between regions
-
-        :param frame: see InitShorcuts->param
-        :type frame: idem
-        :return: entrie(here tuple) for AcceleratorTable
-        :rtype: tuple(int, int, int)
-        """        
-        frame.Bind(wx.EVT_MENU, frame.OnChangeFocus, id=wx.ID_MOVE)
-        return (wx.ACCEL_NORMAL,  wx.WXK_F6, wx.ID_MOVE)
-
-    def InitCTRL_plus(frame):
-        """Ctrl + = to zoom on the editor
-
-        :param frame: see InitShorcuts->param
-        :type frame: idem
-        :return: entrie(here tuple) for AcceleratorTable
-        :rtype: tuple(int, int, int)
-        """
-        frame.Bind(wx.EVT_MENU, frame.OnZoomIn, id=wx.ID_ZOOM_IN)
-        return (wx.ACCEL_CTRL,  ord('='), wx.ID_ZOOM_IN)        
-
-    def InitCTRL_moins(frame):
-        """Ctrl + - to zoom on the editor
-
-        :param frame: see InitShorcuts->param
-        :type frame: idem
-        :return: entrie(here tuple) for AcceleratorTable
-        :rtype: tuple(int, int, int)
-        """
-        frame.Bind(wx.EVT_MENU, frame.OnZoomOut, id=wx.ID_ZOOM_OUT)
-        return (wx.ACCEL_CTRL,  ord('-'), wx.ID_ZOOM_OUT)        
-
-    accel_tbl = wx.AcceleratorTable([InitF6(frame), InitCTRL_plus(frame), InitCTRL_moins(frame)])
-    frame.SetAcceleratorTable(accel_tbl)
 
 class MainWindow(wx.Frame):
     """MainWindow of the app which will contains all the children classes and custom functions
@@ -78,10 +37,12 @@ class MainWindow(wx.Frame):
         self.recvdata=""
         self.show_cmd = True
         self.connected = False
+        self.Shell_text = ""
+        self.get_cmd = False
+        self.cmd_return = ""
         #####
         self.who_is_focus = 0
         self.top_menu = Init_Top_Menu(self)
-        self.preferences = Preferences(self)
         self.statusbar = MyStatusBar(self)
         self.serial_manager = ManageConnection(self)
         self.voice_on = True
@@ -92,7 +53,7 @@ class MainWindow(wx.Frame):
         self.__attach_events()
          
     def __attach_events(self):
-        self.Bind(EVT_SERIALRX, self.OnSerialRead)
+        #self.Bind(EVT_SERIALRX, self.OnSerialRead)
         self.Shell.Bind(wx.EVT_CHAR, self.OnKey)
 
     def StartThread(self):
@@ -124,35 +85,62 @@ class MainWindow(wx.Frame):
         char = chr(code)
         self.serial.write(char.encode('UTF-8', 'replace'))
 
-    def OnSerialRead(self, event):
+    def ReadCmd(self, data):
+        """Get the return of the cmd sent to the MicroPython card
+
+        :param data: The commande sent
+        :type data: str
+        :return: the return of the command sent
+        :rtype: str
+        """
+        b = self.serial.read(self.serial.in_waiting or 1)
+        self.is_data = False
+        if b:
+            self.is_data  = True
+            # newline transformation
+            if self.settings.newline == NEWLINE_CR:
+                b = b.replace(b'\r', b'\n')
+            elif self.settings.newline == NEWLINE_LF:
+                pass
+            elif self.settings.newline == NEWLINE_CRLF:
+                b = b.replace(b'\r\n', b'\n')
+        self.OnSerialRead(b)
+        return GetCmdReturn(self.Shell_text, data)
+
+    def OnSerialRead(self, data):
         """Handle input from the serial port."""
-        data = event.data
-        if event.data == "not_show_cmd":
-            self.show_cmd = False
-            return
-        elif event.data == "show_cmd":
-            self.show_cmd = True
-            return
-        print("Text red = " + data.decode('UTF-8', 'replace'))
+        print(data)
+        #data = event
+        
         if data == b'\x08': #backspace
             txt = self.Shell.GetValue()
             cursor = self.Shell.GetInsertionPoint()
             self.Shell.SetValue(txt[:-1])
+            self.Shell_text = self.Shell_text[:-1]
             self.Shell.SetInsertionPoint(cursor)
+            return
         elif data == b'\x1b[K':
-            pass
+            return
+        if type(data) is bytes:
+            print("Text red = " + data.decode('UTF-8', 'replace'))
         else:
-            if self.show_cmd == True:
-                self.Shell.AppendText(event.data.decode('UTF-8', 'ignore'))
+            print("Text red = " + data)
+    
+        self.Shell_text += data.decode('UTF-8', 'ignore')
+        if self.show_cmd == True:
+            self.Shell.AppendText(data.decode('UTF-8', 'ignore'))
 
     def ComPortThread(self):
         """\
         Thread that handles the incoming traffic. Does the basic input
-        transformation (newlines) and generates an SerialRxEvent
+        transformation (newlines) and call an OnSerialRead
         """
         while self.alive.isSet():
+            #print("J'y passe")
             b = self.serial.read(self.serial.in_waiting or 1)
-            if b:
+            self.is_data = False
+            if b and b != b'\x00':
+                self.is_data  = True
                 # newline transformation
                 if self.settings.newline == NEWLINE_CR:
                     b = b.replace(b'\r', b'\n')
@@ -160,11 +148,14 @@ class MainWindow(wx.Frame):
                     pass
                 elif self.settings.newline == NEWLINE_CRLF:
                     b = b.replace(b'\r\n', b'\n')
-                event = SerialRxEvent(self.GetId(), b)
-                self.GetEventHandler().AddPendingEvent(event)
+                self.OnSerialRead(b)
 
     def ChangeStatus(self, evt):
-        print("SALUT MON POTE")
+        """Actualize the Status Bar
+
+        :param evt: Event binded to trigger the function
+        :type evt: wx.Event https://wxpython.org/Phoenix/docs/html/wx.Event.html
+        """
         page = self.MyNotebook.GetCurrentPage()
         line = page.GetCurrentLine()
         margin = page.GetLineIndentation(line)
@@ -175,8 +166,8 @@ class MainWindow(wx.Frame):
     def OnChangeFocus(self, event):
         """Allow to navigate in the differents region of the Frame after an event
 
-        :param event: Passive arg but important for binding events
-        :type event: None
+        :param evt: Event binded to trigger the function
+        :type evt: wx.Event https://wxpython.org/Phoenix/docs/html/wx.Event.html
         """
         widgets = [self.FileTree, self.MyNotebook.GetCurrentPage(), self.Shell]
         if self.who_is_focus == 1 and widgets[self.who_is_focus] == None:
@@ -190,6 +181,11 @@ class MainWindow(wx.Frame):
             self.who_is_focus = 0
     
     def OnZoomIn(self, evt):
+        """Zoom On which affects the EditWindow panel
+
+        :param evt: Event binded to trigger the function
+        :type evt: wx.Event https://wxpython.org/Phoenix/docs/html/wx.Event.html
+        """
         page = self.MyNotebook.GetCurrentPage()
         if page != None:
             page.ZoomIn()
@@ -197,11 +193,24 @@ class MainWindow(wx.Frame):
             self.Shell.ZoomIn()
 
     def OnZoomOut(self, evt):
+        """Zoom Out which affects the EditWindow panel
+
+        :param evt: Event binded to trigger the function
+        :type evt: wx.Event https://wxpython.org/Phoenix/docs/html/wx.Event.html
+        """
         page = self.MyNotebook.GetCurrentPage()
         if page != None:
             page.ZoomOut()
         if self.Shell.HasFocus() == True:
             self.Shell.ZoomOut()
+
+    def OnStatus(self, evt):
+        """Set the Focus on the Status Bar
+
+        :param evt: Event binded to trigger the function
+        :type evt: wx.Event https://wxpython.org/Phoenix/docs/html/wx.Event.html
+        """
+        self.statusbar.SetFocus()
             
 class Myapp(wx.App):
     """Minimal class to launch the app

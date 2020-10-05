@@ -1,17 +1,9 @@
+"""
+Module which has functions and classes to manage the connection and communication with the card
+"""
+
 from Packages import wx, os, time
 from Constantes import *
-
-class SerialRxEvent(wx.PyCommandEvent):
-    eventType = SERIALRX
-
-    def __init__(self, windowID, data):
-        wx.PyCommandEvent.__init__(self, self.eventType, windowID)
-        self.data = data
-        print("DATA = ", end='')
-        print(data)
-
-    def Clone(self):
-        return self.__class__(self.GetId(), self.data)
 
 class TerminalSetup:
     """
@@ -24,18 +16,36 @@ class TerminalSetup:
         self.newline = NEWLINE_CRLF
 
 class ManageConnection():
+    """
+    Class with useful methods to manage Connection related with the frame
+    """
+    
     def __init__(self, frame):
+        """Constructor for ManageConnection class
+
+        :param frame: The MainWindow to get some properties
+        :type frame: MainWindow class
+        """
+        
         self.frame = frame
         self.last_cmd = ""
-    
-    def put_cmd(self, msg):
-        #TODO: Ajouter une condition pour le exec
-        #if (len(msg) > 4) and msg[:4] == "exec":
-        #    self.last_cmd = "exec"            
+
+    def put_cmd(self, msg): 
+        """Send a Python command to the connected card
+
+        :param msg: command to send
+        :type msg: str
+        """
+                  
         self.frame.serial.write(msg.encode('utf-8'))
         self.frame.serial.flush()
     
     def downloadRun(self, filename):
+        """Execute the file gived in params on the MicroPython card
+
+        :param filename: the path of the file to execute(root is the device connected)
+        :type filename: str
+        """
         time.sleep(1)
         self.put_cmd('\x03')
         self.put_cmd("exec(open(\'%s\').read(),globals())\r\n"%str(filename))
@@ -58,10 +68,7 @@ class ManageConnection():
         except Exception as e:
             print("Error file : %s"%(e))
         self.put_cmd('\x03')
-        
-        event = SerialRxEvent(self.frame.GetId(), "not_show_cmd")
-        self.frame.GetEventHandler().AddPendingEvent(event)
-        
+        self.frame.show_cmd = False
         startTime=time.time()
         self.frame.Shell.AppendText("Ready to download this file,please wait!")
         time.sleep(1)
@@ -69,7 +76,6 @@ class ManageConnection():
         self.put_cmd(cmd)
         time.sleep(1)
         #self.frame.Shell.SetValue("Ready to download this file,please wait!\n...")
-        
         ##################
         #write(msg)
         ##################

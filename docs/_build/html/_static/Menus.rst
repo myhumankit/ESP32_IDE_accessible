@@ -1,7 +1,7 @@
-Menus module
+menus module
 ============
 
-.. automodule:: Menus
+.. automodule:: menus
    :members:
    :undoc-members:
    :show-inheritance:

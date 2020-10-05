@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Utilitaries module &mdash; BlindIDE  documentation</title>
+  <title>Utilitaries module &mdash; IDE_MicroPython_accessible  documentation</title>
   
 
   
@@ -36,7 +36,8 @@
     
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="prev" title="Panels module" href="Panels.html" /> 
+    <link rel="next" title="api module" href="api.html" />
+    <link rel="prev" title="Shortcuts module" href="Shortcuts.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -50,7 +51,7 @@
           
 
           
-            <a href="index.html" class="icon icon-home" alt="Documentation Home"> BlindIDE
+            <a href="index.html" class="icon icon-home" alt="Documentation Home"> IDE_MicroPython_accessible
           
 
           
@@ -83,13 +84,20 @@
             
               <p class="caption"><span class="caption-text">Contents:</span></p>
 <ul class="current">
-<li class="toctree-l1 current"><a class="reference internal" href="modules.html">src</a><ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">IDE_MicroPython_Accessible</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="Constantes.html">Constantes module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="Editor_Style.html">Editor_Style module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="FileTree.html">FileTree module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="Find_Replace.html">Find_Replace module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="Main.html">Main module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="Menus.html">Menus module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="Panels.html">Panels module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Packages.html">Packages module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Serial.html">Serial module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Shortcuts.html">Shortcuts module</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">Utilitaries module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api.html">api module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="main.html">main module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="menus.html">menus module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="panels.html">panels module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="wxSerialConfigDialog.html">wxSerialConfigDialog module</a></li>
 </ul>
 </li>
 </ul>
@@ -107,7 +115,7 @@
       <nav class="wy-nav-top" aria-label="top navigation">
         
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="index.html">BlindIDE</a>
+          <a href="index.html">IDE_MicroPython_accessible</a>
         
       </nav>
 
@@ -138,7 +146,7 @@
     
       <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
         
-          <li><a href="modules.html">src</a> &raquo;</li>
+          <li><a href="modules.html">IDE_MicroPython_Accessible</a> &raquo;</li>
         
       <li>Utilitaries module</li>
     
@@ -168,14 +176,93 @@
 <col style="width: 90%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="#Utilitaries.load_img" title="Utilitaries.load_img"><code class="xref py py-obj docutils literal notranslate"><span class="pre">load_img</span></code></a>(path)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#Utilitaries.ConnectSerial" title="Utilitaries.ConnectSerial"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ConnectSerial</span></code></a>(self)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#Utilitaries.GetCmdReturn" title="Utilitaries.GetCmdReturn"><code class="xref py py-obj docutils literal notranslate"><span class="pre">GetCmdReturn</span></code></a>(shell_text, cmd)</p></td>
+<td><p>Return the result of a command launched in MicroPython</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#Utilitaries.SendCmdAsync" title="Utilitaries.SendCmdAsync"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SendCmdAsync</span></code></a>(parent, cmd)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#Utilitaries.createReflushTree" title="Utilitaries.createReflushTree"><code class="xref py py-obj docutils literal notranslate"><span class="pre">createReflushTree</span></code></a>(frame, root, msg)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#Utilitaries.getFileTree" title="Utilitaries.getFileTree"><code class="xref py py-obj docutils literal notranslate"><span class="pre">getFileTree</span></code></a>(frame, dir)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#Utilitaries.load_img" title="Utilitaries.load_img"><code class="xref py py-obj docutils literal notranslate"><span class="pre">load_img</span></code></a>(path)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#Utilitaries.reflushTree" title="Utilitaries.reflushTree"><code class="xref py py-obj docutils literal notranslate"><span class="pre">reflushTree</span></code></a>(frame, data)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#Utilitaries.speak" title="Utilitaries.speak"><code class="xref py py-obj docutils literal notranslate"><span class="pre">speak</span></code></a>(frame, txt)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#Utilitaries.treeModel" title="Utilitaries.treeModel"><code class="xref py py-obj docutils literal notranslate"><span class="pre">treeModel</span></code></a>(frame)</p></td>
 <td><p></p></td>
 </tr>
 </tbody>
 </table>
 <dl class="py function">
+<dt id="Utilitaries.ConnectSerial">
+<code class="sig-prename descclassname">Utilitaries.</code><code class="sig-name descname">ConnectSerial</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">self</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Utilitaries.ConnectSerial" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt id="Utilitaries.GetCmdReturn">
+<code class="sig-prename descclassname">Utilitaries.</code><code class="sig-name descname">GetCmdReturn</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">shell_text</span></em>, <em class="sig-param"><span class="n">cmd</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Utilitaries.GetCmdReturn" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the result of a command launched in MicroPython</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>shell_text</strong> (<em>str</em>) – The text catched on the shell panel</p></li>
+<li><p><strong>cmd</strong> (<em>str</em>) – The cmd return asked</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>the return of the command searched</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="Utilitaries.SendCmdAsync">
+<em class="property">async </em><code class="sig-prename descclassname">Utilitaries.</code><code class="sig-name descname">SendCmdAsync</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">parent</span></em>, <em class="sig-param"><span class="n">cmd</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Utilitaries.SendCmdAsync" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt id="Utilitaries.createReflushTree">
+<code class="sig-prename descclassname">Utilitaries.</code><code class="sig-name descname">createReflushTree</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">frame</span></em>, <em class="sig-param"><span class="n">root</span></em>, <em class="sig-param"><span class="n">msg</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Utilitaries.createReflushTree" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt id="Utilitaries.getFileTree">
+<code class="sig-prename descclassname">Utilitaries.</code><code class="sig-name descname">getFileTree</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">frame</span></em>, <em class="sig-param"><span class="n">dir</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Utilitaries.getFileTree" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
 <dt id="Utilitaries.load_img">
 <code class="sig-prename descclassname">Utilitaries.</code><code class="sig-name descname">load_img</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">path</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Utilitaries.load_img" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt id="Utilitaries.reflushTree">
+<code class="sig-prename descclassname">Utilitaries.</code><code class="sig-name descname">reflushTree</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">frame</span></em>, <em class="sig-param"><span class="n">data</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Utilitaries.reflushTree" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt id="Utilitaries.speak">
+<code class="sig-prename descclassname">Utilitaries.</code><code class="sig-name descname">speak</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">frame</span></em>, <em class="sig-param"><span class="n">txt</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Utilitaries.speak" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt id="Utilitaries.treeModel">
+<code class="sig-prename descclassname">Utilitaries.</code><code class="sig-name descname">treeModel</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">frame</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Utilitaries.treeModel" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </div>
@@ -188,8 +275,10 @@
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
+        <a href="api.html" class="btn btn-neutral float-right" title="api module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
-        <a href="Panels.html" class="btn btn-neutral float-left" title="Panels module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+        <a href="Shortcuts.html" class="btn btn-neutral float-left" title="Shortcuts module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   

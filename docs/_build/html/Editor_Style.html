@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Editor_Style module &mdash; BlindIDE  documentation</title>
+  <title>Editor_Style module &mdash; IDE_MicroPython_accessible  documentation</title>
   
 
   
@@ -36,8 +36,8 @@
     
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Find_Replace module" href="Find_Replace.html" />
-    <link rel="prev" title="src" href="modules.html" /> 
+    <link rel="next" title="FileTree module" href="FileTree.html" />
+    <link rel="prev" title="Constantes module" href="Constantes.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -51,7 +51,7 @@
           
 
           
-            <a href="index.html" class="icon icon-home" alt="Documentation Home"> BlindIDE
+            <a href="index.html" class="icon icon-home" alt="Documentation Home"> IDE_MicroPython_accessible
           
 
           
@@ -84,13 +84,20 @@
             
               <p class="caption"><span class="caption-text">Contents:</span></p>
 <ul class="current">
-<li class="toctree-l1 current"><a class="reference internal" href="modules.html">src</a><ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">IDE_MicroPython_Accessible</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="Constantes.html">Constantes module</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">Editor_Style module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="FileTree.html">FileTree module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="Find_Replace.html">Find_Replace module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="Main.html">Main module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="Menus.html">Menus module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="Panels.html">Panels module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Packages.html">Packages module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Serial.html">Serial module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Shortcuts.html">Shortcuts module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="Utilitaries.html">Utilitaries module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api.html">api module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="main.html">main module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="menus.html">menus module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="panels.html">panels module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="wxSerialConfigDialog.html">wxSerialConfigDialog module</a></li>
 </ul>
 </li>
 </ul>
@@ -108,7 +115,7 @@
       <nav class="wy-nav-top" aria-label="top navigation">
         
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="index.html">BlindIDE</a>
+          <a href="index.html">IDE_MicroPython_accessible</a>
         
       </nav>
 
@@ -139,7 +146,7 @@
     
       <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
         
-          <li><a href="modules.html">src</a> &raquo;</li>
+          <li><a href="modules.html">IDE_MicroPython_Accessible</a> &raquo;</li>
         
       <li>Editor_Style module</li>
     
@@ -162,6 +169,7 @@
             
   <div class="section" id="module-Editor_Style">
 <span id="editor-style-module"></span><h1>Editor_Style module<a class="headerlink" href="#module-Editor_Style" title="Permalink to this headline">¶</a></h1>
+<p>Module to Customize Panels with differents themes</p>
 <p><strong>Functions:</strong></p>
 <table class="longtable docutils align-default">
 <colgroup>
@@ -169,48 +177,73 @@
 <col style="width: 90%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="#Editor_Style.Change_Theme" title="Editor_Style.Change_Theme"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Change_Theme</span></code></a>(editor, theme, py_style)</p></td>
-<td><p>Chnage theme of the window</p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#Editor_Style.Custom_Notebook" title="Editor_Style.Custom_Notebook"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Custom_Notebook</span></code></a>(notebook, theme)</p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#Editor_Style.Custom_Tree_Ctrl" title="Editor_Style.Custom_Tree_Ctrl"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Custom_Tree_Ctrl</span></code></a>(tree, theme)</p></td>
-<td><p></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#Editor_Style.Change_Theme" title="Editor_Style.Change_Theme"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Change_Theme</span></code></a>(editor, theme)</p></td>
+<td><p>Change theme of the window</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="#Editor_Style.Init_Editor_base" title="Editor_Style.Init_Editor_base"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Init_Editor_base</span></code></a>(editor)</p></td>
-<td><p>Init settings for Editor</p></td>
+<td><p>Init some settings for Editor Window</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#Editor_Style.change_lexer_pystyle" title="Editor_Style.change_lexer_pystyle"><code class="xref py py-obj docutils literal notranslate"><span class="pre">change_lexer_pystyle</span></code></a>(editor, theme, font)</p></td>
+<td><p>Change lexer python words by applying  the theme and the font gived in parameters</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#Editor_Style.change_lexer_stcstyle" title="Editor_Style.change_lexer_stcstyle"><code class="xref py py-obj docutils literal notranslate"><span class="pre">change_lexer_stcstyle</span></code></a>(editor, theme, font)</p></td>
+<td><p>Change lexer words stc style by applying  the theme and the font gived in parameters</p></td>
 </tr>
 </tbody>
 </table>
 <dl class="py function">
 <dt id="Editor_Style.Change_Theme">
-<code class="sig-prename descclassname">Editor_Style.</code><code class="sig-name descname">Change_Theme</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">editor</span></em>, <em class="sig-param"><span class="n">theme</span></em>, <em class="sig-param"><span class="n">py_style</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Editor_Style.Change_Theme" title="Permalink to this definition">¶</a></dt>
-<dd><p>Chnage theme of the window</p>
+<code class="sig-prename descclassname">Editor_Style.</code><code class="sig-name descname">Change_Theme</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">editor</span></em>, <em class="sig-param"><span class="n">theme</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Editor_Style.Change_Theme" title="Permalink to this definition">¶</a></dt>
+<dd><p>Change theme of the window</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>editor</strong> (<em>[</em><em>type</em><em>]</em>) – editwindow</p>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>editor</strong> (<em>wx.py.editwindow.EditWindow</em>) – EditWindow to customize</p></li>
+<li><p><strong>theme</strong> (<em>list</em>) – Theme to apply on the EditWindow</p></li>
+</ul>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="py function">
-<dt id="Editor_Style.Custom_Notebook">
-<code class="sig-prename descclassname">Editor_Style.</code><code class="sig-name descname">Custom_Notebook</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">notebook</span></em>, <em class="sig-param"><span class="n">theme</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Editor_Style.Custom_Notebook" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py function">
-<dt id="Editor_Style.Custom_Tree_Ctrl">
-<code class="sig-prename descclassname">Editor_Style.</code><code class="sig-name descname">Custom_Tree_Ctrl</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">tree</span></em>, <em class="sig-param"><span class="n">theme</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Editor_Style.Custom_Tree_Ctrl" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py function">
 <dt id="Editor_Style.Init_Editor_base">
 <code class="sig-prename descclassname">Editor_Style.</code><code class="sig-name descname">Init_Editor_base</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">editor</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Editor_Style.Init_Editor_base" title="Permalink to this definition">¶</a></dt>
-<dd><p>Init settings for Editor</p>
+<dd><p>Init some settings for Editor Window</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>editor</strong> (<em>[</em><em>type</em><em>]</em>) – editorWindow</p>
+<dd class="field-odd"><p><strong>editor</strong> (<em>wx.py.editwindow.EditWindow</em>) – editorWindow</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="Editor_Style.change_lexer_pystyle">
+<code class="sig-prename descclassname">Editor_Style.</code><code class="sig-name descname">change_lexer_pystyle</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">editor</span></em>, <em class="sig-param"><span class="n">theme</span></em>, <em class="sig-param"><span class="n">font</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Editor_Style.change_lexer_pystyle" title="Permalink to this definition">¶</a></dt>
+<dd><p>Change lexer python words by applying 
+the theme and the font gived in parameters</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>editor</strong> (<em>wx.py.editwindow.EditWindow</em>) – EditWindow to apply the style</p></li>
+<li><p><strong>theme</strong> (<em>list</em>) – Theme to apply on the EditWindow python lexer</p></li>
+<li><p><strong>font</strong> (<em>wx.Font</em>) – font to apply on lexer</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="Editor_Style.change_lexer_stcstyle">
+<code class="sig-prename descclassname">Editor_Style.</code><code class="sig-name descname">change_lexer_stcstyle</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">editor</span></em>, <em class="sig-param"><span class="n">theme</span></em>, <em class="sig-param"><span class="n">font</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Editor_Style.change_lexer_stcstyle" title="Permalink to this definition">¶</a></dt>
+<dd><p>Change lexer words stc style by applying 
+the theme and the font gived in parameters</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>editor</strong> (<em>wx.py.editwindow.EditWindow</em>) – EditWindow to apply the style</p></li>
+<li><p><strong>theme</strong> (<em>list</em>) – Theme to apply on the EditWindow lexer</p></li>
+<li><p><strong>font</strong> (<em>wx.Font</em>) – font to apply on lexer</p></li>
+</ul>
 </dd>
 </dl>
 </dd></dl>
@@ -225,10 +258,10 @@
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="Find_Replace.html" class="btn btn-neutral float-right" title="Find_Replace module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="FileTree.html" class="btn btn-neutral float-right" title="FileTree module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="modules.html" class="btn btn-neutral float-left" title="src" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="Constantes.html" class="btn btn-neutral float-left" title="Constantes module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   

@@ -1,7 +1,7 @@
-Panels module
+panels module
 =============
 
-.. automodule:: Panels
+.. automodule:: panels
    :members:
    :undoc-members:
    :show-inheritance:

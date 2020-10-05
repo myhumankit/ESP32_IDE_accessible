@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Main module &mdash; BlindIDE  documentation</title>
+  <title>main module &mdash; IDE_MicroPython_accessible  documentation</title>
   
 
   
@@ -36,8 +36,8 @@
     
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Menus module" href="Menus.html" />
-    <link rel="prev" title="Find_Replace module" href="Find_Replace.html" /> 
+    <link rel="next" title="menus module" href="menus.html" />
+    <link rel="prev" title="api module" href="api.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -51,7 +51,7 @@
           
 
           
-            <a href="index.html" class="icon icon-home" alt="Documentation Home"> BlindIDE
+            <a href="index.html" class="icon icon-home" alt="Documentation Home"> IDE_MicroPython_accessible
           
 
           
@@ -84,13 +84,20 @@
             
               <p class="caption"><span class="caption-text">Contents:</span></p>
 <ul class="current">
-<li class="toctree-l1 current"><a class="reference internal" href="modules.html">src</a><ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">IDE_MicroPython_Accessible</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="Constantes.html">Constantes module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="Editor_Style.html">Editor_Style module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="FileTree.html">FileTree module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="Find_Replace.html">Find_Replace module</a></li>
-<li class="toctree-l2 current"><a class="current reference internal" href="#">Main module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="Menus.html">Menus module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="Panels.html">Panels module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Packages.html">Packages module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Serial.html">Serial module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Shortcuts.html">Shortcuts module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="Utilitaries.html">Utilitaries module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api.html">api module</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">main module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="menus.html">menus module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="panels.html">panels module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="wxSerialConfigDialog.html">wxSerialConfigDialog module</a></li>
 </ul>
 </li>
 </ul>
@@ -108,7 +115,7 @@
       <nav class="wy-nav-top" aria-label="top navigation">
         
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="index.html">BlindIDE</a>
+          <a href="index.html">IDE_MicroPython_accessible</a>
         
       </nav>
 
@@ -139,15 +146,15 @@
     
       <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
         
-          <li><a href="modules.html">src</a> &raquo;</li>
+          <li><a href="modules.html">IDE_MicroPython_Accessible</a> &raquo;</li>
         
-      <li>Main module</li>
+      <li>main module</li>
     
     
       <li class="wy-breadcrumbs-aside">
         
             
-            <a href="_sources/Main.rst.txt" rel="nofollow"> View page source</a>
+            <a href="_sources/main.rst.txt" rel="nofollow"> View page source</a>
           
         
       </li>
@@ -160,8 +167,8 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="module-Main">
-<span id="main-module"></span><h1>Main module<a class="headerlink" href="#module-Main" title="Permalink to this headline">¶</a></h1>
+  <div class="section" id="module-main">
+<span id="main-module"></span><h1>main module<a class="headerlink" href="#module-main" title="Permalink to this headline">¶</a></h1>
 <p><strong>Functions:</strong></p>
 <table class="longtable docutils align-default">
 <colgroup>
@@ -169,46 +176,79 @@
 <col style="width: 90%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">Change_Theme</span></code>(editor, theme, py_style)</p></td>
-<td><p>Chnage theme of the window</p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">Change_Theme</span></code>(editor, theme)</p></td>
+<td><p>Change theme of the window</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">Custom_Notebook</span></code>(notebook, theme)</p></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">CheckPySyntax</span></code>([prog, args])</p></td>
+<td><p>Entry point for the script “pyflakes”.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">ConnectSerial</span></code>(self)</p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">Custom_Tree_Ctrl</span></code>(tree, theme)</p></td>
-<td><p></p></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">GetCmdReturn</span></code>(shell_text, cmd)</p></td>
+<td><p>Return the result of a command launched in MicroPython</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#Main.InitShortcuts" title="Main.InitShortcuts"><code class="xref py py-obj docutils literal notranslate"><span class="pre">InitShortcuts</span></code></a>(frame)</p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">InitShortcuts</span></code>(frame)</p></td>
 <td><p>Initiate shortcuts of the Application with wx.Accelerator Table</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">Init_Editor_base</span></code>(editor)</p></td>
-<td><p>Init settings for Editor</p></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">Init_Editor_base</span></code>(editor)</p></td>
+<td><p>Init some settings for Editor Window</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">Init_Panels</span></code>(frame)</p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">Init_Panels</span></code>(frame)</p></td>
 <td><p>Inits the three differents regions(treeCtrl, Notebook, Shell) in the MainWindow</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">Init_ToolBar</span></code>(frame)</p></td>
-<td><p>Inits and place the toolbar</p></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">Init_ToolBar</span></code>(frame)</p></td>
+<td><p>Inits an instance of the customized ToolBar class and places it on the frame</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">Init_Top_Menu</span></code>(frame)</p></td>
-<td><p>Inits and place the top menu</p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">Init_Top_Menu</span></code>(frame)</p></td>
+<td><p>Inits an instance of customized TopMenu class and places it on the frame</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">create_Board_Menu</span></code>()</p></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">MyStatusBar</span></code>(frame)</p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">create_Edit_Menu</span></code>()</p></td>
-<td><p>Inits a Edit menu and his buttons (Copy, Paste, Find,…)</p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">create_File_Menu</span></code>()</p></td>
-<td><p>Inits a File menu and his buttons (Save, Open,…)</p></td>
-</tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">create_Themes_Menu</span></code>()</p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">SendCmdAsync</span></code>(parent, cmd)</p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">create_Tools_Menu</span></code>()</p></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">change_lexer_pystyle</span></code>(editor, theme, font)</p></td>
+<td><p>Change lexer python words by applying  the theme and the font gived in parameters</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">change_lexer_stcstyle</span></code>(editor, theme, font)</p></td>
+<td><p>Change lexer words stc style by applying  the theme and the font gived in parameters</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">createReflushTree</span></code>(frame, root, msg)</p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">load_img</span></code>(path)</p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">create_Edit_Menu</span></code>()</p></td>
+<td><p>Inits a instance of a wx.Menu to create an Edit menu and his buttons (Copy, Paste, Find,…)</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">create_File_Menu</span></code>()</p></td>
+<td><p>Inits a Instance of wx.Menu to create a File menu and his buttons (Save, Open,…)</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">create_Themes_Menu</span></code>()</p></td>
+<td><p>Inits a instance of a wx.Menu to create a Theme menu and his buttons (Copy, Paste, Find,…)</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">create_Tools_Menu</span></code>()</p></td>
+<td><p>Inits a instance of a wx.Menu to create a Tools menu and his buttons (Copy, Paste, Find,…)</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">find_next</span></code>(editor, evt)</p></td>
+<td><p>Useful function to find the next occurence of a word on the EditWindow panel</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">getFileTree</span></code>(frame, dir)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">load_img</span></code>(path)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">reflushTree</span></code>(frame, data)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">replace</span></code>(editor, evt)</p></td>
+<td><p>Useful function to replace a the selected text by an other word on the EditWindow panel</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">speak</span></code>(frame, txt)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">treeModel</span></code>(frame)</p></td>
 <td><p></p></td>
 </tr>
 </tbody>
@@ -220,49 +260,50 @@
 <col style="width: 90%" />
 </colgroup>
 <tbody>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">ChooseWorkspace</span></code>(parent, frame)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">DeviceTree</span></code>(parent, frame, paths, name)</p></td>
+<td><p></p></td>
+</tr>
 <tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">FileTreePanel</span></code>(parent, frame)</p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#Main.MainWindow" title="Main.MainWindow"><code class="xref py py-obj docutils literal notranslate"><span class="pre">MainWindow</span></code></a>(name, size)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#main.MainWindow" title="main.MainWindow"><code class="xref py py-obj docutils literal notranslate"><span class="pre">MainWindow</span></code></a>(name, size)</p></td>
 <td><p>MainWindow of the app which will contains all the children classes and custom functions</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">MyEditor</span></code>(parent)</p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">ManageConnection</span></code>(frame)</p></td>
+<td><p>Class with useful methods to manage Connection related with the frame</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">MyEditor</span></code>(parent, topwindow)</p></td>
 <td><p>Customizable Editor page</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#Main.Myapp" title="Main.Myapp"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Myapp</span></code></a>([redirect, filename, useBestVisual, …])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#main.Myapp" title="main.Myapp"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Myapp</span></code></a>([redirect, filename, useBestVisual, …])</p></td>
 <td><p>Minimal class to launch the app</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">NotebookPanel</span></code>(parent)</p></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">NotebookPanel</span></code>(parent, topwindow)</p></td>
+<td><p>Customized Notebook class</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">ShellPanel</span></code>(parent, frame)</p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">ShellPanel</span></code>(parent)</p></td>
-<td><p></p></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">TerminalSetup</span></code>()</p></td>
+<td><p>Placeholder for various terminal settings.</p></td>
 </tr>
 <tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">ToolBar</span></code>(parent)</p></td>
-<td><p>MOMENT : Derivated class to set A toolbar maybe we’ll erase this derivated class</p></td>
+<td><p>A custom class derivated from wx.ToolBar to access quickly on some commands</p></td>
 </tr>
 <tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">TopMenu</span></code>(parent)</p></td>
-<td><p>TopMenu class which contains the Edit and File Menus</p></td>
+<td><p>TopMenu class derivated of wx.MenuBar which contains the Edit and File Menus</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">WorkspaceTree</span></code>(parent, frame)</p></td>
+<td><p></p></td>
 </tr>
 </tbody>
 </table>
-<dl class="py function">
-<dt id="Main.InitShortcuts">
-<code class="sig-prename descclassname">Main.</code><code class="sig-name descname">InitShortcuts</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">frame</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Main.InitShortcuts" title="Permalink to this definition">¶</a></dt>
-<dd><p>Initiate shortcuts of the Application with wx.Accelerator Table</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>frame</strong> – parent class to bind events)</p>
-</dd>
-<dt class="field-even">Type frame</dt>
-<dd class="field-even"><p>MainWindow()</p>
-</dd>
-</dl>
-</dd></dl>
-
 <dl class="py class">
-<dt id="Main.MainWindow">
-<em class="property">class </em><code class="sig-prename descclassname">Main.</code><code class="sig-name descname">MainWindow</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">name</span></em>, <em class="sig-param"><span class="n">size</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Main.MainWindow" title="Permalink to this definition">¶</a></dt>
+<dt id="main.MainWindow">
+<em class="property">class </em><code class="sig-prename descclassname">main.</code><code class="sig-name descname">MainWindow</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">name</span></em>, <em class="sig-param"><span class="n">size</span></em><span class="sig-paren">)</span><a class="headerlink" href="#main.MainWindow" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">wx._core.Frame</span></code></p>
 <p>MainWindow of the app which will contains all the children classes and custom functions</p>
 <dl class="field-list simple">
@@ -277,43 +318,150 @@
 <col style="width: 90%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="#Main.MainWindow.OnChangeFocus" title="Main.MainWindow.OnChangeFocus"><code class="xref py py-obj docutils literal notranslate"><span class="pre">OnChangeFocus</span></code></a>(event)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#main.MainWindow.ChangeStatus" title="main.MainWindow.ChangeStatus"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ChangeStatus</span></code></a>(evt)</p></td>
+<td><p>Actualize the Status Bar</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#main.MainWindow.ComPortThread" title="main.MainWindow.ComPortThread"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ComPortThread</span></code></a>()</p></td>
+<td><p>Thread that handles the incoming traffic.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#main.MainWindow.OnChangeFocus" title="main.MainWindow.OnChangeFocus"><code class="xref py py-obj docutils literal notranslate"><span class="pre">OnChangeFocus</span></code></a>(event)</p></td>
 <td><p>Allow to navigate in the differents region of the Frame after an event</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#Main.MainWindow.OnZoomIn" title="Main.MainWindow.OnZoomIn"><code class="xref py py-obj docutils literal notranslate"><span class="pre">OnZoomIn</span></code></a>(evt)</p></td>
-<td><p></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#main.MainWindow.OnKey" title="main.MainWindow.OnKey"><code class="xref py py-obj docutils literal notranslate"><span class="pre">OnKey</span></code></a>(event)</p></td>
+<td><p>Key event handler.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#Main.MainWindow.OnZoomOut" title="Main.MainWindow.OnZoomOut"><code class="xref py py-obj docutils literal notranslate"><span class="pre">OnZoomOut</span></code></a>(evt)</p></td>
-<td><p></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#main.MainWindow.OnSerialRead" title="main.MainWindow.OnSerialRead"><code class="xref py py-obj docutils literal notranslate"><span class="pre">OnSerialRead</span></code></a>(data)</p></td>
+<td><p>Handle input from the serial port.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#main.MainWindow.OnStatus" title="main.MainWindow.OnStatus"><code class="xref py py-obj docutils literal notranslate"><span class="pre">OnStatus</span></code></a>(evt)</p></td>
+<td><p>Set the Focus on the Status Bar</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#main.MainWindow.OnZoomIn" title="main.MainWindow.OnZoomIn"><code class="xref py py-obj docutils literal notranslate"><span class="pre">OnZoomIn</span></code></a>(evt)</p></td>
+<td><p>Zoom On which affects the EditWindow panel</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#main.MainWindow.OnZoomOut" title="main.MainWindow.OnZoomOut"><code class="xref py py-obj docutils literal notranslate"><span class="pre">OnZoomOut</span></code></a>(evt)</p></td>
+<td><p>Zoom Out which affects the EditWindow panel</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#main.MainWindow.ReadCmd" title="main.MainWindow.ReadCmd"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ReadCmd</span></code></a>(data)</p></td>
+<td><p>Get the return of the cmd sent to the MicroPython card</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#main.MainWindow.StartThread" title="main.MainWindow.StartThread"><code class="xref py py-obj docutils literal notranslate"><span class="pre">StartThread</span></code></a>()</p></td>
+<td><p>Start the receiver thread</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#main.MainWindow.StopThread" title="main.MainWindow.StopThread"><code class="xref py py-obj docutils literal notranslate"><span class="pre">StopThread</span></code></a>()</p></td>
+<td><p>Stop the receiver thread, wait until it’s finished.</p></td>
 </tr>
 </tbody>
 </table>
 <dl class="py method">
-<dt id="Main.MainWindow.OnChangeFocus">
-<code class="sig-name descname">OnChangeFocus</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">event</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Main.MainWindow.OnChangeFocus" title="Permalink to this definition">¶</a></dt>
-<dd><p>Allow to navigate in the differents region of the Frame after an event</p>
+<dt id="main.MainWindow.ChangeStatus">
+<code class="sig-name descname">ChangeStatus</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">evt</span></em><span class="sig-paren">)</span><a class="headerlink" href="#main.MainWindow.ChangeStatus" title="Permalink to this definition">¶</a></dt>
+<dd><p>Actualize the Status Bar</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>event</strong> (<em>None</em>) – Passive arg but important for binding events</p>
+<dd class="field-odd"><p><strong>evt</strong> (wx.Event <a class="reference external" href="https://wxpython.org/Phoenix/docs/html/wx.Event.html">https://wxpython.org/Phoenix/docs/html/wx.Event.html</a>) – Event binded to trigger the function</p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="py method">
-<dt id="Main.MainWindow.OnZoomIn">
-<code class="sig-name descname">OnZoomIn</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">evt</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Main.MainWindow.OnZoomIn" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dt id="main.MainWindow.ComPortThread">
+<code class="sig-name descname">ComPortThread</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#main.MainWindow.ComPortThread" title="Permalink to this definition">¶</a></dt>
+<dd><p>Thread that handles the incoming traffic. Does the basic input
+transformation (newlines) and call an OnSerialRead</p>
+</dd></dl>
 
 <dl class="py method">
-<dt id="Main.MainWindow.OnZoomOut">
-<code class="sig-name descname">OnZoomOut</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">evt</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Main.MainWindow.OnZoomOut" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dt id="main.MainWindow.OnChangeFocus">
+<code class="sig-name descname">OnChangeFocus</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">event</span></em><span class="sig-paren">)</span><a class="headerlink" href="#main.MainWindow.OnChangeFocus" title="Permalink to this definition">¶</a></dt>
+<dd><p>Allow to navigate in the differents region of the Frame after an event</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>evt</strong> (wx.Event <a class="reference external" href="https://wxpython.org/Phoenix/docs/html/wx.Event.html">https://wxpython.org/Phoenix/docs/html/wx.Event.html</a>) – Event binded to trigger the function</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="main.MainWindow.OnKey">
+<code class="sig-name descname">OnKey</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">event</span></em><span class="sig-paren">)</span><a class="headerlink" href="#main.MainWindow.OnKey" title="Permalink to this definition">¶</a></dt>
+<dd><p>Key event handler. If the key is in the ASCII range, write it to the
+serial port. Newline handling is also done here.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="main.MainWindow.OnSerialRead">
+<code class="sig-name descname">OnSerialRead</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">data</span></em><span class="sig-paren">)</span><a class="headerlink" href="#main.MainWindow.OnSerialRead" title="Permalink to this definition">¶</a></dt>
+<dd><p>Handle input from the serial port.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="main.MainWindow.OnStatus">
+<code class="sig-name descname">OnStatus</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">evt</span></em><span class="sig-paren">)</span><a class="headerlink" href="#main.MainWindow.OnStatus" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the Focus on the Status Bar</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>evt</strong> (wx.Event <a class="reference external" href="https://wxpython.org/Phoenix/docs/html/wx.Event.html">https://wxpython.org/Phoenix/docs/html/wx.Event.html</a>) – Event binded to trigger the function</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="main.MainWindow.OnZoomIn">
+<code class="sig-name descname">OnZoomIn</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">evt</span></em><span class="sig-paren">)</span><a class="headerlink" href="#main.MainWindow.OnZoomIn" title="Permalink to this definition">¶</a></dt>
+<dd><p>Zoom On which affects the EditWindow panel</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>evt</strong> (wx.Event <a class="reference external" href="https://wxpython.org/Phoenix/docs/html/wx.Event.html">https://wxpython.org/Phoenix/docs/html/wx.Event.html</a>) – Event binded to trigger the function</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="main.MainWindow.OnZoomOut">
+<code class="sig-name descname">OnZoomOut</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">evt</span></em><span class="sig-paren">)</span><a class="headerlink" href="#main.MainWindow.OnZoomOut" title="Permalink to this definition">¶</a></dt>
+<dd><p>Zoom Out which affects the EditWindow panel</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>evt</strong> (wx.Event <a class="reference external" href="https://wxpython.org/Phoenix/docs/html/wx.Event.html">https://wxpython.org/Phoenix/docs/html/wx.Event.html</a>) – Event binded to trigger the function</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="main.MainWindow.ReadCmd">
+<code class="sig-name descname">ReadCmd</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">data</span></em><span class="sig-paren">)</span><a class="headerlink" href="#main.MainWindow.ReadCmd" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the return of the cmd sent to the MicroPython card</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>data</strong> (<em>str</em>) – The commande sent</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>the return of the command sent</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="main.MainWindow.StartThread">
+<code class="sig-name descname">StartThread</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#main.MainWindow.StartThread" title="Permalink to this definition">¶</a></dt>
+<dd><p>Start the receiver thread</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="main.MainWindow.StopThread">
+<code class="sig-name descname">StopThread</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#main.MainWindow.StopThread" title="Permalink to this definition">¶</a></dt>
+<dd><p>Stop the receiver thread, wait until it’s finished.</p>
+</dd></dl>
 
 </dd></dl>
 
 <dl class="py class">
-<dt id="Main.Myapp">
-<em class="property">class </em><code class="sig-prename descclassname">Main.</code><code class="sig-name descname">Myapp</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">redirect</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">filename</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">useBestVisual</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">clearSigInt</span><span class="o">=</span><span class="default_value">True</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Main.Myapp" title="Permalink to this definition">¶</a></dt>
+<dt id="main.Myapp">
+<em class="property">class </em><code class="sig-prename descclassname">main.</code><code class="sig-name descname">Myapp</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">redirect</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">filename</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">useBestVisual</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">clearSigInt</span><span class="o">=</span><span class="default_value">True</span></em><span class="sig-paren">)</span><a class="headerlink" href="#main.Myapp" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">wx.core.App</span></code></p>
 <p>Minimal class to launch the app</p>
 <dl class="field-list simple">
@@ -328,14 +476,14 @@
 <col style="width: 90%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="#Main.Myapp.OnInit" title="Main.Myapp.OnInit"><code class="xref py py-obj docutils literal notranslate"><span class="pre">OnInit</span></code></a>()</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#main.Myapp.OnInit" title="main.Myapp.OnInit"><code class="xref py py-obj docutils literal notranslate"><span class="pre">OnInit</span></code></a>()</p></td>
 <td><p>Special constructor (do not modify) which affect the Mainwindow to the App</p></td>
 </tr>
 </tbody>
 </table>
 <dl class="py method">
-<dt id="Main.Myapp.OnInit">
-<code class="sig-name descname">OnInit</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#Main.Myapp.OnInit" title="Permalink to this definition">¶</a></dt>
+<dt id="main.Myapp.OnInit">
+<code class="sig-name descname">OnInit</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#main.Myapp.OnInit" title="Permalink to this definition">¶</a></dt>
 <dd><p>Special constructor (do not modify) which affect the Mainwindow to the App</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
@@ -361,10 +509,10 @@
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="Menus.html" class="btn btn-neutral float-right" title="Menus module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="menus.html" class="btn btn-neutral float-right" title="menus module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="Find_Replace.html" class="btn btn-neutral float-left" title="Find_Replace module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="api.html" class="btn btn-neutral float-left" title="api module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   

@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Find_Replace module &mdash; BlindIDE  documentation</title>
+  <title>Find_Replace module &mdash; IDE_MicroPython_accessible  documentation</title>
   
 
   
@@ -36,8 +36,8 @@
     
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Main module" href="Main.html" />
-    <link rel="prev" title="Editor_Style module" href="Editor_Style.html" /> 
+    <link rel="next" title="Packages module" href="Packages.html" />
+    <link rel="prev" title="FileTree module" href="FileTree.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -51,7 +51,7 @@
           
 
           
-            <a href="index.html" class="icon icon-home" alt="Documentation Home"> BlindIDE
+            <a href="index.html" class="icon icon-home" alt="Documentation Home"> IDE_MicroPython_accessible
           
 
           
@@ -84,13 +84,20 @@
             
               <p class="caption"><span class="caption-text">Contents:</span></p>
 <ul class="current">
-<li class="toctree-l1 current"><a class="reference internal" href="modules.html">src</a><ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">IDE_MicroPython_Accessible</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="Constantes.html">Constantes module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="Editor_Style.html">Editor_Style module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="FileTree.html">FileTree module</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">Find_Replace module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="Main.html">Main module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="Menus.html">Menus module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="Panels.html">Panels module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Packages.html">Packages module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Serial.html">Serial module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Shortcuts.html">Shortcuts module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="Utilitaries.html">Utilitaries module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api.html">api module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="main.html">main module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="menus.html">menus module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="panels.html">panels module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="wxSerialConfigDialog.html">wxSerialConfigDialog module</a></li>
 </ul>
 </li>
 </ul>
@@ -108,7 +115,7 @@
       <nav class="wy-nav-top" aria-label="top navigation">
         
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="index.html">BlindIDE</a>
+          <a href="index.html">IDE_MicroPython_accessible</a>
         
       </nav>
 
@@ -139,7 +146,7 @@
     
       <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
         
-          <li><a href="modules.html">src</a> &raquo;</li>
+          <li><a href="modules.html">IDE_MicroPython_Accessible</a> &raquo;</li>
         
       <li>Find_Replace module</li>
     
@@ -162,51 +169,61 @@
             
   <div class="section" id="module-Find_Replace">
 <span id="find-replace-module"></span><h1>Find_Replace module<a class="headerlink" href="#module-Find_Replace" title="Permalink to this headline">¶</a></h1>
-<p><strong>Classes:</strong></p>
+<p>Module which contains functions to find and replace</p>
+<p><strong>Functions:</strong></p>
 <table class="longtable docutils align-default">
 <colgroup>
 <col style="width: 10%" />
 <col style="width: 90%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="#Find_Replace.Find_Replace_dlg" title="Find_Replace.Find_Replace_dlg"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Find_Replace_dlg</span></code></a>(parent, data)</p></td>
-<td><p>This is a conceptual class representation of a simple BLE device (GATT Server).</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#Find_Replace.find_next" title="Find_Replace.find_next"><code class="xref py py-obj docutils literal notranslate"><span class="pre">find_next</span></code></a>(editor, evt)</p></td>
+<td><p>Useful function to find the next occurence of a word on the EditWindow panel</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#Find_Replace.replace" title="Find_Replace.replace"><code class="xref py py-obj docutils literal notranslate"><span class="pre">replace</span></code></a>(editor, evt)</p></td>
+<td><p>Useful function to replace a the selected text by an other word on the EditWindow panel</p></td>
 </tr>
 </tbody>
 </table>
-<dl class="py class">
-<dt id="Find_Replace.Find_Replace_dlg">
-<em class="property">class </em><code class="sig-prename descclassname">Find_Replace.</code><code class="sig-name descname">Find_Replace_dlg</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">parent</span></em>, <em class="sig-param"><span class="n">data</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Find_Replace.Find_Replace_dlg" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">wx._core.FindReplaceDialog</span></code></p>
-<p>This is a conceptual class representation of a simple BLE device
-(GATT Server). It is essentially an extended combination of the
-<code class="xref py py-class docutils literal notranslate"><span class="pre">bluepy.btle.Peripheral</span></code> and <code class="xref py py-class docutils literal notranslate"><span class="pre">bluepy.btle.ScanEntry</span></code> classes</p>
+<dl class="py function">
+<dt id="Find_Replace.find_next">
+<code class="sig-prename descclassname">Find_Replace.</code><code class="sig-name descname">find_next</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">editor</span></em>, <em class="sig-param"><span class="n">evt</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Find_Replace.find_next" title="Permalink to this definition">¶</a></dt>
+<dd><p>Useful function to find the next occurence of a word on the EditWindow panel</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>client</strong> (class:<cite>simpleble.SimpleBleClient</cite>) – A handle to the <code class="xref py py-class docutils literal notranslate"><span class="pre">simpleble.SimpleBleClient</span></code> client
-object that detected the device</p></li>
-<li><p><strong>addr</strong> (<em>str</em><em>, </em><em>optional</em>) – Device MAC address, defaults to None</p></li>
-<li><p><strong>addrType</strong> (<em>str</em><em>, </em><em>optional</em>) – Device address type - one of ADDR_TYPE_PUBLIC or
-ADDR_TYPE_RANDOM, defaults to ADDR_TYPE_PUBLIC</p></li>
-<li><p><strong>iface</strong> (<em>int</em><em>, </em><em>optional</em>) – Bluetooth interface number (0 = /dev/hci0) used for the
-connection, defaults to 0</p></li>
-<li><p><strong>data</strong> (<em>list</em><em>, </em><em>optional</em>) – A list of tuples (adtype, description, value) containing the
-AD type code, human-readable description and value for all available
-advertising data items, defaults to None</p></li>
-<li><p><strong>rssi</strong> (<em>int</em><em>, </em><em>optional</em>) – Received Signal Strength Indication for the last received
-broadcast from the device. This is an integer value measured in dB,
-where 0 dB is the maximum (theoretical) signal strength, and more
-negative numbers indicate a weaker signal, defaults to 0</p></li>
-<li><p><strong>connectable</strong> (<em>bool</em><em>, </em><em>optional</em>) – <cite>True</cite> if the device supports connections, and <cite>False</cite>
-otherwise (typically used for advertising ‘beacons’).,
-defaults to <cite>False</cite></p></li>
-<li><p><strong>updateCount</strong> – Integer count of the number of advertising packets
-received from the device so far, defaults to 0</p></li>
+<li><p><strong>editor</strong> (<em>wx.py.editwindow.EditWindow</em>) – EditWindow to apply the function</p></li>
+<li><p><strong>evt</strong> (<em>wx.Event</em>) – Evt which contains the string to find</p></li>
 </ul>
 </dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>True if the string is found, False if not</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>Boolean</p>
+</dd>
 </dl>
-<p>:type u</p>
+</dd></dl>
+
+<dl class="py function">
+<dt id="Find_Replace.replace">
+<code class="sig-prename descclassname">Find_Replace.</code><code class="sig-name descname">replace</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">editor</span></em>, <em class="sig-param"><span class="n">evt</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Find_Replace.replace" title="Permalink to this definition">¶</a></dt>
+<dd><p>Useful function to replace a the selected text by an other word
+on the EditWindow panel</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>editor</strong> (<em>wx.py.editwindow.EditWindow</em>) – EditWindow to apply the function</p></li>
+<li><p><strong>evt</strong> (<em>wx.Event</em>) – Evt which contains the string to replace</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>True if something is replaced, False if not</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>Boolean</p>
+</dd>
+</dl>
 </dd></dl>
 
 </div>
@@ -219,10 +236,10 @@ received from the device so far, defaults to 0</p></li>
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="Main.html" class="btn btn-neutral float-right" title="Main module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="Packages.html" class="btn btn-neutral float-right" title="Packages module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="Editor_Style.html" class="btn btn-neutral float-left" title="Editor_Style module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="FileTree.html" class="btn btn-neutral float-left" title="FileTree module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   

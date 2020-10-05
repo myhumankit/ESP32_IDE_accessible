@@ -12,12 +12,12 @@
 #
 import os
 import sys
-sys.path.insert(0, os.path.abspath('../src'))
+sys.path.insert(0, os.path.abspath('..'))
 
-autoapi_dirs = ['../src']
+autoapi_dirs = ['..']
 # -- Project information -----------------------------------------------------
 
-project = 'BlindIDE'
+project = 'IDE_MicroPython_accessible'
 copyright = '2020, @MyHumanKit'
 author = 'Evan Sabre'
 
