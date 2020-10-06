@@ -520,10 +520,14 @@ class TopMenu(wx.MenuBar):
             self.parent.statusbar.SetStatusText("Status: Connected", 1)
             speak(parent, "Device Connected")
             #TODO: change status Barre
-            parent.show_cmd = False
-            asyncio.run(SendCmdAsync(parent, "import os\r\n"))
+            asyncio.run(SetView(parent, False))
+            result = asyncio.run(SendCmdAsync(parent, "import os\r\n"))
+            #print("RETURN :" + result)
             treeModel(parent)
-            parent.show_cmd = True
+            #result = asyncio.run(SendCmdAsync(parent, "os.listdir()\r\n"))
+            #print(parent.ReadCmd("os.listdir()"))
+            #asyncio.run(SetView(parent, True))
+            #print("RETURN :" + result)
              
     def OnDownloadFile(self, event):
         """Download the file found on the current tab if it was saved

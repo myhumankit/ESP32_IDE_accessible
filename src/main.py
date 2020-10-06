@@ -53,7 +53,7 @@ class MainWindow(wx.Frame):
         self.__attach_events()
          
     def __attach_events(self):
-        #self.Bind(EVT_SERIALRX, self.OnSerialRead)
+        self.Bind(EVT_SERIALRX, self.OnSerialRead)
         self.Shell.Bind(wx.EVT_CHAR, self.OnKey)
 
     def StartThread(self):
@@ -93,7 +93,7 @@ class MainWindow(wx.Frame):
         :return: the return of the command sent
         :rtype: str
         """
-        b = self.serial.read(self.serial.in_waiting or 1)
+        b = self.serial.read(self.serial.in_waiting)
         self.is_data = False
         if b:
             self.is_data  = True
@@ -104,13 +104,19 @@ class MainWindow(wx.Frame):
                 pass
             elif self.settings.newline == NEWLINE_CRLF:
                 b = b.replace(b'\r\n', b'\n')
+        #self.serial_manager.SendEventRx(b)
         self.OnSerialRead(b)
+    
         return GetCmdReturn(self.Shell_text, data)
 
     def OnSerialRead(self, data):
         """Handle input from the serial port."""
-        print(data)
-        #data = event
+        print(self.show_cmd)
+        #data = event.data
+        if type(data) is bytes:
+            print("Text red bytes = " + data.decode('UTF-8', 'replace'))
+        else:
+            print("Text red = " + data)
         
         if data == b'\x08': #backspace
             txt = self.Shell.GetValue()
@@ -118,17 +124,12 @@ class MainWindow(wx.Frame):
             self.Shell.SetValue(txt[:-1])
             self.Shell_text = self.Shell_text[:-1]
             self.Shell.SetInsertionPoint(cursor)
-            return
         elif data == b'\x1b[K':
-            return
-        if type(data) is bytes:
-            print("Text red = " + data.decode('UTF-8', 'replace'))
+            pass
         else:
-            print("Text red = " + data)
-    
-        self.Shell_text += data.decode('UTF-8', 'ignore')
-        if self.show_cmd == True:
-            self.Shell.AppendText(data.decode('UTF-8', 'ignore'))
+            self.Shell_text += data.decode('UTF-8', 'ignore')
+            if self.show_cmd == True:
+                asyncio.run(self.Shell.Asyncappend(data.decode('UTF-8', 'ignore')))
 
     def ComPortThread(self):
         """\
@@ -137,7 +138,7 @@ class MainWindow(wx.Frame):
         """
         while self.alive.isSet():
             #print("J'y passe")
-            b = self.serial.read(self.serial.in_waiting or 1)
+            b = self.serial.read(self.serial.in_waiting)
             self.is_data = False
             if b and b != b'\x00':
                 self.is_data  = True
@@ -148,6 +149,7 @@ class MainWindow(wx.Frame):
                     pass
                 elif self.settings.newline == NEWLINE_CRLF:
                     b = b.replace(b'\r\n', b'\n')
+                #self.serial_manager.SendEventRx(b)
                 self.OnSerialRead(b)
 
     def ChangeStatus(self, evt):

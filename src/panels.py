@@ -389,3 +389,5 @@ class ShellPanel(wx.TextCtrl):
         #font = wx.Font(pointSize = 10, family = wx.FONTFAMILY_SWISS, style = wx.FONTSTYLE_SLANT, weight = wx.FONTWEIGHT_BOLD,  
         #              underline = False, faceName ="", encoding = 0)
         #self.SetFont(font)
+    async def Asyncappend(self, data):
+        self.AppendText(data)

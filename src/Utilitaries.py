@@ -1,6 +1,5 @@
 from Packages import wx, speech, time, json, asyncio
 
-
 #TODO établir liste baudrate/sleep
 
 def load_img(path):
@@ -85,9 +84,13 @@ def GetCmdReturn(shell_text, cmd):
         return_cmd = shell_text.split(cmd, 1)[1]
         return_cmd = return_cmd[:-4]
     except Exception:
+        print ("ERROR: |" + shell_text +  "|")
         return "err"
-    print ("SLT" + return_cmd)
+    print ("SUCCESS:" + return_cmd)
     return return_cmd
+
+async def SetView(frame, info):
+    frame.show_cmd = info
 
 
 #TODO: reconstruire l'algo GetFileTree via upycraft
@@ -96,12 +99,15 @@ def getFileTree(frame, dir):
         print("GET FILE TREE : %s"%(dir))
         frame.cmd_return = ""
         frame.get_cmd = True
-        result = asyncio.run(SendCmdAsync(frame, "os.listdir(\'%s\')\r\n"%dir))
+        asyncio.run(SendCmdAsync(frame, "os.listdir(\'%s\')\r\n"%dir))
+        result = frame.ReadCmd("os.listdir(\'%s\')"%dir)
+        print("RETURN: " + result)
         if result=="err":
             return result
         print("ON Y EST")
         #if gestion erreur
         filemsg=result[result.find("["):result.find("]")+1]
+        print("FILEMSG = " + filemsg)
 
         ret=json.loads("{}")
         ret[dir]=[]
@@ -115,30 +121,33 @@ def getFileTree(frame, dir):
                 pass
             else:
                 filelist.append(i)
-        
+        print("FILE LIST =" ,filelist)
         for i in filelist:
-            res = asyncio.run(SendCmdAsync(frame, "os.stat(\'%s\')\r\n"%(dir + "/" + i)))
+            asyncio.run(SendCmdAsync(frame, "os.stat(\'%s\')\r\n"%(dir + "/" + i)))
+            res = frame.ReadCmd("os.stat(\'%s\')"%(dir + "/" + i))
             if res == "err":
                 return res
-            isdir=res.split("\r\n")
-
-            for adir in isdir:
-                if adir.find(", ")>=0:
-                    adir=adir[adir.find("(")+1:adir.find(")")]
-                    adir=adir.split(", ")
-                    break
+            isdir=res.split("\n")[1]
+            isdir=isdir.split(", ")
+            print("ISDIR = ", isdir)
             try:
-                if int(adir[0])==0o40000:
-                    if frame.currentBoard=="pyboard" and i=="System Volume Information":
+                adir = isdir[0]
+                if adir.find("(")>=0:
+                    adir = adir[1:]
+                if adir.find(")")>=0:
+                    adir = adir[:-1]
+                print("ADIR = ", adir)
+                if int(adir)==0o040000:
+                    if i=="System Volume Information":
                         pass
                     else:
-                        ret[dir].append(frame.getFileTree(dir+"/"+i))
+                        ret[dir].append(getFileTree(frame, dir+"/"+i))
                 else:
                     ret[dir].append(i)
             except Exception as e:
                 print("ERROr: " + e)
                 return "err"
-            return ret
+        return ret
     
 def treeModel(frame):
         frame.reflushTreeBool=True
@@ -164,36 +173,39 @@ def reflushTree(frame,data):
         return
     print("reflushTree=====================%s"%data)
 
-    createReflushTree(frame.device_tree,data['.'])
+    createReflushTree(frame,frame.device_tree.root,data['.'])
     
 def createReflushTree(frame, root, msg):
         print("MSG " + str(msg))
+        tree = frame.device_tree
         time.sleep(1)
-        # if type(msg) is str:
-        #     itemDevice=QStandardItem(msg)
-        #     root.AppendItem(itemDevice)
-        #     root.RemoveItem(itemDevice.Item())
-        #     itemDevice=QStandardItem(QIcon(":/treeFileOpen.png"),msg)
-        #     root.AppendItem(itemDevice)
+        if type(msg) is str:
+            child = tree.AppendItem(root, msg)
+            tree.SetItemImage(child, tree.fldridx, wx.TreeItemIcon_Normal)
+            tree.SetItemImage(child, tree.fldropenidx, wx.TreeItemIcon_Expanded)
+            #root.RemoveItem(itemDevice.Item())
             
-        # elif type(msg) is dict:
-        #     for i in msg:
-        #         k=eval("%s"%msg[i])
-        #         i=i.split("/")
-        #         itemDevice=QStandardItem(QIcon(":/treeMenuClosed.png"),"%s"%i[-1])
-        #         root.appendItem(itemDevice)
-        #         frame.createReflushTree(itemDevice,k)
-        # elif type(msg) is list:#liste de fichiers
-        #     for i in msg:
-        #         if type(i) is str:
-        #             frame.createReflushTree(root,i)
-        #         elif type(i) is dict:
-        #             frame.createReflushTree(root,i)           
-        # else:
-        #     pass
+        elif type(msg) is dict:
+            for i in msg:
+                k=eval("%s"%msg[i])
+                i=i.split("/")
+                print("KKKK = ", k, "I = ", i)
+                child = tree.AppendItem(root, msg)
+                tree.SetItemImage(child, tree.fldridx, wx.TreeItemIcon_Normal)
+                tree.SetItemImage(child, tree.fldropenidx, wx.TreeItemIcon_Expanded)
+                frame.createReflushTree(frame, child, k)
+        elif type(msg) is list:#liste de fichiers
+            for i in msg:
+                if type(i) is str:
+                    createReflushTree(frame, root, i)
+                elif type(i) is dict:
+                    createReflushTree(frame, root, i)           
+                else:
+                    pass
     
 async def SendCmdAsync(parent, cmd):
     parent.cmd_return = ""
+    print("CMDsend = " +cmd)
     parent.serial_manager.put_cmd(cmd)
     await asyncio.sleep(1)
-    return parent.ReadCmd(cmd[:-2])
+    #return 

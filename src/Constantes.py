@@ -8,6 +8,10 @@ rootDirectoryPath  =os.path.expanduser("~")
 rootDirectoryPath  =rootDirectoryPath.replace("\\","/")
 currentTempPath="%s/AppData/Local/uPyCraft/temp/"%rootDirectoryPath
 
+SERIALRX = wx.NewEventType() #:create a serial data received event
+EVT_SERIALRX = wx.PyEventBinder(SERIALRX, 0) #:bind to serial data receive events
+
+
 wx.ID_CONNECT = wx.NewId() #: New id to Connect the card
 wx.ID_REFLUSH_DIR = wx.NewId() #: New id to Connect the card
 wx.ID_EXAMPLES = wx.NewId() #: New id to Connect the card

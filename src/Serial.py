@@ -5,6 +5,18 @@ Module which has functions and classes to manage the connection and communicatio
 from Packages import wx, os, time
 from Constantes import *
 
+class SerialRxEvent(wx.PyCommandEvent):
+    eventType = SERIALRX
+
+    def __init__(self, windowID, data):
+        wx.PyCommandEvent.__init__(self, self.eventType, windowID)
+        self.data = data
+        print("DATA = ", end='')
+        print(data)
+
+    def Clone(self):
+        return self.__class__(self.GetId(), self.data)
+
 class TerminalSetup:
     """
     Placeholder for various terminal settings. Used to pass the
@@ -29,6 +41,10 @@ class ManageConnection():
         
         self.frame = frame
         self.last_cmd = ""
+
+    def SendEventRx(self, data):
+        event = SerialRxEvent(self.frame.GetId(), data)
+        self.frame.GetEventHandler().AddPendingEvent(event)
 
     def put_cmd(self, msg): 
         """Send a Python command to the connected card
