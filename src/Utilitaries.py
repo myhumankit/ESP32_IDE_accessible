@@ -190,10 +190,10 @@ def createReflushTree(frame, root, msg):
                 k=eval("%s"%msg[i])
                 i=i.split("/")
                 print("KKKK = ", k, "I = ", i)
-                child = tree.AppendItem(root, msg)
+                child = tree.AppendItem(root, i[1])
                 tree.SetItemImage(child, tree.fldridx, wx.TreeItemIcon_Normal)
                 tree.SetItemImage(child, tree.fldropenidx, wx.TreeItemIcon_Expanded)
-                frame.createReflushTree(frame, child, k)
+                createReflushTree(frame, child, k)
         elif type(msg) is list:#liste de fichiers
             for i in msg:
                 if type(i) is str:
