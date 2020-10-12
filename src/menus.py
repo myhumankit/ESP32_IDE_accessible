@@ -4,9 +4,12 @@ from Utilitaries import *
 from api import main as CheckPySyntax
 from Constantes import *
 import asyncio
+from BurnFirmware import UpdateFirmwareDialog, FirmwareThread, BurnFrame
 
 #? Doit-on retourner le menu et la toolbar pour la stocker avec self. 
 #? ou la stocke t-on directement dans les fonctions associés
+
+#TODO: CUSTOM FONT OF MENUSS
 
 def Init_Top_Menu(frame):
     """Inits an instance of customized TopMenu class and places it on the frame
@@ -141,8 +144,8 @@ class TopMenu(wx.MenuBar):
         self.Bind(wx.EVT_MENU, self.OnDownloadFile, id=wx.ID_DOWNLOAD)
         self.Bind(wx.EVT_MENU, self.OnRun, id=wx.ID_EXECUTE)
         self.Bind(wx.EVT_MENU, self.OnStop, id=wx.ID_STOP)
+        self.Bind(wx.EVT_MENU, self.OnBurnFirmware, id=wx.ID_BURN_FIRMWARE)
         
-
         self.Bind(wx.EVT_MENU,  self.OnChangeTheme, id=wx.ID_LIGHT_THEME)
         self.Bind(wx.EVT_MENU,  self.OnChangeTheme, id=wx.ID_DARK_THEME)
         self.Bind(wx.EVT_MENU,  self.OnChangeTheme, id=wx.ID_ASTRO_THEME)
@@ -153,6 +156,7 @@ class TopMenu(wx.MenuBar):
         :param evt: Event to trigger the method
         :type evt: wx.Event
         """        
+        self.parent.StopThread()
         self.Parent.Destroy()
 
     def OnSave(self, evt):
@@ -163,6 +167,8 @@ class TopMenu(wx.MenuBar):
         """   
         notebookP = self.parent.MyNotebook
         page = notebookP.GetCurrentPage()
+        if page.on_card:
+            return save_on_card(self.parent, page)
         # Check if save is required
         if (page.GetValue() != page.last_save):
             page.saved = False
@@ -260,7 +266,7 @@ class TopMenu(wx.MenuBar):
                 else:
                     print("")
                     notebookP.tab_num += 1
-                    new_tab = MyEditor(notebookP)
+                    new_tab = MyEditor(notebookP, self.parent, "", False)
                     new_tab.filename = filename
                     new_tab.directory = directory
                     notebookP.AddPage(new_tab, filename, select = True)
@@ -333,7 +339,8 @@ class TopMenu(wx.MenuBar):
         """
         notebookP = self.parent.MyNotebook
         notebookP.tab_num += 1
-        new_tab = MyEditor(self.parent.MyNotebook, self.parent)
+        #RAJOUTER une variable on_card and Value
+        new_tab = MyEditor(self.parent.MyNotebook, self.parent, "", False)
         new_tab = notebookP.AddPage(new_tab, "Tab %s" % notebookP.tab_num, select=True)
 
     def OnClosePage(self, event):
@@ -512,23 +519,22 @@ class TopMenu(wx.MenuBar):
                 ok = True
         if parent.serial.isOpen() == True:
             if not ConnectSerial(parent):
-                print("FAIL")
                 return
-            parent.serial.flush()
             parent.workspace_tree.ReCreateTree()
             parent.connected = True
-            self.parent.statusbar.SetStatusText("Status: Connected", 1)
-            speak(parent, "Device Connected")
             #TODO: change status Barre
             asyncio.run(SetView(parent, False))
-            result = asyncio.run(SendCmdAsync(parent, "import os\r\n"))
-            #print("RETURN :" + result)
+            asyncio.run(SendCmdAsync(parent, "import os\r\n"))
+            asyncio.run(SendCmdAsync(parent, "os.uname()\r\n"))
+            self.parent.serial_manager.Get_Info_Card(self.parent.ReadCmd("os.uname()"))
+            print(self.parent.serial_manager.card)
+            asyncio.run(SendCmdAsync(parent, "\r\n"))
+            self.parent.ChangeStatus()
             treeModel(parent)
-            #result = asyncio.run(SendCmdAsync(parent, "os.listdir()\r\n"))
-            #print(parent.ReadCmd("os.listdir()"))
-            #asyncio.run(SetView(parent, True))
-            #print("RETURN :" + result)
-             
+            asyncio.run(SetView(parent, True))
+            speak(parent, "Device Connected")
+            print(self.parent.serial_manager.card)
+    
     def OnDownloadFile(self, event):
         """Download the file found on the current tab if it was saved
 
@@ -634,7 +640,38 @@ class TopMenu(wx.MenuBar):
             self.parent.serial_manager.put_cmd('\x03')
         else:
             self.parent.Shell.AppendText("serial not open")
-        
+    
+    def OnBurnFirmware(self, event):
+        parent = self.parent
+        firmware_manager = parent.firmware_manager
+        ok = False
+        while not ok:
+            with UpdateFirmwareDialog(parent, firmware_manager) as dialog_serial_cfg:
+                dialog_serial_cfg.CenterOnParent()
+                result = dialog_serial_cfg.ShowModal()
+            # open port if not called on startup, open it on startup and OK too
+            if result == wx.ID_OK or event is not None:
+                print(firmware_manager.burn_adress, firmware_manager.port, firmware_manager.bin_path)
+                if not firmware_manager.port or not firmware_manager.bin_path :
+                    with wx.MessageDialog(self, "", "Incorrect Path or Port", wx.OK | wx.ICON_ERROR)as dlg:
+                        dlg.ShowModal()
+                        ok = True
+                else:    
+                        sys.stdout = sys.__stdout__
+                        self.Frame_burn = BurnFrame(parent)
+                        burn_thread = FirmwareThread(parent, firmware_manager, self.Frame_burn.txt)
+                        self.Frame_burn.CenterOnParent()
+                        burn_thread.setDaemon(1)
+                        burn_thread.start()
+                        self.Frame_burn.ShowModal()
+                        burn_thread.join()
+                        speak(self.parent, "Firmware installed")
+                        self.Frame_burn.Destroy()
+                        sys.stdout = sys.__stdout__
+                        ok = True
+            else:
+                ok = True
+
 class ToolBar(wx.ToolBar):
     """A custom class derivated from wx.ToolBar to access quickly on some commands
 

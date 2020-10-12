@@ -1,11 +1,11 @@
-from Packages import random, os, codecs, threading, wxSerialConfigDialog, serial
+from Packages import random, os, codecs, threading, wxSerialConfigDialog, serial, asyncio, sys
 import wx.stc as stc
 import wx.py as pysh
 import wx.lib.agw.flatnotebook as fnb
 from Editor_Style import *
 from Find_Replace import *
 from Constantes import *
-from FileTree import DeviceTree
+from Utilitaries import SendCmdAsync
 
 def Init_Panels(frame):
     """Inits the three differents regions(treeCtrl, Notebook, Shell) in the MainWindow
@@ -23,7 +23,7 @@ def Init_Panels(frame):
     frame.splitter_h.SplitHorizontally(frame.MyNotebook, frame.Shell, 400)
     
     vbox = wx.BoxSizer(wx.VERTICAL)
-    frame.device_tree = DeviceTree(frame.FileTree, frame, "", "COMPUTER")
+    frame.device_tree = DeviceTree(frame.FileTree, frame, "", "Device")
     frame.workspace_tree = WorkspaceTree(frame.FileTree, frame)
     vbox.Add(frame.device_tree, 1, wx.EXPAND | wx.ALL)
     vbox.Add(frame.workspace_tree, 1, wx.EXPAND | wx.ALL)
@@ -37,7 +37,7 @@ class MyEditor(pysh.editwindow.EditWindow):
     :type pysh.editwindow.EditWindow: wx.py.editwindow.EditWindow
     """
 
-    def __init__(self, parent, topwindow):
+    def __init__(self, parent, topwindow, text, on_card):
         """ Constructor to init a Tab on the Notebook
         
         :param parent: NotebookPanel class
@@ -48,11 +48,13 @@ class MyEditor(pysh.editwindow.EditWindow):
 
         pysh.editwindow.EditWindow.__init__(self, parent=parent)
 
-        self.__set_properties(parent, topwindow)
+        self.__set_properties(parent, topwindow, on_card)
         self.__set_style(parent)
         self.__attach_events()
+        #self.write(text)
+        self.SetValue(text)
     
-    def __set_properties(self, parent, topwindow):
+    def __set_properties(self, parent, topwindow, on_card):
         """Set the properties and declare the variables of the instance
         
         :param parent: NotebookPanel class
@@ -71,6 +73,7 @@ class MyEditor(pysh.editwindow.EditWindow):
         self.txt = ""
         self.pos = 0
         self.size = 0
+        self.on_card = on_card
 
     def __set_style(self, parent):
         """Load the first style of the editor
@@ -230,7 +233,7 @@ class FileTreePanel(wx.GenericDirCtrl):
         self.theme = frame.MyNotebook.theme
         self.tree = self.GetTreeCtrl()
         self.font = wx.Font(pointSize = 10, family = wx.FONTFAMILY_SWISS, style = wx.FONTSTYLE_SLANT, weight = wx.FONTWEIGHT_BOLD,  
-                      underline = False, faceName ="", encoding = 0)
+                      underline = False, faceName ="Fira Code", encoding = 0)
         self.Custom_Tree_Ctrl(themes[self.theme])
 
     def __attach_events(self):
@@ -257,7 +260,7 @@ class FileTreePanel(wx.GenericDirCtrl):
                 notebookP.GetCurrentPage().saved = True
         else:
             notebookP.tab_num += 1
-            new_tab = MyEditor(notebookP, self.frame)
+            new_tab = MyEditor(notebookP, self.frame, "", False)
             new_tab.filename = filename
             new_tab.directory = directory
             notebookP.AddPage(new_tab, filename, select = True)
@@ -269,8 +272,6 @@ class FileTreePanel(wx.GenericDirCtrl):
             notebookP.SetPageText(notebookP.GetSelection(), filename)
             filehandle.close()
         
-#TODO: add Set focus raccourci = maj + fin(flèche)
-
 class WorkspaceTree(wx.GenericDirCtrl):
     def __init__(self, parent, frame):
         """constructor for the File/dir Controller on the left
@@ -288,8 +289,8 @@ class WorkspaceTree(wx.GenericDirCtrl):
         self.frame = frame
         self.theme = frame.MyNotebook.theme
         self.tree = self.GetTreeCtrl()
-        self.font = wx.Font(pointSize = 10, family = wx.FONTFAMILY_SWISS, style = wx.FONTSTYLE_SLANT, weight = wx.FONTWEIGHT_NORMAL,  
-                      underline = False, faceName ="", encoding = 0)
+        self.font = wx.Font(pointSize = 12, family = wx.FONTFAMILY_SWISS, style = wx.FONTSTYLE_SLANT, weight = wx.FONTWEIGHT_NORMAL,  
+                      underline = False, faceName ="Fira Code", encoding = 0)
         self.Custom_Tree_Ctrl(themes[self.theme])
 
     def __attach_events(self):
@@ -316,7 +317,7 @@ class WorkspaceTree(wx.GenericDirCtrl):
                 notebookP.GetCurrentPage().saved = True
         else:
             notebookP.tab_num += 1
-            new_tab = MyEditor(notebookP, self.frame)
+            new_tab = MyEditor(notebookP, self.frame, "", False)
             new_tab.filename = filename
             new_tab.directory = directory
             notebookP.AddPage(new_tab, filename, select = True)
@@ -328,8 +329,6 @@ class WorkspaceTree(wx.GenericDirCtrl):
             notebookP.SetPageText(notebookP.GetSelection(), filename)
             filehandle.close()
         
-#TODO: add Set focus raccourci = maj + fin(flèche)
-
 class ChooseWorkspace(wx.DirPickerCtrl):
     def __init__(self, parent, frame):
         wx.DirPickerCtrl.__init__(self, parent, message="Hello")
@@ -384,10 +383,160 @@ class ShellPanel(wx.TextCtrl):
 
     def Custom_Shell(self, theme):
         self.SetBackgroundColour("white")
-        self.font = wx.Font(9, wx.MODERN, wx.NORMAL, wx.NORMAL, 0, "")
+        self.font = wx.Font(12, wx.MODERN, wx.NORMAL, wx.NORMAL, 0, "Fira code")
         self.SetFont(self.font)
         #font = wx.Font(pointSize = 10, family = wx.FONTFAMILY_SWISS, style = wx.FONTSTYLE_SLANT, weight = wx.FONTWEIGHT_BOLD,  
         #              underline = False, faceName ="", encoding = 0)
         #self.SetFont(font)
+    
     async def Asyncappend(self, data):
         self.AppendText(data)
+        
+class DeviceTree(wx.TreeCtrl):
+    def __init__(self, parent, frame, paths, name):
+        tID = wx.NewId()
+        # Use the WANTS_CHARS style so the panel doesn't eat the Return key.
+        wx.TreeCtrl.__init__(self, parent)
+        self.frame = frame
+        paths = paths
+        isz = (16,16)
+        self.il = wx.ImageList(isz[0], isz[1])
+        self.fldridx     = self.il.Add(wx.ArtProvider.GetBitmap(wx.ART_FOLDER,      wx.ART_OTHER, isz))
+        self.fldropenidx = self.il.Add(wx.ArtProvider.GetBitmap(wx.ART_FOLDER_OPEN, wx.ART_OTHER, isz))
+        self.fileidx     = self.il.Add(wx.ArtProvider.GetBitmap(wx.ART_NORMAL_FILE, wx.ART_OTHER, isz))
+        self.font = wx.Font(pointSize = 12, family = wx.FONTFAMILY_SWISS, style = wx.FONTSTYLE_SLANT, weight = wx.FONTWEIGHT_NORMAL,  
+                      underline = False, faceName ="Fira Code", encoding = 0)
+        self.theme = frame.MyNotebook.theme
+        self.root = self.AddRoot(name)
+
+        self.SetImageList(self.il)
+        self.SetItemData(self.root, None)
+        self.SetItemImage(self.root, self.fldridx, wx.TreeItemIcon_Normal)
+        self.SetItemImage(self.root, self.fldropenidx, wx.TreeItemIcon_Expanded)
+        self.Custom_Tree_Ctrl(themes[self.theme])
+        self.__attach_events()
+
+    def __attach_events(self):
+        self.Bind(wx.EVT_TREE_ITEM_EXPANDED, self.OnItemExpanded, self)
+        self.Bind(wx.EVT_TREE_ITEM_COLLAPSED, self.OnItemCollapsed, self)
+        self.Bind(wx.EVT_TREE_SEL_CHANGED, self.OnSelChanged, self)
+        self.Bind(wx.EVT_TREE_BEGIN_LABEL_EDIT, self.OnBeginEdit, self)
+        self.Bind(wx.EVT_TREE_END_LABEL_EDIT, self.OnEndEdit, self)
+        self.Bind(wx.EVT_TREE_ITEM_ACTIVATED, self.OnActivate, self)
+
+        self.Bind(wx.EVT_LEFT_DCLICK, self.OnLeftDClick)
+        self.Bind(wx.EVT_RIGHT_DOWN, self.OnRightDown)
+        self.Bind(wx.EVT_RIGHT_UP, self.OnRightUp)
+        
+    def Custom_Tree_Ctrl(self, theme):
+        self.SetBackgroundColour(theme[1][1])
+        self.SetFont(self.font)
+
+    def OnRightDown(self, event):
+        pt = event.GetPosition();
+        item, flags = self.HitTest(pt)
+        if item:
+            sys.stdout.write("OnRightClick: %s, %s, %s\n" %
+                               (self.GetItemText(item), type(item), item.__class__))
+            self.SelectItem(item)
+
+    def OnRightUp(self, event):
+        pt = event.GetPosition();
+        item, flags = self.HitTest(pt)
+        if item:
+            sys.stdout.write("OnRightUp: %s (manually starting label edit)\n"
+                               % self.GetItemText(item))
+            self.EditLabel(item)
+
+    def OnBeginEdit(self, event):
+        sys.stdout.write("OnBeginEdit\n")
+        # show how to prevent edit...
+        item = event.GetItem()
+        if item and self.GetItemText(item) == "The Root Item":
+            wx.Bell()
+            sys.stdout.write("You can't edit this one...\n")
+
+            # Lets just see what's visible of its children
+            cookie = 0
+            root = event.GetItem()
+            (child, cookie) = self.GetFirstChild(root)
+
+            while child.IsOk():
+                sys.stdout.write("Child [%s] visible = %d" %
+                                   (self.GetItemText(child),
+                                    self.IsVisible(child)))
+                (child, cookie) = self.GetNextChild(root, cookie)
+
+            event.Veto()
+
+    def OnEndEdit(self, event):
+        sys.stdout.write("OnEndEdit: %s %s\n" %
+                           (event.IsEditCancelled(), event.GetLabel()) )
+        # show how to reject edit, we'll not allow any digits
+        for x in event.GetLabel():
+            if x in string.digits:
+                sys.stdout.write("You can't enter digits...\n")
+                event.Veto()
+                return
+
+    def OnLeftDClick(self, event):
+        pt = event.GetPosition();
+        item, flags = self.HitTest(pt)
+        if item:
+            sys.stdout.write("OnLeftDClick: %s\n" % self.GetItemText(item))
+            parent = self.GetItemParent(item)
+            if parent.IsOk():
+                self.SortChildren(parent)
+        event.Skip()
+
+    def OnItemExpanded(self, event):
+        item = event.GetItem()
+
+    def OnItemCollapsed(self, event):
+        item = event.GetItem()
+
+    def OnSelChanged(self, event):
+        self.item = event.GetItem()
+        if self.item:
+            sys.stdout.write("OnSelChanged: %s\n" % self.GetItemText(self.item))
+            #items = self.GetSelections()
+            #print(map(self.GetItemText, items))
+        event.Skip()
+
+    def OnActivate(self, event):
+        if self.item:
+            if self.GetItemImage(self.item, which=wx.TreeItemIcon_Normal):
+                print("FILE")
+                #TODO: Create path to open,
+                self.path = ""
+                self.root_it = self.GetRootItem()
+                name = self.GetItemText(self.item)
+
+                self.Get_Path_Item(self.item, name)
+                print("Path = ", self.path)
+                self.frame.show_cmd = False
+                asyncio.run(SendCmdAsync(self.frame, "a = open('%s').read()\r\n"%self.path))
+                asyncio.run(SendCmdAsync(self.frame, "print(a)\r\n"))
+                res = self.frame.ReadCmd("print(a)")
+                asyncio.run(SendCmdAsync(self.frame, "a.close()\r\n"))
+                notebookP = self.frame.MyNotebook
+                notebookP.tab_num += 1
+                new_tab = MyEditor(notebookP, self.frame, str(res), True)
+                new_tab.filename = name
+                new_tab.directory = self.path
+                new_tab = notebookP.AddPage(new_tab, "Tab %s" % notebookP.tab_num, select=True)
+                self.frame.show_cmd = True
+            sys.stdout.write("OnActivate: %s\n" % name)
+            
+    def Get_Path_Item(self, item, name):
+        parent_it = self.GetItemParent(item)
+        list = []
+        while parent_it != self.root_it:
+            list.insert(0, self.GetItemText(parent_it))
+            parent_it = self.GetItemParent(parent_it)
+        list.insert(0, self.GetItemText(parent_it))
+        for i in list:
+            if i == "Device":
+                i = "."
+            self.path += i + "/"
+        self.path += name

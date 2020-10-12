@@ -5,6 +5,8 @@ from Serial import *
 from Constantes import *
 from Utilitaries import *
 from Shortcuts import InitShortcuts
+from BurnFirmware import FirmwareManager
+from Install_fonts import Install_fonts
 
 #TODO: change focus when new editor tab
 
@@ -24,10 +26,14 @@ class MainWindow(wx.Frame):
         wx.Frame.__init__(self, None, 1, title = name, size = size)
         self.SetIcon(wx.Icon("./img/Icone.png"))
         self.__set_properties__()
+        e = wx.FontEnumerator()
+        e.EnumerateFacenames()
+        elist= e.GetFacenames()
         
     def __set_properties__(self):
         self.serial = serial.Serial()
-        self.serial.timeout = 0.5   # make sure that the alive event can be checked from time to time
+        self.serial.timeout = 0.5
+        self.time_to_send = 0.5   # make sure that the alive event can be checked from time to time
         self.settings = TerminalSetup()  # placeholder for the settings
         self.thread = None
         self.alive = threading.Event()
@@ -46,6 +52,8 @@ class MainWindow(wx.Frame):
         self.statusbar = MyStatusBar(self)
         self.serial_manager = ManageConnection(self)
         self.voice_on = True
+        self.firmware_manager = FirmwareManager()
+        
         Init_Panels(self)
         Init_ToolBar(self)
         InitShortcuts(self)
@@ -152,18 +160,16 @@ class MainWindow(wx.Frame):
                 #self.serial_manager.SendEventRx(b)
                 self.OnSerialRead(b)
 
-    def ChangeStatus(self, evt):
+    def ChangeStatus(self):
         """Actualize the Status Bar
 
         :param evt: Event binded to trigger the function
         :type evt: wx.Event https://wxpython.org/Phoenix/docs/html/wx.Event.html
         """
-        page = self.MyNotebook.GetCurrentPage()
-        line = page.GetCurrentLine()
-        margin = page.GetLineIndentation(line)
-        end = page.GetLineIndentPosition(line)
-        print(line)
-        self.statusbar.SetStatusText("%s/%s"%(margin, end), 1)
+        if self.connected:
+            self.statusbar.SetStatusText("Status: %s %s %s"%("Connected",self.serial_manager.card, self.serial_manager.version), 1)
+        else:
+            self.statusbar.SetStatusText("Status: %s"%"Not Connected", 1)
 
     def OnChangeFocus(self, event):
         """Allow to navigate in the differents region of the Frame after an event
@@ -213,6 +219,7 @@ class MainWindow(wx.Frame):
         :type evt: wx.Event https://wxpython.org/Phoenix/docs/html/wx.Event.html
         """
         self.statusbar.SetFocus()
+        speak(self, self.statusbar.GetStatusText(1))
             
 class Myapp(wx.App):
     """Minimal class to launch the app
@@ -234,5 +241,20 @@ class Myapp(wx.App):
         return True
 
 if __name__ == "__main__":
+    sys.stdout = sys.__stdout__
+    if sys.platform.startswith('win32') or sys.platform.startswith('cygwin'):
+        FONTDIRS=os.path.join(os.environ['WINDIR'],'Fonts')
+        fonts=os.listdir(FONTDIRS)
+        flags=False
+    for filename in fonts:
+        if(filename.find('FiraCode')==0):
+            flags=True
+            break
+    if flags is False:  
+        try:
+            fonts = ["./FiraCode-Medium.ttf", "./FiraCode-Regular.ttf", "./FiraCode-Retina.ttf", "./FiraCode-Light.ttf"]
+            Install_fonts(fonts)
+        except:
+            print("install ttf false.")
     app = Myapp()
     app.MainLoop()

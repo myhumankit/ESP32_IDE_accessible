@@ -1,6 +1,28 @@
 from Packages import wx, speech, time, json, asyncio
 
+
 #TODO établir liste baudrate/sleep
+def save_on_card(frame, page):
+    print(page.directory)
+    print(page.filename)
+    notebookP = frame.MyNotebook
+
+    # Check if save is required
+    if (page.GetValue() != page.last_save):
+        page.saved = False
+        # Grab the content to be saved
+        save_as_file_contents = page.GetValue()
+        frame.show_cmd = False
+        cmd = "f = open('%s', 'wb')\r\n"%page.directory + "/" + page.filename
+        frame.serial_manager.put_cmd(cmd)
+        cmd = "f.write(%s)\r\n"%save_as_file_contents
+        frame.serial_manager.put_cmd(cmd)
+        cmd = "f.close()\r\n"
+        frame.serial_manager.put_cmd(cmd)
+        page.last_save = save_as_file_contents
+        page.saved = True
+        frame.Shell.AppendText("Content Saved\n")
+        speak(frame, "Content Saved")
 
 def load_img(path):
     return wx.Image(path,wx.BITMAP_TYPE_ANY).ConvertToBitmap()
@@ -30,7 +52,10 @@ def ConnectSerial(self):
                 if not self.serial.isOpen():
                     print("UPDATE FIRMWARE")
                 return False
-        senddata="import sys\r"
+        print("SURVIVOR")
+        senddata="import sys\r\n"
+        self.serial_manager.put_cmd("import sys\r\n")
+        print("SURVIVOR")
         for i in senddata:
             self.serial.write(i.encode())
         startdata=""
@@ -45,6 +70,7 @@ def ConnectSerial(self):
             time.sleep(0.1)
             endTime=time.time()
             if endTime-startTime>2:
+                print(startdata)
                 self.serial.close()
                 self.Shell.AppendText("connect serial timeout")
                 return False
@@ -66,7 +92,7 @@ def ConnectSerial(self):
                 self.serial.close()
                 self.Shell.AppendText("connect serial timeout")
                 return False
-            
+
         self.StartThread()
         return True
 
@@ -92,9 +118,6 @@ def GetCmdReturn(shell_text, cmd):
 async def SetView(frame, info):
     frame.show_cmd = info
 
-
-#TODO: reconstruire l'algo GetFileTree via upycraft
-#! Objectif: obtenir le res en json correctement
 def getFileTree(frame, dir):
         print("GET FILE TREE : %s"%(dir))
         frame.cmd_return = ""
@@ -148,64 +171,57 @@ def getFileTree(frame, dir):
                 print("ERROr: " + e)
                 return "err"
         return ret
-    
+
 def treeModel(frame):
-        frame.reflushTreeBool=True
-        frame.cmd_return =""
-
+        frame.reflushTreeBool= True
+        frame.cmd_return = ""
         res=json.loads("{}")
-
-        
         res=getFileTree(frame, ".")
+
         if res=="err":
-            frame.reflushTreeBool=False
             frame.cmd_return = ""
             return
         print("RESSSSSSS")
         print(res)
-        reflushTree(frame,res)
+        try:
+            ReflushTree(frame,frame.device_tree.root,res['.'])
+        except Exception as e:
+            print(e)
         frame.cmd_return =""
-        frame.reflushTreeBool=False
-
-def reflushTree(frame,data):
-    if data=="err":
-        print("soucii")
-        return
-    print("reflushTree=====================%s"%data)
-
-    createReflushTree(frame,frame.device_tree.root,data['.'])
     
-def createReflushTree(frame, root, msg):
+def ReflushTree(frame, root, msg):
+        if msg=="err":
+            print("soucii")
+            return
+        print("reflushTree=====================%s"%msg)
         print("MSG " + str(msg))
         tree = frame.device_tree
-        time.sleep(1)
-        if type(msg) is str:
+        if type(msg) is str: #: fichier
             child = tree.AppendItem(root, msg)
-            tree.SetItemImage(child, tree.fldridx, wx.TreeItemIcon_Normal)
-            tree.SetItemImage(child, tree.fldropenidx, wx.TreeItemIcon_Expanded)
+            tree.SetItemImage(child, tree.fileidx, wx.TreeItemIcon_Normal)
+            tree.SetItemImage(child, tree.fileidx, wx.TreeItemIcon_Expanded)
             #root.RemoveItem(itemDevice.Item())
             
-        elif type(msg) is dict:
+        elif type(msg) is dict: #: dossier
             for i in msg:
                 k=eval("%s"%msg[i])
                 i=i.split("/")
-                print("KKKK = ", k, "I = ", i)
+                #print("KKKK = ", k, "I = ", i)
                 child = tree.AppendItem(root, i[1])
                 tree.SetItemImage(child, tree.fldridx, wx.TreeItemIcon_Normal)
                 tree.SetItemImage(child, tree.fldropenidx, wx.TreeItemIcon_Expanded)
-                createReflushTree(frame, child, k)
-        elif type(msg) is list:#liste de fichiers
+                ReflushTree(frame, child, k)
+        elif type(msg) is list: #liste de fichiers
             for i in msg:
                 if type(i) is str:
-                    createReflushTree(frame, root, i)
+                    ReflushTree(frame, root, i)
                 elif type(i) is dict:
-                    createReflushTree(frame, root, i)           
+                    ReflushTree(frame, root, i)           
                 else:
                     pass
     
-async def SendCmdAsync(parent, cmd):
-    parent.cmd_return = ""
+async def SendCmdAsync(main_frame, cmd):
+    main_frame.cmd_return = ""
     print("CMDsend = " +cmd)
-    parent.serial_manager.put_cmd(cmd)
-    await asyncio.sleep(1)
-    #return 
+    main_frame.serial_manager.put_cmd(cmd)
+    await asyncio.sleep(main_frame.time_to_send) 

@@ -21,6 +21,10 @@ def Init_Editor_base(editor):
     editor.SetEOLMode(stc.STC_EOL_CRLF)
     editor.setDisplayLineNumbers(True)
     editor.SetLexer(wx.stc.STC_LEX_PYTHON)
+    editor.SetIndent(4)
+    editor.SetTabIndents(4)
+    editor.AutoCompleteDirectories()
+    editor.AutoCompleteFileNames()
     #editor.SetFontQuality(stc.STC_EFF_QUALITY_LCD_OPTIMIZED)
     #editor.SetUseAntiAliasing(True)
 
@@ -40,9 +44,9 @@ def Change_Theme(editor, theme):
     font = wx.Font(pointSize = 10,
                 family = wx.FONTFAMILY_SWISS,
                 style = wx.FONTSTYLE_SLANT,
-                weight = wx.FONTWEIGHT_BOLD,  
+                weight = wx.FONTWEIGHT_NORMAL,  
                 underline = False,
-                faceName ="",
+                faceName ="Fira Code",
                 encoding = 0)
     change_lexer_stcstyle(editor, theme, font)
     change_lexer_pystyle(editor, theme, font)
@@ -85,6 +89,5 @@ def change_lexer_pystyle(editor, theme, font):
         editor.StyleSetBackground(i, theme[1][0])
     for i in py_style:
         editor.StyleSetForeground(i, theme[0][x])
-        print(editor.StyleGetForeground(i))
         x += 1
         

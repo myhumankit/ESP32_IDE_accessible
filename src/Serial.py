@@ -41,6 +41,36 @@ class ManageConnection():
         
         self.frame = frame
         self.last_cmd = ""
+        self.card = None
+        self.nodename = None
+        self.release = None
+        self.version = None
+        self.machine = None
+
+    def Get_Info_Card(self, msg):
+        count = 0
+        msg = msg.split('(')[1]
+        msg = msg.split(')')[0]
+        res = tuple(map(str, msg.split(', ')))
+        list_infos = [self.card,
+                        self.nodename, 
+                        self.release,
+                        self.version,
+                        self.machine]
+        list_res = []
+
+        print("Tuple after getting conversion from String : " + str(res))
+        for i in res:
+            i = i.split('=')
+            i = i[1][1:-1]
+            list_res.append(i)
+            count += 1
+
+        self.card = list_res[0]
+        self.nodename = list_res[1]
+        self.release = list_res[2]
+        self.version = list_res[3]
+        self.machine = list_res[4]
 
     def SendEventRx(self, data):
         event = SerialRxEvent(self.frame.GetId(), data)
