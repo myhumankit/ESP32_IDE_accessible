@@ -659,13 +659,15 @@ class TopMenu(wx.MenuBar):
                 else:    
                         sys.stdout = sys.__stdout__
                         self.Frame_burn = BurnFrame(parent)
-                        burn_thread = FirmwareThread(parent, firmware_manager, self.Frame_burn.txt)
+                        burn_thread = FirmwareThread(parent, firmware_manager, self.Frame_burn)
                         self.Frame_burn.CenterOnParent()
                         burn_thread.setDaemon(1)
                         burn_thread.start()
                         self.Frame_burn.ShowModal()
+                        burn_thread._stop()
                         burn_thread.join()
                         speak(self.parent, "Firmware installed")
+                        self.Frame_burn.txt.Destroy()
                         self.Frame_burn.Destroy()
                         sys.stdout = sys.__stdout__
                         ok = True

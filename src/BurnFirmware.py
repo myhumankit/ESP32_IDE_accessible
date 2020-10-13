@@ -170,14 +170,16 @@ class BurnFrame(wx.Dialog):
 class FirmwareThread(Thread):#(Thread)
     def __init__(self, parent, firmware_manager, console):
         Thread.__init__(self)
-        self.Frame_burn = console        
-        #sys.stdout = self.Frame_burn.txt 
+        self.burn_frame = console
+        self.burn_console = console.txt      
+        #sys.stdout = self.burn_console.txt 
         self.board= firmware_manager.board
         self.binpath= firmware_manager.bin_path
         self.com= firmware_manager.port
         self.iserase= firmware_manager.burn_erase
         self.burnaddr= firmware_manager.burn_adress
         self.port = firmware_manager.port
+        self.stop_thread = False
     
         if self.burnaddr=="0x0":
             self.burnaddr=0
@@ -187,21 +189,24 @@ class FirmwareThread(Thread):#(Thread)
         print("burn=====board:%s path:%s port:%s adress:%s "% (str(self.board), self.binpath, self.port, self.burnaddr))
 
     def run(self):
-
-        if self.iserase=="yes":
+        while True:
+            if self.stop_thread:
+                break
+            if self.iserase=="yes":
+                try:
+                    Esp.Burn(self.burn_console, str(self.board),self.binpath,self.port,"yes", self.burnaddr)
+                except Exception as e:
+                    time.sleep(3)
+                    print(e)
+                    self.stop_thread = True
+                    return
             try:
-                print("burn=====board:%s path:%s port:%s adress:%s "% (str(self.board), self.binpath, self.port, self.burnaddr))
-                Esp.Burn(self.Frame_burn, str(self.board),self.binpath,self.port,"yes", self.burnaddr)
+                Esp.Burn(self.burn_console, str(self.board),self.binpath,self.port,"no",self.burnaddr)
             except Exception as e:
-                time.sleep(3)
                 print(e)
+                self.stop_thread = True
                 return
-        try:
-            print("burn=====board:%s path:%s port:%s adress:%s "% (str(self.board), self.binpath, self.port, self.burnaddr))
-            Esp.Burn(self.Frame_burn, str(self.board),self.binpath,self.port,"no",self.burnaddr)
-            
-        except Exception as e:
-            print(e)
-            return
-        if self.board=="esp8266":
-            Esp.downOkReset()
+            if self.board=="esp8266":
+                Esp.downOkReset()
+            self.stop_thread = True
+            self.burn_frame.Destroy()
