@@ -1,7 +1,7 @@
 """Module which contains functions to find and replace
 """
 
-from Packages import wx
+from packages import wx
 
 def find_next(editor, evt):
     """

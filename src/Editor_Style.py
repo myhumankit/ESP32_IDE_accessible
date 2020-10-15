@@ -2,8 +2,8 @@
 Module to Customize Panels with differents themes
 """
 
-from Packages import wx, random, os
-from Constantes import *
+from packages import wx, random, os
+from constantes import *
 
 import wx.stc as stc
 import wx.py as pysh
@@ -11,7 +11,7 @@ import wx.lib.agw.flatnotebook as fnb
 
 #TODO: finir les thèmes
 
-def Init_Editor_base(editor):
+def init_editor_style(editor):
     """Init some settings for Editor Window
 
     :param editor: editorWindow
@@ -28,7 +28,7 @@ def Init_Editor_base(editor):
     #editor.SetFontQuality(stc.STC_EFF_QUALITY_LCD_OPTIMIZED)
     #editor.SetUseAntiAliasing(True)
 
-def Change_Theme(editor, theme):
+def customize_editor(editor, theme):
     """Change theme of the window
 
     :param editor: EditWindow to customize
@@ -48,10 +48,10 @@ def Change_Theme(editor, theme):
                 underline = False,
                 faceName ="Fira Code",
                 encoding = 0)
-    change_lexer_stcstyle(editor, theme, font)
-    change_lexer_pystyle(editor, theme, font)
+    customize_lexer_stcstyle(editor, theme, font)
+    customize_lexer_pystyle(editor, theme, font)
 
-def change_lexer_stcstyle(editor, theme, font):
+def customize_lexer_stcstyle(editor, theme, font):
     """Change lexer words stc style by applying 
     the theme and the font gived in parameters
 
@@ -71,7 +71,7 @@ def change_lexer_stcstyle(editor, theme, font):
 
     #Lexer style
 
-def change_lexer_pystyle(editor, theme, font):
+def customize_lexer_pystyle(editor, theme, font):
     """Change lexer python words by applying 
     the theme and the font gived in parameters
 

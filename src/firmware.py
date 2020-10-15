@@ -1,16 +1,20 @@
-from Packages import wx, serial, time, threading, sys
+from packages import wx, serial, time, threading, sys
 from threading import Thread
 
 import serial.tools.list_ports
 import subprocess
-import Esp
+import api.api_esptool
 
 #######FONCTIONS A INTEGRER AU FIL PRINCIPAL
 #TODO: Intégrer progress bar 
     #TODO: -->Si erase, rajouter progress bar sinon non, s'inspirer du hide wxSerialConfig
 
 class FirmwareManager():
+    """Class which contains parameters to use esptool
+    """
     def __init__(self):
+        """Basic constructor for FirmwareManager Class
+        """
         self.burn_adress = None
         self.port = None
         self.board = None
@@ -18,24 +22,52 @@ class FirmwareManager():
         self.bin_path = None
 
 class ChooseBin(wx.FilePickerCtrl):
+    """Class wich manage the selection the selection of the binary to be install on the card
+    
+
+    :param wx.FilePickerCtrl: WX Class to derivate
+    :type wx.FilepickerCtrl: wx.FilePickerCtrl
+    """
     def __init__(self, parent, burn_manager):
+        """Basic constructor for ChooseBin class
+
+        :param parent: Parent class
+        :type parent: :class:UpdateFirmwareDialog
+        :param burn_manager: :class:FirmwareManager to fill 
+        :type burn_manager: :class:FirmwareManager
+        """
         wx.FilePickerCtrl.__init__(self, parent, message="Hello", wildcard="*.bin")
 
         self.burn_manager = burn_manager
         self.__set_properties(parent)
-        self.Bind(wx.EVT_FILEPICKER_CHANGED, self.changeBinPath)
+        self.Bind(wx.EVT_FILEPICKER_CHANGED, self.change_bin_path)
     
-    def __set_properties(self, parent):
-        self.SetLabelText("Select path of the bin")
+    def __set_properties(self):
+        """Custom the current class
+        """
+        self.set_label_text("Select path of the bin")
     
-    def changeBinPath(self, event):
+    def change_bin_path(self, event):
+        """Change the binary path by the path selected
+
+        :param event: event which sets off the function
+        :type event: wx.EVT_FILE_PICKER_CHANGED
+        """
         self.burn_manager.bin_path = self.GetPath()
 
 class UpdateFirmwareDialog(wx.Dialog):
     """
+    Dialog to update the firmware or other 
     """
     
     def __init__(self, parent, burn_manager):
+        """Basic constructor for UpdateFirmwareDialog class
+
+        :param parent: Parent class
+        :type parent: :class:MainWindow
+        :param burn_manager: :class:FirmwareManager to fill
+        :type burn_manager: :class:FirmwareManager
+        """
         wx.Dialog.__init__(self, parent, style=wx.DEFAULT_DIALOG_STYLE)
 
         self.burn_manager = burn_manager
@@ -71,6 +103,9 @@ class UpdateFirmwareDialog(wx.Dialog):
         self.__attach_events()
 
     def __set_properties(self):
+        """Custom the current class
+         """
+        
         self.SetTitle("Update Firmware")
         self.choice_adresses.SetSelection(0)
         self.choice_erase_flash.SetSelection(0)
@@ -104,6 +139,8 @@ class UpdateFirmwareDialog(wx.Dialog):
         self.choice_erase_flash.SetSelection(index)
 
     def __do_layout(self):
+        """Places the different elements of the current class instance on the window
+         """
         sizer_2 = wx.BoxSizer(wx.VERTICAL)
         sizer_3 = wx.BoxSizer(wx.HORIZONTAL)
         self.sizer_binary_staticbox.Lower()
@@ -139,11 +176,19 @@ class UpdateFirmwareDialog(wx.Dialog):
         # end wxGlade
 
     def __attach_events(self):
+        """Attach events on the class instantiated
+         """
+        
         self.Bind(wx.EVT_BUTTON, self.OnCancel, id=wx.ID_CANCEL)
         self.Bind(wx.EVT_BUTTON, self.OnOK, id=wx.ID_OK)
 
     def OnOK(self, event):
-        print("OKKKKKKKKKKKK MON POTEEE")
+        """Function to apply when the user click on the OK button
+
+        :param event: event which sets off the function
+        :type event: wx.EVT_BUTTON
+        """
+
         success = True
         self.burn_manager.port = self.ports[self.choice_port.GetSelection()]
         self.burn_manager.burn_adress = self.choice_adresses.GetStringSelection()
@@ -152,10 +197,27 @@ class UpdateFirmwareDialog(wx.Dialog):
             self.EndModal(wx.ID_OK)
 
     def OnCancel(self, events):
+        """Function to apply when the user click on the Cancel button
+
+        :param event: event which sets off the function
+        :type event: wx.EVT_BUTTON
+        """
         self.EndModal(wx.ID_CANCEL)
 
 class BurnFrame(wx.Dialog):
+    """Burn Firware dialog class to update or install the firmware selected on the card
+
+    :param wx: Class to derivate
+    :type wx: :class:wx.Dialog
+    """
     def __init__(self, parent):
+        """Basic constructor to init the class
+
+        :param parent: Parent class 
+        :type parent: :class:MainWindow
+        """
+        #
+        #TODO Continuer la doc
         wx.Dialog.__init__(self, parent, style=wx.DIALOG_ADAPTATION_LOOSE_BUTTONS)
         self.SetTitle("Burn Firmware Console")
         sizer = wx.BoxSizer(wx.VERTICAL)
@@ -167,12 +229,26 @@ class BurnFrame(wx.Dialog):
         sizer.Add(self.txt, 1, wx.EXPAND | wx.ALL, 0)
         self.SetSizer(sizer)
 
-class FirmwareThread(Thread):#(Thread)
+class FirmwareThread(Thread):
+    """Thread to execute esptool command(s)
+
+    :param Thread: Thread class from Python module
+    :type Thread: [type]
+    """
     def __init__(self, parent, firmware_manager, console):
+        """Constructor to init a instance of :class:FirmwareThread
+
+        :param parent: MainWindow
+        :type parent: :class:MainWindow
+        :param firmware_manager: Firmware manager 
+        :type firmware_manager: :class:FirmwareManager
+        :param console: Place where write the output of esptool
+        :type console: :class:BurnFrame
+        """
+
         Thread.__init__(self)
         self.burn_frame = console
-        self.burn_console = console.txt      
-        #sys.stdout = self.burn_console.txt 
+        self.burn_console = console.txt       
         self.board= firmware_manager.board
         self.binpath= firmware_manager.bin_path
         self.com= firmware_manager.port

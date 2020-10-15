@@ -1,100 +1,38 @@
-from Packages import wx, speech, time, json, asyncio
-
+from packages import wx, speech, time, json, asyncio, sys
+from my_serial import SendCmdAsync, put_cmd
 
 #TODO établir liste baudrate/sleep
-def save_on_card(frame, page):
+def save_on_card(main_window, page):
     print(page.directory)
     print(page.filename)
-    notebookP = frame.MyNotebook
+    notebookP = main_window.MyNotebook
 
     # Check if save is required
     if (page.GetValue() != page.last_save):
         page.saved = False
         # Grab the content to be saved
-        save_as_file_contents = page.GetValue()
-        frame.show_cmd = False
-        cmd = "f = open('%s', 'wb')\r\n"%page.directory + "/" + page.filename
-        frame.serial_manager.put_cmd(cmd)
-        cmd = "f.write(%s)\r\n"%save_as_file_contents
-        frame.serial_manager.put_cmd(cmd)
+        save_as_file_content = page.GetValue()
+        main_window.show_cmd = False
+        cmd = "f = os.remove('%s')\r\n" % (page.directory + "/" + page.filename)
+        asyncio.run(SendCmdAsync(main_window, cmd))
+        cmd = "f = open('%s', 'wb')\r\n" % (page.directory + "/" + page.filename)
+        asyncio.run(SendCmdAsync(main_window, cmd))
+        cmd = "f.write(%s)\r\n" % save_as_file_content
+        asyncio.run(SendCmdAsync(main_window, cmd))
         cmd = "f.close()\r\n"
-        frame.serial_manager.put_cmd(cmd)
-        page.last_save = save_as_file_contents
+        asyncio.run(SendCmdAsync(main_window, cmd))
+        page.last_save = save_as_file_content
         page.saved = True
-        frame.Shell.AppendText("Content Saved\n")
-        speak(frame, "Content Saved")
+        treeModel(main_window)
+        main_window.Shell.AppendText("Content Saved\n")
+        speak(main_window, "Content Saved")
 
 def load_img(path):
     return wx.Image(path,wx.BITMAP_TYPE_ANY).ConvertToBitmap()
 
-def speak(frame, txt):
-    if frame.voice_on:
+def speak(main_window, txt):
+    if main_window.voice_on:
         speech.say(txt)
-
-def ConnectSerial(self):
-        self.Shell.Clear()
-        self.serial.write('\x03'.encode())
-
-        startdata=""
-        startTime=time.time()
-        while True:
-            n = self.serial.inWaiting()
-            if n>0:
-                startdata += (self.serial.read(n)).decode(encoding='utf-8',errors='ignore')
-                print("[%s]"%startdata)
-                if startdata.find('>>> '):
-                    print("OK")
-                    break
-            time.sleep(0.1)
-            endTime=time.time()
-            if endTime-startTime > 10:
-                self.serial.close()
-                if not self.serial.isOpen():
-                    print("UPDATE FIRMWARE")
-                return False
-        print("SURVIVOR")
-        senddata="import sys\r\n"
-        self.serial_manager.put_cmd("import sys\r\n")
-        print("SURVIVOR")
-        for i in senddata:
-            self.serial.write(i.encode())
-        startdata=""
-        startTime=time.time()
-        while True:
-            n = self.serial.inWaiting()
-            if n>0:
-                startdata+=(self.serial.read(n)).decode('utf-8')
-                if startdata.find('>>> ')>=0:
-                    self.Shell.AppendText(">>> ")
-                    break
-            time.sleep(0.1)
-            endTime=time.time()
-            if endTime-startTime>2:
-                print(startdata)
-                self.serial.close()
-                self.Shell.AppendText("connect serial timeout")
-                return False
-
-        senddata="sys.platform\r"
-        for i in senddata:
-            self.serial.write(i.encode())
-        startdata=""
-        startTime=time.time()
-        while True:
-            n = self.serial.inWaiting()
-            if n>0:
-                startdata+=(self.serial.read(n)).decode('utf-8')
-                if startdata.find('>>> ')>=0:
-                    break
-            time.sleep(0.1)
-            endTime=time.time()
-            if endTime-startTime>2:
-                self.serial.close()
-                self.Shell.AppendText("connect serial timeout")
-                return False
-
-        self.StartThread()
-        return True
 
 def GetCmdReturn(shell_text, cmd):
     """Return the result of a command launched in MicroPython
@@ -115,15 +53,15 @@ def GetCmdReturn(shell_text, cmd):
     print ("SUCCESS:" + return_cmd)
     return return_cmd
 
-async def SetView(frame, info):
-    frame.show_cmd = info
+async def SetView(main_window, info):
+    main_window.show_cmd = info
 
-def getFileTree(frame, dir):
+def getFileTree(main_window, dir):
         print("GET FILE TREE : %s"%(dir))
-        frame.cmd_return = ""
-        frame.get_cmd = True
-        asyncio.run(SendCmdAsync(frame, "os.listdir(\'%s\')\r\n"%dir))
-        result = frame.ReadCmd("os.listdir(\'%s\')"%dir)
+        main_window.cmd_return = ""
+        main_window.get_cmd = True
+        asyncio.run(SendCmdAsync(main_window, "os.listdir(\'%s\')\r\n"%dir))
+        result = main_window.read_cmd("os.listdir(\'%s\')"%dir)
         print("RETURN: " + result)
         if result=="err":
             return result
@@ -146,8 +84,8 @@ def getFileTree(frame, dir):
                 filelist.append(i)
         print("FILE LIST =" ,filelist)
         for i in filelist:
-            asyncio.run(SendCmdAsync(frame, "os.stat(\'%s\')\r\n"%(dir + "/" + i)))
-            res = frame.ReadCmd("os.stat(\'%s\')"%(dir + "/" + i))
+            asyncio.run(SendCmdAsync(main_window, "os.stat(\'%s\')\r\n"%(dir + "/" + i)))
+            res = main_window.read_cmd("os.stat(\'%s\')"%(dir + "/" + i))
             if res == "err":
                 return res
             isdir=res.split("\n")[1]
@@ -164,7 +102,7 @@ def getFileTree(frame, dir):
                     if i=="System Volume Information":
                         pass
                     else:
-                        ret[dir].append(getFileTree(frame, dir+"/"+i))
+                        ret[dir].append(getFileTree(main_window, dir+"/"+i))
                 else:
                     ret[dir].append(i)
             except Exception as e:
@@ -172,30 +110,30 @@ def getFileTree(frame, dir):
                 return "err"
         return ret
 
-def treeModel(frame):
-        frame.reflushTreeBool= True
-        frame.cmd_return = ""
+def treeModel(main_window):
+        main_window.reflushTreeBool= True
+        main_window.cmd_return = ""
         res=json.loads("{}")
-        res=getFileTree(frame, ".")
+        res=getFileTree(main_window, ".")
 
         if res=="err":
-            frame.cmd_return = ""
+            main_window.cmd_return = ""
             return
         print("RESSSSSSS")
         print(res)
         try:
-            ReflushTree(frame,frame.device_tree.root,res['.'])
+            ReflushTree(main_window,main_window.device_tree.root,res['.'])
         except Exception as e:
             print(e)
-        frame.cmd_return =""
+        main_window.cmd_return =""
     
-def ReflushTree(frame, root, msg):
+def ReflushTree(main_window, root, msg):
         if msg=="err":
             print("soucii")
             return
         print("reflushTree=====================%s"%msg)
         print("MSG " + str(msg))
-        tree = frame.device_tree
+        tree = main_window.device_tree
         if type(msg) is str: #: fichier
             child = tree.AppendItem(root, msg)
             tree.SetItemImage(child, tree.fileidx, wx.TreeItemIcon_Normal)
@@ -210,18 +148,12 @@ def ReflushTree(frame, root, msg):
                 child = tree.AppendItem(root, i[1])
                 tree.SetItemImage(child, tree.fldridx, wx.TreeItemIcon_Normal)
                 tree.SetItemImage(child, tree.fldropenidx, wx.TreeItemIcon_Expanded)
-                ReflushTree(frame, child, k)
+                ReflushTree(main_window, child, k)
         elif type(msg) is list: #liste de fichiers
             for i in msg:
                 if type(i) is str:
-                    ReflushTree(frame, root, i)
+                    ReflushTree(main_window, root, i)
                 elif type(i) is dict:
-                    ReflushTree(frame, root, i)           
+                    ReflushTree(main_window, root, i)           
                 else:
                     pass
-    
-async def SendCmdAsync(main_frame, cmd):
-    main_frame.cmd_return = ""
-    print("CMDsend = " +cmd)
-    main_frame.serial_manager.put_cmd(cmd)
-    await asyncio.sleep(main_frame.time_to_send) 

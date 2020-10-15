@@ -1,6 +1,5 @@
 """Constantes Module to stock main constants"""
-
-from Packages import os, wx
+from packages import os, wx
 
 import wx.stc as stc
 
@@ -10,7 +9,6 @@ currentTempPath="%s/AppData/Local/uPyCraft/temp/"%rootDirectoryPath
 
 SERIALRX = wx.NewEventType() #:create a serial data received event
 EVT_SERIALRX = wx.PyEventBinder(SERIALRX, 0) #:bind to serial data receive events
-
 
 wx.ID_CONNECT = wx.NewId() #: New id to Connect the card
 wx.ID_REFLUSH_DIR = wx.NewId() #: New id to Connect the card
@@ -107,31 +105,9 @@ th_light = [
 ]
 frame_light = ["White" , "Black"]
 
-th_astro = [
-        '#2e8942', #strings editor 0 
-        '#d08c25', #class editor 1
-        '#db62f2', #word editor 2
-        '#131313', #character editor 3
-        '#1626ff', #def editor 4
-        '#1626ff', #decorator editor 5
-        '#131313', #default editor 6
-        '#131313', #identifier editor 7
-        '#d08c25', #Number editor 8
-        '#131313', #Operator editor 9
-        '#2e8942', #str EOL editor 11
-        '#2e8942', #triple editor 10
-        '#2e8942', #triple double editor 12
-        '#db62f2', #word 2 13
-        '#9798a3', #CommentLine 14
-        '#2e8942', #Comment block + strings 15
-]
-frame_astro = ["White", "Black"]
-
 #: Themes lists with sub_themes[lexer, frames]
 themes = [[th_dark, frame_dark],
-          [th_light, frame_light],
-          [th_astro, frame_astro]
-          ]
+          [th_light, frame_light],]
  
 #: List about lexer styles
 py_style = [

@@ -8,7 +8,7 @@ import speech #:see import win32com.client as wincl on Google
 import queue #:https://docs.python.org/fr/3/library/queue.html
 import time #:https://docs.python.org/fr/3/library/time.html
 import sys #:https://docs.python.org/fr/3/library/sys.html
-import Serial #: see Serial module
+#import my_serial #: see Serial module :module: my_serial
 import random #:https://docs.python.org/fr/3/library/random.html
 import codecs #:https://docs.python.org/fr/3/library/codecs.html
 import serial #:https://pyserial.readthedocs.io/en/latest/shortintro.html

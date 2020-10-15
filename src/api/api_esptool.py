@@ -79,23 +79,18 @@ def stub_and_esp32_function_only(func):
     """ Attribute for a function only supported by software stubs or ESP32 ROM """
     return check_supported_function(func, lambda o: o.IS_STUB or o.CHIP_NAME == "ESP32")
 
-
 PYTHON2 = sys.version_info[0] < 3  # True if on pre-Python 3
 
 # Function to return nth byte of a bitstring
 # Different behaviour on Python 2 vs 3
-if PYTHON2:
-    def byte(bitstr, index):
-        return ord(bitstr[index])
-else:
-    def byte(bitstr, index):
-        return bitstr[index]
+
+def byte(bitstr, index):
+    return bitstr[index]
 
 
 def esp8266_function_only(func):
     """ Attribute for a function only supported on ESP8266 """
     return check_supported_function(func, lambda o: o.CHIP_NAME == "ESP8266")
-
 
 class ESPLoader(object):
     """ Base class providing access to ESP ROM & softtware stub bootloaders.
@@ -803,7 +798,6 @@ class ESPLoader(object):
                 # in the stub loader
                 self.command(self.ESP_RUN_USER_CODE, wait_response=False)
 
-
 class ESP8266ROM(ESPLoader):
     """ Access class for ESP8266 ROM bootloader
     """
@@ -890,7 +884,6 @@ class ESP8266ROM(ESPLoader):
             return (num_sectors + 1) // 2 * sector_size
         else:
             return (num_sectors - head_sectors) * sector_size
-
 
 class ESP8266StubLoader(ESP8266ROM):
     """ Access class for ESP8266 stub loader, runs on top of ROM.
@@ -982,7 +975,6 @@ class ESP32ROM(ESPLoader):
     def get_erase_size(self, offset, size):
         return size
 
-
 class ESP32StubLoader(ESP32ROM):
     """ Access class for ESP32 stub loader, runs on top of ROM.
     """
@@ -1007,7 +999,6 @@ class ESPBOOTLOADER(object):
     # First 'segment' value in a "v2" application image, appears to be a constant version value?
     IMAGE_V2_SEGMENT = 4
 
-
 def LoadFirmwareImage(chip, filename):
     """ Load a firmware image. Can be for ESP8266 or ESP32. ESP8266 images will be examined to determine if they are
         original ROM firmware images (ESPFirmwareImage) or "v2" OTA bootloader images.
@@ -1026,7 +1017,6 @@ def LoadFirmwareImage(chip, filename):
                 return OTAFirmwareImage(f)
             else:
                 raise FatalError("Invalid image magic number: %d" % magic)
-
 
 class ImageSegment(object):
     """ Wrapper class for a segment in an ESP image
@@ -1049,7 +1039,6 @@ class ImageSegment(object):
             r += " file_offs 0x%08x" % (self.file_offs)
         return r
 
-
 class ELFSection(ImageSegment):
     """ Wrapper class for a section in an ELF image, has a section
     name as well as the common properties of an ImageSegment. """
@@ -1059,7 +1048,6 @@ class ELFSection(ImageSegment):
 
     def __repr__(self):
         return "%s %s" % (self.name, super(ELFSection, self).__repr__())
-
 
 class BaseFirmwareImage(object):
     SEG_HEADER_LEN = 8
@@ -1144,7 +1132,6 @@ class BaseFirmwareImage(object):
         irom_segment = self.get_irom_segment()
         return [s for s in self.segments if s != irom_segment]
 
-
 class ESPFirmwareImage(BaseFirmwareImage):
     """ 'Version 1' firmware image, segments loaded directly by the ROM bootloader. """
 
@@ -1183,7 +1170,6 @@ class ESPFirmwareImage(BaseFirmwareImage):
             for segment in normal_segments:
                 checksum = self.save_segment(f, segment, checksum)
             self.append_checksum(f, checksum)
-
 
 class OTAFirmwareImage(BaseFirmwareImage):
     """ 'Version 2' firmware image, segments loaded by software bootloader stub
@@ -1261,7 +1247,6 @@ class OTAFirmwareImage(BaseFirmwareImage):
             for segment in normal_segments:
                 checksum = self.save_segment(f, segment, checksum)
             self.append_checksum(f, checksum)
-
 
 class ESP32FirmwareImage(BaseFirmwareImage):
     """ ESP32 firmware image is very similar to V1 ESP8266 image,
@@ -1368,7 +1353,6 @@ class ESP32FirmwareImage(BaseFirmwareImage):
             except TypeError:  # Python 3
                 f.write(bytes([len(self.segments) + padding_segments]))
 
-
 class ELFFile(object):
     SEC_TYPE_PROGBITS = 0x01
     SEC_TYPE_STRTAB = 0x03
@@ -1449,7 +1433,6 @@ class ELFFile(object):
                          if lma != 0]
         self.sections = prog_sections
 
-
 def slip_reader(port):
     """Generator to read SLIP packets from a serial port.
     Yields one full SLIP packet at a time, raises exception on timeout or invalid data.
@@ -1490,10 +1473,8 @@ def slip_reader(port):
             else:  # normal byte in packet
                 partial_packet += b
 
-
 def arg_auto_int(x):
     return int(x, 0)
-
 
 def div_roundup(a, b):
     """ Return a/b rounded up to nearest integer,
@@ -1502,12 +1483,10 @@ def div_roundup(a, b):
     """
     return (int(a) + int(b) - 1) // int(b)
 
-
 def align_file_position(f, size):
     """ Align the position in the file to the next block of specified size """
     align = (size - 1) - (f.tell() % size)
     f.seek(align, 1)
-
 
 def flash_size_bytes(size):
     """ Given a flash size of the type passed in args.flash_size
@@ -1520,13 +1499,11 @@ def flash_size_bytes(size):
     else:
         raise FatalError("Unknown size %s" % size)
 
-
 def hexify(s):
     if not PYTHON2:
         return ''.join('%02X' % c for c in s)
     else:
         return ''.join('%02X' % ord(c) for c in s)
-
 
 def unhexify(hs):
     s = bytes()
@@ -1541,14 +1518,12 @@ def unhexify(hs):
 
     return s
 
-
 def pad_to(data, alignment, pad_character=b'\xFF'):
     """ Pad to the next alignment boundary """
     pad_mod = len(data) % alignment
     if pad_mod != 0:
         data += pad_character * (alignment - pad_mod)
     return data
-
 
 class FatalError(RuntimeError):
     """
@@ -1567,7 +1542,6 @@ class FatalError(RuntimeError):
         message += " (result was %s)" % hexify(result)
         return FatalError(message)
 
-
 class NotImplementedInROMError(FatalError):
     """
     Wrapper class for the error thrown when a particular ESP bootloader function
@@ -1580,7 +1554,6 @@ class NotImplementedInROMError(FatalError):
 #
 # Each function takes either two args (<ESPLoader instance>, <args>) or a single <args>
 # argument.
-
 
 def load_ram(esp, args):
     image = LoadFirmwareImage(esp, args.filename)
@@ -1601,15 +1574,12 @@ def load_ram(esp, args):
     print_wx_info(Console_wx, 'All segments done, executing at %08x' % image.entrypoint)
     esp.mem_finish(image.entrypoint)
 
-
 def read_mem(esp, args):
     print_wx_info(Console_wx, '0x%08x = 0x%08x' % (args.address, esp.read_reg(args.address)))
-
 
 def write_mem(esp, args):
     esp.write_reg(args.address, args.value, args.mask, 0)
     print_wx_info(Console_wx, 'Wrote %08x, mask %08x to %08x' % (args.value, args.mask, args.address))
-
 
 def dump_mem(esp, args):
     f = open(args.filename, 'wb')
@@ -1623,7 +1593,6 @@ def dump_mem(esp, args):
         sys.stdout.flush()
     print_wx_info(Console_wx, 'Done!')
 
-
 def detect_flash_size(esp, args):
     if args.flash_size == 'detect':
         flash_id = esp.flash_id()
@@ -1634,7 +1603,6 @@ def detect_flash_size(esp, args):
             args.flash_size = '4MB'
         else:
             print_wx_info(Console_wx, 'Auto-detected Flash size:', args.flash_size)
-
 
 def _update_image_flash_params(esp, address, args, image):
     """ Modify the flash mode & size bytes if this looks like an executable bootloader image  """
@@ -1662,7 +1630,6 @@ def _update_image_flash_params(esp, address, args, image):
         print_wx_info(Console_wx, 'Flash params set to 0x%04x' % struct.unpack(">H", flash_params))
         image = image[0:2] + flash_params + image[4:]
     return image
-
 
 def write_flash(esp, args):
     # set args.compress based on default behaviour:
@@ -1755,7 +1722,6 @@ def write_flash(esp, args):
         print_wx_info(Console_wx, '(This option is deprecated, flash contents are now always read back after flashing.)')
         verify_flash(esp, args)
 
-
 def image_info(args):
     image = LoadFirmwareImage(args.chip, args.filename)
     print_wx_info(Console_wx, 'Image version: %d' % image.version)
@@ -1770,7 +1736,6 @@ def image_info(args):
     print_wx_info(Console_wx, 'Checksum: %02x (%s)' % (image.checksum,
                                    'valid' if image.checksum == calc_checksum else 'invalid - calculated %02x' % calc_checksum))
 
-
 def make_image(args):
     image = ESPFirmwareImage()
     if len(args.segfile) == 0:
@@ -1782,7 +1747,6 @@ def make_image(args):
         image.segments.append(ImageSegment(addr, data))
     image.entrypoint = args.entrypoint
     image.save(args.output)
-
 
 def elf2image(args):
     e = ELFFile(args.input)
@@ -1806,7 +1770,6 @@ def elf2image(args):
         args.output = image.default_output_name(args.input)
     image.save(args.output)
 
-
 def read_mac(esp, args):
     mac = esp.read_mac()
 
@@ -1814,11 +1777,9 @@ def read_mac(esp, args):
         print_wx_info(Console_wx, '%s: %s' % (label, ':'.join(map(lambda x: '%02x' % x, mac))))
     print_wx_info_mac("MAC", mac)
 
-
 def chip_id(esp, args):
     chipid = esp.chip_id()
     print_wx_info(Console_wx, 'Chip ID: 0x%08x' % chipid)
-
 
 def erase_flash(esp, args):
     print_wx_info(Console_wx, 'Erasing flash (this may take a while)...')
@@ -1828,17 +1789,14 @@ def erase_flash(esp, args):
     esp.erase_flash()
     print_wx_info(Console_wx, 'Chip erase completed successfully in %.1fs' % (time.time() - t))
 
-
 def erase_region(esp, args):
     print_wx_info(Console_wx, 'Erasing region (may be slow depending on size)...')
     t = time.time()
     esp.erase_region(args.address, args.size)
     print_wx_info(Console_wx, 'Erase completed successfully in %.1f seconds.' % (time.time() - t))
 
-
 def run(esp, args):
     esp.run()
-
 
 def flash_id(esp, args):
     flash_id = esp.flash_id()
@@ -1846,7 +1804,6 @@ def flash_id(esp, args):
     flid_lowbyte = (flash_id >> 16) & 0xFF
     print_wx_info(Console_wx, 'Device: %02x%02x' % ((flash_id >> 8) & 0xff, flid_lowbyte))
     print_wx_info(Console_wx, 'Detected flash size: %s' % (DETECTED_FLASH_SIZES.get(flid_lowbyte, "Unknown")))
-
 
 def read_flash(esp, args):
     if args.no_progress:

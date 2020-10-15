@@ -1,34 +1,34 @@
-from Packages import random, os, codecs, threading, wxSerialConfigDialog, serial, asyncio, sys
+from packages import random, os, codecs, threading, wxSerialConfigDialog, asyncio, sys
 import wx.stc as stc
 import wx.py as pysh
 import wx.lib.agw.flatnotebook as fnb
-from Editor_Style import *
-from Find_Replace import *
-from Constantes import *
-from Utilitaries import SendCmdAsync
+from editor_style import *
+from find_replace import *
+from constantes import *
+from my_serial import SendCmdAsync, put_cmd
 
-def Init_Panels(frame):
+def create_panels(main_window):
     """Inits the three differents regions(treeCtrl, Notebook, Shell) in the MainWindow
     
-    :param frame: MainWindow or window to split
-    :type frame: MainWindow or other panel
+    :param main_window: MainWindow or window to split
+    :type main_window: MainWindow or other panel
     """    
     style = wx.SP_3D | wx.SP_NO_XP_THEME | wx.SP_PERMIT_UNSPLIT | wx.SP_LIVE_UPDATE
-    frame.splitter_v = wx.SplitterWindow(frame, style=style, name="Dimension")
-    frame.splitter_h = wx.SplitterWindow(frame.splitter_v, style=style, name="DIMENSION ALL")
-    frame.MyNotebook = NotebookPanel(frame.splitter_h, frame)
-    frame.FileTree = wx.Panel(frame.splitter_v)
-    frame.Shell = ShellPanel(frame.splitter_h, frame)
-    frame.splitter_v.SplitVertically(frame.FileTree , frame.splitter_h, 200)
-    frame.splitter_h.SplitHorizontally(frame.MyNotebook, frame.Shell, 400)
+    main_window.splitter_v = wx.SplitterWindow(main_window, style=style, name="Dimension")
+    main_window.splitter_h = wx.SplitterWindow(main_window.splitter_v, style=style, name="DIMENSION ALL")
+    main_window.MyNotebook = NotebookPanel(main_window.splitter_h, main_window)
+    main_window.FileTree = wx.Panel(main_window.splitter_v)
+    main_window.Shell = ShellPanel(main_window.splitter_h, main_window)
+    main_window.splitter_v.SplitVertically(main_window.FileTree , main_window.splitter_h, 200)
+    main_window.splitter_h.SplitHorizontally(main_window.MyNotebook, main_window.Shell, 400)
     
     vbox = wx.BoxSizer(wx.VERTICAL)
-    frame.device_tree = DeviceTree(frame.FileTree, frame, "", "Device")
-    frame.workspace_tree = WorkspaceTree(frame.FileTree, frame)
-    vbox.Add(frame.device_tree, 1, wx.EXPAND | wx.ALL)
-    vbox.Add(frame.workspace_tree, 1, wx.EXPAND | wx.ALL)
-    vbox.Add(ChooseWorkspace(frame.FileTree, frame), 1, wx.MINIMIZE)
-    frame.FileTree.SetSizer(vbox)
+    main_window.device_tree = DeviceTree(main_window.FileTree, main_window, "", "Device")
+    main_window.workspace_tree = WorkspaceTree(main_window.FileTree, main_window)
+    vbox.Add(main_window.device_tree, 1, wx.EXPAND | wx.ALL)
+    vbox.Add(main_window.workspace_tree, 1, wx.EXPAND | wx.ALL)
+    vbox.Add(ChooseWorkspace(main_window.FileTree, main_window), 1, wx.MINIMIZE)
+    main_window.FileTree.SetSizer(vbox)
 
 class MyEditor(pysh.editwindow.EditWindow):
     """Customizable Editor page
@@ -84,20 +84,20 @@ class MyEditor(pysh.editwindow.EditWindow):
         print("PARENT THEME = " + str(parent.theme))
         self.SetMarginType(1, stc.STC_MARGIN_NUMBER)
         self.SetMarginWidth(1, 25)
-        Init_Editor_base(self)
-        Change_Theme(self, themes[self.theme])
+        init_editor_style(self)
+        customize_editor(self, themes[self.theme])
 
     def __attach_events(self):
         """
         Bind events related to this class
         """
-        self.Bind(wx.EVT_TEXT, self.topwindow.ChangeStatus)
-        self.Bind(wx.EVT_TEXT_ENTER, self.topwindow.ChangeStatus)
+        self.Bind(wx.EVT_TEXT, self.topwindow.actualize_status_bar)
+        self.Bind(wx.EVT_TEXT_ENTER, self.topwindow.actualize_status_bar)
         
-    def BindFindEvents(self, win):
+    def bind_find_events(self, win):
         """Bind events of the find and replace dialog
 
-        :param win: the main frame
+        :param win: the main main_window
         :type win: MainWindow class
         """
         win.Bind(wx.EVT_FIND, self.OnFind)
@@ -107,14 +107,14 @@ class MyEditor(pysh.editwindow.EditWindow):
         win.Bind(wx.EVT_FIND_CLOSE, self.OnFindClose)
 
     def OnShowFindReplace(self, evt=None):
-        """Show the Find and Replace dialog and call the BindFindEvents method
+        """Show the Find and Replace dialog and call the bind_find_events method
 
         :param evt: , defaults to None
         :type evt: wx.Event, optional
         """
         dlg = wx.FindReplaceDialog(self, self.findData, "Find & Replace", wx.FR_REPLACEDIALOG)
 
-        self.BindFindEvents(dlg)
+        self.bind_find_events(dlg)
         dlg.Show(True)
 
     def OnFind(self, evt):
@@ -181,10 +181,12 @@ class NotebookPanel(fnb.FlatNotebook):
         :param event: Event to repaint the notebook background
         :type event: wx.Event
         """
+
         self.dc = wx.PaintDC(self)
         x = 0
         y = 0
         w, h = self.GetSize()
+
         self.dc.GradientFillLinear((x, y, w, h), themes[self.theme][1][4],themes[self.theme][1][5])
 
     def __set_properties(self, parent, topwindow):
@@ -202,21 +204,23 @@ class NotebookPanel(fnb.FlatNotebook):
         self.data = ""
         self.dlg = None
         self.theme = 0
-        self.Custom_Notebook(themes[self.theme])
+
+        self.custom_notebook(themes[self.theme])
         
-    def Custom_Notebook(self, theme):
+    def custom_notebook(self, theme):
         """Custom the Notebook according to the theme passed on args
 
         :param theme: The theme to apply
         :type theme: list
         """
+
         self.SetActiveTabColour(theme[1][1])
         self.SetTabAreaColour(theme[1][3])
         self.SetActiveTabTextColour(theme[1][0])
         self.SetNonActiveTabTextColour(theme[1][7])
         
 class FileTreePanel(wx.GenericDirCtrl):
-    def __init__(self, parent, frame):
+    def __init__(self, parent, main_window):
         """constructor for the File/dir Controller on the left
         
         :param training_dir: path of training directory with subdirectories
@@ -224,27 +228,32 @@ class FileTreePanel(wx.GenericDirCtrl):
         """
         wx.GenericDirCtrl.__init__(self, parent = parent)
         
-        self.__set_properties(frame)
+        self.__set_properties(main_window)
         self.__attach_events()
         self.ReCreateTree()
 
-    def __set_properties(self, frame):
-        self.frame = frame
-        self.theme = frame.MyNotebook.theme
+    def __set_properties(self, main_window):
+        self.main_window = main_window
+        self.theme = main_window.MyNotebook.theme
         self.tree = self.GetTreeCtrl()
         self.font = wx.Font(pointSize = 10, family = wx.FONTFAMILY_SWISS, style = wx.FONTSTYLE_SLANT, weight = wx.FONTWEIGHT_BOLD,  
                       underline = False, faceName ="Fira Code", encoding = 0)
-        self.Custom_Tree_Ctrl(themes[self.theme])
+        self.custom_tree_ctrl(themes[self.theme])
 
     def __attach_events(self):
         self.Bind(wx.EVT_DIRCTRL_FILEACTIVATED, self.OnOpenFile)
         
-    def Custom_Tree_Ctrl(self, theme):
+    def custom_tree_ctrl(self, theme):
+        """Custom the tree controller of the class
+
+        :param theme: theme to apply on the cutomtree_ctrl
+        :type theme:  
+        """
         self.tree.SetBackgroundColour(theme[1][1])
         self.tree.SetFont(self.font)
 
     def OnOpenFile(self, evt):
-        notebookP = self.frame.MyNotebook
+        notebookP = self.main_window.MyNotebook
         path = self.GetFilePath()
         file = os.path.split(path)
         directory = file[0]
@@ -260,7 +269,7 @@ class FileTreePanel(wx.GenericDirCtrl):
                 notebookP.GetCurrentPage().saved = True
         else:
             notebookP.tab_num += 1
-            new_tab = MyEditor(notebookP, self.frame, "", False)
+            new_tab = MyEditor(notebookP, self.main_window, "", False)
             new_tab.filename = filename
             new_tab.directory = directory
             notebookP.AddPage(new_tab, filename, select = True)
@@ -273,7 +282,7 @@ class FileTreePanel(wx.GenericDirCtrl):
             filehandle.close()
         
 class WorkspaceTree(wx.GenericDirCtrl):
-    def __init__(self, parent, frame):
+    def __init__(self, parent, main_window):
         """constructor for the File/dir Controller on the left
         
         :param training_dir: path of training directory with subdirectories
@@ -281,27 +290,27 @@ class WorkspaceTree(wx.GenericDirCtrl):
         """
         wx.GenericDirCtrl.__init__(self, parent = parent, style = wx.ALIGN_CENTER)
         
-        self.__set_properties(frame)
+        self.__set_properties(main_window)
         self.__attach_events()
         print(self.GetDefaultPath())
 
-    def __set_properties(self, frame):
-        self.frame = frame
-        self.theme = frame.MyNotebook.theme
+    def __set_properties(self, main_window):
+        self.main_window = main_window
+        self.theme = main_window.MyNotebook.theme
         self.tree = self.GetTreeCtrl()
         self.font = wx.Font(pointSize = 12, family = wx.FONTFAMILY_SWISS, style = wx.FONTSTYLE_SLANT, weight = wx.FONTWEIGHT_NORMAL,  
                       underline = False, faceName ="Fira Code", encoding = 0)
-        self.Custom_Tree_Ctrl(themes[self.theme])
+        self.custom_tree_ctrl(themes[self.theme])
 
     def __attach_events(self):
         self.Bind(wx.EVT_DIRCTRL_FILEACTIVATED, self.OnOpenFile)
         
-    def Custom_Tree_Ctrl(self, theme):
+    def custom_tree_ctrl(self, theme):
         self.tree.SetBackgroundColour(theme[1][1])
         self.tree.SetFont(self.font)
 
     def OnOpenFile(self, evt):
-        notebookP = self.frame.MyNotebook
+        notebookP = self.main_window.MyNotebook
         path = self.GetFilePath()
         file = os.path.split(path)
         directory = file[0]
@@ -317,7 +326,7 @@ class WorkspaceTree(wx.GenericDirCtrl):
                 notebookP.GetCurrentPage().saved = True
         else:
             notebookP.tab_num += 1
-            new_tab = MyEditor(notebookP, self.frame, "", False)
+            new_tab = MyEditor(notebookP, self.main_window, "", False)
             new_tab.filename = filename
             new_tab.directory = directory
             notebookP.AddPage(new_tab, filename, select = True)
@@ -330,25 +339,25 @@ class WorkspaceTree(wx.GenericDirCtrl):
             filehandle.close()
         
 class ChooseWorkspace(wx.DirPickerCtrl):
-    def __init__(self, parent, frame):
+    def __init__(self, parent, main_window):
         wx.DirPickerCtrl.__init__(self, parent, message="Hello")
 
-        self.__set_properties(frame)
+        self.__set_properties(main_window)
         self.Bind(wx.EVT_DIRPICKER_CHANGED, self.changeWorkspace)
     
-    def __set_properties(self, frame):
+    def __set_properties(self, main_window):
         self.SetLabelText("Set your Workspace")
-        self.frame = frame
+        self.main_window = main_window
     
     def changeWorkspace(self, evt):
         path = self.GetPath()
-        self.frame.workspace_tree.SetPath(path)
-        self.frame.workspace_tree.SetFocus()
+        self.main_window.workspace_tree.SetPath(path)
+        self.main_window.workspace_tree.SetFocus()
 
-def MyStatusBar(frame):
-    statusbar = frame.CreateStatusBar(2, style= wx.STB_ELLIPSIZE_MIDDLE)
+def create_status_bar(main_window):
+    statusbar = main_window.CreateStatusBar(2, style= wx.STB_ELLIPSIZE_MIDDLE)
     statusbar.SetBackgroundColour("Grey")
-    if frame.connected:
+    if main_window.connected:
         statusbar.SetStatusText("Status: Connected", 1)
     else: 
         statusbar.SetStatusText("Status: Not Connected", 1)
@@ -365,23 +374,22 @@ class TerminalSetup:
         self.newline = NEWLINE_CRLF
 
 class ShellPanel(wx.TextCtrl):
-    def __init__(self, parent, frame):
+    def __init__(self, parent, main_window):
         """ inits Spamfilter with training data
 
         :param training_dir: path of training directory with subdirectories
          '/ham' and '/spam'
         """
         wx.TextCtrl.__init__(self, parent=parent, style=wx.TE_MULTILINE | wx.TE_READONLY |wx.TE_RICH2)
+        self.__set_properties__(main_window)
 
-        self.__set_properties__(frame)
-
-    def __set_properties__(self, frame):
-        self.top_window = frame
+    def __set_properties__(self, main_window):
+        self.main_window = main_window
         self.SetName("Python Shell")
-        self.theme = frame.MyNotebook.theme
-        self.Custom_Shell(themes[self.theme])
+        self.theme = main_window.MyNotebook.theme
+        self.custom_shell(themes[self.theme])
 
-    def Custom_Shell(self, theme):
+    def custom_shell(self, theme):
         self.SetBackgroundColour("white")
         self.font = wx.Font(12, wx.MODERN, wx.NORMAL, wx.NORMAL, 0, "Fira code")
         self.SetFont(self.font)
@@ -393,27 +401,27 @@ class ShellPanel(wx.TextCtrl):
         self.AppendText(data)
         
 class DeviceTree(wx.TreeCtrl):
-    def __init__(self, parent, frame, paths, name):
+    def __init__(self, parent, main_window, paths, name):
         tID = wx.NewId()
         # Use the WANTS_CHARS style so the panel doesn't eat the Return key.
         wx.TreeCtrl.__init__(self, parent)
-        self.frame = frame
+        self.main_window = main_window
         paths = paths
         isz = (16,16)
         self.il = wx.ImageList(isz[0], isz[1])
         self.fldridx     = self.il.Add(wx.ArtProvider.GetBitmap(wx.ART_FOLDER,      wx.ART_OTHER, isz))
         self.fldropenidx = self.il.Add(wx.ArtProvider.GetBitmap(wx.ART_FOLDER_OPEN, wx.ART_OTHER, isz))
         self.fileidx     = self.il.Add(wx.ArtProvider.GetBitmap(wx.ART_NORMAL_FILE, wx.ART_OTHER, isz))
-        self.font = wx.Font(pointSize = 12, family = wx.FONTFAMILY_SWISS, style = wx.FONTSTYLE_SLANT, weight = wx.FONTWEIGHT_NORMAL,  
+        self.font = wx.Font(pointSize = 12, family = wx.FONTFAMILY_SWISS, style = wx.FONTSTYLE_SLANT, weight = wx.FONTWEIGHT_NORMAL,
                       underline = False, faceName ="Fira Code", encoding = 0)
-        self.theme = frame.MyNotebook.theme
+        self.theme = main_window.MyNotebook.theme
         self.root = self.AddRoot(name)
 
         self.SetImageList(self.il)
         self.SetItemData(self.root, None)
         self.SetItemImage(self.root, self.fldridx, wx.TreeItemIcon_Normal)
         self.SetItemImage(self.root, self.fldropenidx, wx.TreeItemIcon_Expanded)
-        self.Custom_Tree_Ctrl(themes[self.theme])
+        self.custom_tree_ctrl(themes[self.theme])
         self.__attach_events()
 
     def __attach_events(self):
@@ -423,18 +431,25 @@ class DeviceTree(wx.TreeCtrl):
         self.Bind(wx.EVT_TREE_BEGIN_LABEL_EDIT, self.OnBeginEdit, self)
         self.Bind(wx.EVT_TREE_END_LABEL_EDIT, self.OnEndEdit, self)
         self.Bind(wx.EVT_TREE_ITEM_ACTIVATED, self.OnActivate, self)
-
+        self.Bind(wx.EVT_RIGHT_DCLICK, self.OnClipboardMenu)
         self.Bind(wx.EVT_LEFT_DCLICK, self.OnLeftDClick)
         self.Bind(wx.EVT_RIGHT_DOWN, self.OnRightDown)
         self.Bind(wx.EVT_RIGHT_UP, self.OnRightUp)
         
-    def Custom_Tree_Ctrl(self, theme):
+    def custom_tree_ctrl(self, theme):
+        """Custom the tree controller
+
+        :param theme: theme to apply on the tree
+        :type theme: list
+        """
+
         self.SetBackgroundColour(theme[1][1])
         self.SetFont(self.font)
 
     def OnRightDown(self, event):
         pt = event.GetPosition();
         item, flags = self.HitTest(pt)
+
         if item:
             sys.stdout.write("OnRightClick: %s, %s, %s\n" %
                                (self.GetItemText(item), type(item), item.__class__))
@@ -512,23 +527,30 @@ class DeviceTree(wx.TreeCtrl):
                 self.root_it = self.GetRootItem()
                 name = self.GetItemText(self.item)
 
-                self.Get_Path_Item(self.item, name)
+                self.get_path_item(self.item, name)
                 print("Path = ", self.path)
-                self.frame.show_cmd = False
-                asyncio.run(SendCmdAsync(self.frame, "a = open('%s').read()\r\n"%self.path))
-                asyncio.run(SendCmdAsync(self.frame, "print(a)\r\n"))
-                res = self.frame.ReadCmd("print(a)")
-                asyncio.run(SendCmdAsync(self.frame, "a.close()\r\n"))
-                notebookP = self.frame.MyNotebook
+                self.main_window.show_cmd = False
+                put_cmd(self.main_window, "a = open('%s','r')\r\n" % self.path)
+                asyncio.run(SendCmdAsync(self.main_window, "print(a.read())\r\n"))
+                res = self.main_window.read_cmd("print(a.read())")
+                put_cmd(self.main_window, "a.close()\r\n")
+                notebookP = self.main_window.MyNotebook
                 notebookP.tab_num += 1
-                new_tab = MyEditor(notebookP, self.frame, str(res), True)
+                new_tab = MyEditor(notebookP, self.main_window, str(res), True)
                 new_tab.filename = name
                 new_tab.directory = self.path
                 new_tab = notebookP.AddPage(new_tab, "Tab %s" % notebookP.tab_num, select=True)
-                self.frame.show_cmd = True
+                self.main_window.show_cmd = True
             sys.stdout.write("OnActivate: %s\n" % name)
             
-    def Get_Path_Item(self, item, name):
+    def get_path_item(self, item, name):
+        """Catch the path name of an item in the tree
+
+        :param item: Item to find path
+        :type item: wx.ItemId
+        :param name: Name of the item
+        :type name: str
+        """
         parent_it = self.GetItemParent(item)
         list = []
         while parent_it != self.root_it:
@@ -540,3 +562,7 @@ class DeviceTree(wx.TreeCtrl):
                 i = "."
             self.path += i + "/"
         self.path += name
+
+    def OnClipboardMenu(self, evt):
+        #TODO: CREATE THE CLIPBOARD MENU
+        print("hello")

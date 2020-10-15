@@ -1,12 +1,12 @@
-from Packages import *
+from packages import *
 from menus import *
 from panels import *
-from Serial import *
-from Constantes import *
-from Utilitaries import *
-from Shortcuts import InitShortcuts
-from BurnFirmware import FirmwareManager
-from Install_fonts import Install_fonts
+from my_serial import *
+from constantes import *
+from utilitaries import *
+from shortcuts import InitShortcuts
+from firmware import FirmwareManager
+from install_fonts import Install_fonts
 
 #TODO: change focus when new editor tab
 
@@ -32,7 +32,7 @@ class MainWindow(wx.Frame):
         
     def __set_properties__(self):
         self.serial = serial.Serial()
-        self.serial.timeout = 0.5
+        self.serial.timeout = 0.01
         self.time_to_send = 0.5   # make sure that the alive event can be checked from time to time
         self.settings = TerminalSetup()  # placeholder for the settings
         self.thread = None
@@ -48,52 +48,38 @@ class MainWindow(wx.Frame):
         self.cmd_return = ""
         #####
         self.who_is_focus = 0
-        self.top_menu = Init_Top_Menu(self)
-        self.statusbar = MyStatusBar(self)
+        self.top_menu = init_top_menu(self)
+        self.statusbar = create_status_bar(self)
         self.serial_manager = ManageConnection(self)
         self.voice_on = True
         self.firmware_manager = FirmwareManager()
         
-        Init_Panels(self)
-        Init_ToolBar(self)
+        create_panels(self)
+        init_toolbar(self)
         InitShortcuts(self)
         
         self.__attach_events()
          
     def __attach_events(self):
-        self.Bind(EVT_SERIALRX, self.OnSerialRead)
         self.Shell.Bind(wx.EVT_CHAR, self.OnKey)
 
-    def StartThread(self):
+    def start_thread_serial(self):
         """Start the receiver thread"""
-        self.thread = threading.Thread(target=self.ComPortThread)
+        self.thread = threading.Thread(target=self.thread_listen_port)
         self.thread.setDaemon(1)
         self.alive.set()
         self.thread.start()
         self.serial.rts = True
         self.serial.dtr = True
 
-    def StopThread(self):
+    def stop_thread_serial(self):
         """Stop the receiver thread, wait until it's finished."""
         if self.thread is not None:
             self.alive.clear()          # clear alive event for thread
             self.thread.join()          # wait until thread has finished
             self.thread = None
 
-    def OnKey(self, event):
-        """\
-        Key event handler. If the key is in the ASCII range, write it to the
-        serial port. Newline handling is also done here.
-        """
-        code = event.GetUnicodeKey()
-        if code < 256:
-            code = event.GetKeyCode()
-        if code == 13:                      # is it a newline? (check for CR which is the RETURN key)
-            self.serial.write(b'\n')     # send LF
-        char = chr(code)
-        self.serial.write(char.encode('UTF-8', 'replace'))
-
-    def ReadCmd(self, data):
+    def read_cmd(self, data):
         """Get the return of the cmd sent to the MicroPython card
 
         :param data: The commande sent
@@ -112,12 +98,11 @@ class MainWindow(wx.Frame):
                 pass
             elif self.settings.newline == NEWLINE_CRLF:
                 b = b.replace(b'\r\n', b'\n')
-        #self.serial_manager.SendEventRx(b)
-        self.OnSerialRead(b)
+        self.serial_read_data(b)
     
         return GetCmdReturn(self.Shell_text, data)
 
-    def OnSerialRead(self, data):
+    def serial_read_data(self, data):
         """Handle input from the serial port."""
         print(self.show_cmd)
         #data = event.data
@@ -139,10 +124,10 @@ class MainWindow(wx.Frame):
             if self.show_cmd == True:
                 asyncio.run(self.Shell.Asyncappend(data.decode('UTF-8', 'ignore')))
 
-    def ComPortThread(self):
+    def thread_listen_port(self):
         """\
         Thread that handles the incoming traffic. Does the basic input
-        transformation (newlines) and call an OnSerialRead
+        transformation (newlines) and call an serial_read_data
         """
         while self.alive.isSet():
             #print("J'y passe")
@@ -157,10 +142,9 @@ class MainWindow(wx.Frame):
                     pass
                 elif self.settings.newline == NEWLINE_CRLF:
                     b = b.replace(b'\r\n', b'\n')
-                #self.serial_manager.SendEventRx(b)
-                self.OnSerialRead(b)
+                self.serial_read_data(b)
 
-    def ChangeStatus(self):
+    def actualize_status_bar(self):
         """Actualize the Status Bar
 
         :param evt: Event binded to trigger the function
@@ -171,7 +155,7 @@ class MainWindow(wx.Frame):
         else:
             self.statusbar.SetStatusText("Status: %s"%"Not Connected", 1)
 
-    def OnChangeFocus(self, event):
+    def OnChangeFocus(self, evt):
         """Allow to navigate in the differents region of the Frame after an event
 
         :param evt: Event binded to trigger the function
@@ -220,8 +204,21 @@ class MainWindow(wx.Frame):
         """
         self.statusbar.SetFocus()
         speak(self, self.statusbar.GetStatusText(1))
-            
-class Myapp(wx.App):
+
+    def OnKey(self, evt):
+        """\
+        Key event handler. If the key is in the ASCII range, write it to the
+        serial port. Newline handling is also done here.
+        """
+        code = evt.GetUnicodeKey()
+        if code < 256:
+            code = evt.GetKeyCode()
+        if code == 13:                      # is it a newline? (check for CR which is the RETURN key)
+            self.serial.write(b'\n')     # send LF
+        char = chr(code)
+        self.serial.write(char.encode('UTF-8', 'replace'))
+
+class MyApp(wx.App):
     """Minimal class to launch the app
 
     :param wx.App: https://wxpython.org/Phoenix/docs/html/wx.App.html
@@ -252,9 +249,10 @@ if __name__ == "__main__":
             break
     if flags is False:  
         try:
-            fonts = ["./FiraCode-Medium.ttf", "./FiraCode-Regular.ttf", "./FiraCode-Retina.ttf", "./FiraCode-Light.ttf"]
+            fonts = ["./FiraCode-Medium.ttf", "./FiraCode-Regular.ttf", \
+                     "./FiraCode-Retina.ttf", "./FiraCode-Light.ttf"]
             Install_fonts(fonts)
         except:
             print("install ttf false.")
-    app = Myapp()
+    app = MyApp()
     app.MainLoop()
