@@ -2,7 +2,7 @@
 Module to Customize Panels with differents themes
 """
 
-from packages import wx, random, os
+from packages import wx, random, os, json
 from constantes import *
 
 import wx.stc as stc
@@ -10,6 +10,14 @@ import wx.py as pysh
 import wx.lib.agw.flatnotebook as fnb
 
 #TODO: finir les thèmes
+
+def change_theme_choice(main_window, theme_name):
+    main_window.notebook.theme_choice = theme_name
+    main_window.shell.theme_choice = theme_name
+    main_window.workspace_tree.theme_choice = theme_name
+    main_window.device_tree.theme_choice = theme_name
+
+
 
 def init_editor_style(editor):
     """Init some settings for Editor Window
@@ -28,28 +36,38 @@ def init_editor_style(editor):
     #editor.SetFontQuality(stc.STC_EFF_QUALITY_LCD_OPTIMIZED)
     #editor.SetUseAntiAliasing(True)
 
-def customize_editor(editor, theme):
-    """Change theme of the window
+def customize_editor(editor, theme_choice):
+    """Change theme of the Editor panel
 
     :param editor: EditWindow to customize
     :type editor: wx.py.editwindow.EditWindow
     :param theme: Theme to apply on the EditWindow
-    :type theme: list
+    :type theme: str
     """
-    editor.SetCaretForeground(theme[1][1])
-    #default
-    # editor.StyleSetSpec(stc.STC_STYLE_DEFAULT,'fore:#0000AA,back:#00000')
-    # editor.StyleSetSpec(wx.stc.STC_STYLE_LINENUMBER,'fore:#FFFF00,back:#0000A')
-    # editor.StyleSetSpec(wx.stc.STC_STYLE_BRACELIGHT,'fore:#FFFF00,back:#0000A')
-    font = wx.Font(pointSize = 10,
-                family = wx.FONTFAMILY_SWISS,
-                style = wx.FONTSTYLE_SLANT,
-                weight = wx.FONTWEIGHT_NORMAL,  
-                underline = False,
-                faceName ="Fira Code",
-                encoding = 0)
-    customize_lexer_stcstyle(editor, theme, font)
-    customize_lexer_pystyle(editor, theme, font)
+
+    try:
+        file = open("./customize.json")
+        theme = json.load(file)
+        theme = theme[theme_choice]
+        file.close()
+        editor.SetCaretForeground(theme['Caret']['Foreground'])
+        #print(theme[0][1])
+        #default
+        # editor.StyleSetSpec(stc.STC_STYLE_DEFAULT,'fore:#0000AA,back:#00000')
+        # editor.StyleSetSpec(wx.stc.STC_STYLE_LINENUMBER,'fore:#FFFF00,back:#0000A')
+        # editor.StyleSetSpec(wx.stc.STC_STYLE_BRACELIGHT,'fore:#FFFF00,back:#0000A')
+        font = wx.Font(pointSize = 10,
+                    family = wx.FONTFAMILY_SWISS,
+                    style = wx.FONTSTYLE_SLANT,
+                    weight = wx.FONTWEIGHT_NORMAL,  
+                    underline = False,
+                    faceName ="Fira Code",
+                    encoding = 0)
+        customize_lexer_stcstyle(editor, theme['Panels Colors'], font)
+        customize_lexer_pystyle(editor, theme, font)
+    except Exception:
+        print("Can't customize Editor")
+        return
 
 def customize_lexer_stcstyle(editor, theme, font):
     """Change lexer words stc style by applying 
@@ -65,11 +83,9 @@ def customize_lexer_stcstyle(editor, theme, font):
     for i in stc_style:
         editor.StyleSetFont(i, font)
     for i in stc_style:
-        editor.StyleSetBackground(i, theme[1][0])
+        editor.StyleSetBackground(i, theme['Text background'])
     for i in stc_style:
-        editor.StyleSetForeground(i, theme[1][1])
-
-    #Lexer style
+        editor.StyleSetForeground(i, theme['Text foreground'])
 
 def customize_lexer_pystyle(editor, theme, font):
     """Change lexer python words by applying 
@@ -83,11 +99,17 @@ def customize_lexer_pystyle(editor, theme, font):
     :type font: wx.Font
     """
     x = 0
+    keys = []
+
     for i in py_style:
         editor.StyleSetFont(i,font)
     for i in py_style:
-        editor.StyleSetBackground(i, theme[1][0])
+        editor.StyleSetBackground(i, theme['Panels Colors']['Text background'])
     for i in py_style:
-        editor.StyleSetForeground(i, theme[0][x])
+        editor.StyleSetForeground(i, theme['Panels Colors']['Text foreground'])
+    for f in theme['LexerStyleEditor']:
+        keys.append(f)
+    print(keys)
+    for i in py_style:
+        editor.StyleSetForeground(i, theme['LexerStyleEditor'][keys[x]])
         x += 1
-        

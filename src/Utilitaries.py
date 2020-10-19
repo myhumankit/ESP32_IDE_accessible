@@ -5,7 +5,7 @@ from my_serial import SendCmdAsync, put_cmd
 def save_on_card(main_window, page):
     print(page.directory)
     print(page.filename)
-    notebookP = main_window.MyNotebook
+    notebookP = main_window.notebook
 
     # Check if save is required
     if (page.GetValue() != page.last_save):
@@ -24,7 +24,7 @@ def save_on_card(main_window, page):
         page.last_save = save_as_file_content
         page.saved = True
         treeModel(main_window)
-        main_window.Shell.AppendText("Content Saved\n")
+        main_window.shell.AppendText("Content Saved\n")
         speak(main_window, "Content Saved")
 
 def load_img(path):
@@ -157,3 +157,22 @@ def ReflushTree(main_window, root, msg):
                     ReflushTree(main_window, root, i)           
                 else:
                     pass
+
+def create_Menu_item(parentMenu, id, text, submenu, theme_name):
+
+    item = wx.MenuItem(parentMenu, id=id, text=text, subMenu=submenu)
+    try:
+        #file = open("./customize.json")
+        #theme = json.load(file)
+        #file.close()
+        #theme = theme[theme_name]
+        font = wx.Font(12, wx.MODERN, wx.NORMAL, wx.NORMAL, 0, "Fira code")
+        #item.SetBackgroundColour(theme['Panels Colors']['Menu background'])
+        #item.SetTextColour(theme['Panels Colors']['Menu foreground'])
+        item.SetFont(font)
+        return item
+    except Exception as e:
+        print(e)
+        print("Can't customize ItemMenu")
+        return item
+    

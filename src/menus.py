@@ -6,6 +6,7 @@ from utilitaries import *
 from api.api_pyflakes import main as CheckPySyntax
 from constantes import *
 from firmware import UpdateFirmwareDialog, FirmwareThread, BurnFrame
+from editor_style import change_theme_choice
 
 #? Doit-on retourner le menu et la toolbar pour la stocker avec self. 
 #? ou la stocke t-on directement dans les fonctions associés
@@ -56,13 +57,17 @@ class FileMenu(wx.Menu):
         wx.Menu.__init__(self, "File")
 
         self.main_window = main_window
-        self.Append(wx.ID_NEW, "&New\tCTRL+N")
-        self.Append(wx.ID_OPEN, "&Open\tCTRL+O")
-        self.Append(wx.ID_SAVE, "&Save\tCTRL+S")
-        self.Append(wx.ID_SAVEAS, "&Save as\tCTRL+A")
-        self.Append(wx.ID_CLOSE, "&Close\tCTRL+W")
-        self.Append(wx.ID_EXIT, "&Exit\tCTRL+Q")
-        self.AppendSeparator()
+        self.item_list = []
+
+        self.item_list.append(create_Menu_item(self, wx.ID_NEW, "&New\tCTRL+N", None, main_window.theme))
+        self.item_list.append(create_Menu_item(self, wx.ID_OPEN, "&Open\tCTRL+O", None, main_window.theme))
+        self.item_list.append(create_Menu_item(self, wx.ID_SAVE, "&Save\tCTRL+S", None, main_window.theme))
+        self.item_list.append(create_Menu_item(self, wx.ID_SAVEAS, "&Save as\tCTRL+A", None, main_window.theme))
+        self.item_list.append(create_Menu_item(self, wx.ID_CLOSE, "&Close\tCTRL+W", None, main_window.theme))
+        self.item_list.append(create_Menu_item(self, wx.ID_EXIT, "&Exit\tCTRL+Q", None, main_window.theme))
+        
+        for i in self.item_list:
+            self.Append(i)
 
     def OnExit(self, evt):
         """Quit the app
@@ -79,7 +84,7 @@ class FileMenu(wx.Menu):
         :param evt: Event to trigger the method
         :type evt: wx.Event
         """   
-        notebookP = self.main_window.MyNotebook
+        notebookP = self.main_window.notebook
         page = notebookP.GetCurrentPage()
         if page.on_card:
             return save_on_card(self.main_window, page)
@@ -114,7 +119,7 @@ class FileMenu(wx.Menu):
             filehandle.close()
             page.last_save = save_as_file_contents
             page.saved = True
-        self.main_window.Shell.AppendText("Content Saved\n")
+        self.main_window.shell.AppendText("Content Saved\n")
         speak(self.main_window, "Content Saved")
 
     def OnSaveAs(self, evt):
@@ -123,7 +128,7 @@ class FileMenu(wx.Menu):
         :param evt: Event to trigger the method
         :type evt: wx.Event
         """   
-        notebookP = self.main_window.MyNotebook
+        notebookP = self.main_window.notebook
         page = notebookP.GetCurrentPage()
         dialog = wx.FileDialog(self.main_window, "Choose a file", page.directory, \
                                "", "*.py*", wx.FD_SAVE | wx.FD_OVERWRITE_PROMPT)
@@ -152,7 +157,7 @@ class FileMenu(wx.Menu):
             :param evt: Event to trigger the method
             :type evt: wx.Event
             """  
-            notebookP = self.main_window.MyNotebook
+            notebookP = self.main_window.notebook
             dialog = wx.FileDialog(self.main_window, 
                                "Choose a File", 
                                notebookP.GetCurrentPage().directory, 
@@ -195,10 +200,10 @@ class FileMenu(wx.Menu):
         :param evt: Event to trigger the method
         :type evt: wx.Event
         """
-        notebookP = self.main_window.MyNotebook
+        notebookP = self.main_window.notebook
         notebookP.tab_num += 1
         #RAJOUTER une variable on_card and Value
-        new_tab = MyEditor(self.main_window.MyNotebook, self.main_window, "", False)
+        new_tab = MyEditor(self.main_window.notebook, self.main_window, "", False)
         new_tab = notebookP.AddPage(new_tab, "Tab %s" % notebookP.tab_num, select=True)
 
     def OnClosePage(self, evt):
@@ -209,7 +214,7 @@ class FileMenu(wx.Menu):
         """  
         #TODO: ajouter un choix de sauvegarde si saved = False
         
-        dataNoteBook = self.main_window.MyNotebook
+        dataNoteBook = self.main_window.notebook
         page = dataNoteBook.GetCurrentPage()
         print("Deleted page: " + str(page.id))
         print(dataNoteBook.GetPageText(page.id - 1))
@@ -236,14 +241,17 @@ class EditMenu(wx.Menu):
         wx.Menu.__init__(self, "Edit")
 
         self.main_window = main_window
-        self.Append(wx.ID_COPY, "&Copy\tCTRL+C")
-        self.Append(wx.ID_CUT, "&Cut\tCTRL+X")
-        self.Append(wx.ID_PASTE, "&Paste\tCTRL+V")
-        self.Append(wx.ID_REDO, "&Redo\tCTRL+Z")
-        self.Append(wx.ID_UNDO, "&Redo\tCTRL+Z")
-        self.Append(wx.ID_SYNTAX_CHECK, "&Syntax Check")
-        self.Append(wx.ID_FIND, "&Find and/or Replace\tCTRL+F")
-        self.AppendSeparator()
+        self.item_list = []
+        self.item_list.append(create_Menu_item(self, wx.ID_COPY, "&Copy\tCTRL+C", None, main_window.theme))
+        self.item_list.append(create_Menu_item(self, wx.ID_CUT, "&Cut\tCTRL+X", None, main_window.theme))
+        self.item_list.append(create_Menu_item(self, wx.ID_PASTE, "&Paste\tCTRL+V", None, main_window.theme))
+        self.item_list.append(create_Menu_item(self, wx.ID_REDO, "&Undo\tCTRL+Z", None, main_window.theme))
+        self.item_list.append(create_Menu_item(self, wx.ID_UNDO, "&Redo\tCTRL+Y", None, main_window.theme))
+        self.item_list.append(create_Menu_item(self, wx.ID_SYNTAX_CHECK, "&Syntax Check", None, main_window.theme))
+        self.item_list.append(create_Menu_item(self, wx.ID_FIND, "&Find and/or Replace\tCTRL+F", None, main_window.theme))
+
+        for i in self.item_list:
+            self.Append(i)
     
     def OnCopy(self, evt):
         """Copy the selection on the clipboard
@@ -251,7 +259,7 @@ class EditMenu(wx.Menu):
         :param evt: Event to trigger the method
         :type evt: wx.Event
         """  
-        self.main_window.MyNotebook.GetCurrentPage().Copy()
+        self.main_window.notebook.GetCurrentPage().Copy()
 
     def OnPaste(self, evt):
         """Paste the content of the clipboard
@@ -259,7 +267,7 @@ class EditMenu(wx.Menu):
         :param evt: Event to trigger the method
         :type evt: wx.Event
         """  
-        self.main_window.MyNotebook.GetCurrentPage().Paste()
+        self.main_window.notebook.GetCurrentPage().Paste()
 
     def OnCut(self, evt):
         """Cut the selection on the clipboard
@@ -267,7 +275,7 @@ class EditMenu(wx.Menu):
         :param evt: Event to trigger the method
         :type evt: wx.Event
         """  
-        self.main_window.MyNotebook.GetCurrentPage().Cut()
+        self.main_window.notebook.GetCurrentPage().Cut()
 
     def OnRedo(self, evt):
         """Redo
@@ -275,7 +283,7 @@ class EditMenu(wx.Menu):
         :param evt: Event to trigger the method
         :type evt: wx.Event
         """  
-        self.main_window.MyNotebook.GetCurrentPage().Redo()
+        self.main_window.notebook.GetCurrentPage().Redo()
 
     def OnUndo(self, evt):
         """Undo
@@ -283,7 +291,7 @@ class EditMenu(wx.Menu):
         :param evt: Event to trigger the method
         :type evt: wx.Event
         """  
-        self.main_window.MyNotebook.GetCurrentPage().Undo()
+        self.main_window.notebook.GetCurrentPage().Undo()
 
     def OnFindReplace(self, evt):
         """Open a wx.FindReplaceDialog to find and/, replace text in the current editor
@@ -291,7 +299,7 @@ class EditMenu(wx.Menu):
         :param evt: Event to trigger the method
         :type evt: wx.Event
         """  
-        notebookP = self.main_window.MyNotebook
+        notebookP = self.main_window.notebook
         page = notebookP.GetCurrentPage()
         if page == None:
             return
@@ -303,7 +311,7 @@ class EditMenu(wx.Menu):
         :param evt: Event to trigger the method
         :type evt: wx.Event
         """  
-        page = self.main_window.MyNotebook.GetCurrentPage()
+        page = self.main_window.notebook.GetCurrentPage()
         
         syntaxCheckFilePath="%s/AppData/Local/uPyCraft/temp/syntaxCheck.py"%rootDirectoryPath
         syntaxCheckFileText=page.GetValue()
@@ -369,7 +377,7 @@ class EditMenu(wx.Menu):
                     if i.find("syntaxCheck.py")>0:
                         i=i[len(syntaxCheckFilePath):]
                     appendMsg=appendMsg + i + "\n"
-                self.main_window.Shell.AppendText(appendMsg)
+                self.main_window.shell.AppendText(appendMsg)
             if stderr=="":
                 pass
             else:
@@ -380,8 +388,8 @@ class EditMenu(wx.Menu):
                     if i.find("syntaxCheck.py")>0:
                         i=i[len(syntaxCheckFilePath):]
                     appendMsg=appendMsg + "\n" + i
-                self.main_window.Shell.AppendText(appendMsg)
-        self.main_window.Shell.AppendText("Syntax terminated.\n")
+                self.main_window.shell.AppendText(appendMsg)
+        self.main_window.shell.AppendText("Syntax terminated.\n")
     
 class ToolsMenu(wx.Menu):
     """Class to create a Tools menu and his buttons (Copy, Paste, Find,...)
@@ -394,12 +402,17 @@ class ToolsMenu(wx.Menu):
 
         self.main_window = main_window
         self.themes_submenu = ThemesMenu(main_window)
-        self.Append(wx.ID_SETTINGS, "&Port Settings\tF2", "", wx.ITEM_NORMAL)
-        self.Append(wx.ID_DOWNLOAD, "&Download")
-        self.Append(wx.ID_EXECUTE, "&DownloadandRun\tF5")
-        self.Append(wx.ID_STOP, "&Stop")
-        self.Append(wx.ID_BURN_FIRMWARE, "&BurnFirmware")
-        self.Append(wx.ID_BOARD, "&Themes", self.themes_submenu)
+
+        self.item_list = []
+        self.item_list.append(create_Menu_item(self, wx.ID_SETTINGS, "&Port Settings\tF2", None, main_window.theme))
+        self.item_list.append(create_Menu_item(self, wx.ID_DOWNLOAD, "&Download", None, main_window.theme))
+        self.item_list.append(create_Menu_item(self, wx.ID_EXECUTE, "&DownloadandRun\tF5", None, main_window.theme))
+        self.item_list.append(create_Menu_item(self, wx.ID_STOP, "&Stop", None, main_window.theme))
+        self.item_list.append(create_Menu_item(self, wx.ID_BURN_FIRMWARE, "&BurnFirmware", None, main_window.theme))
+        self.item_list.append(create_Menu_item(self, wx.ID_BOARD, "&Themes", self.themes_submenu, main_window.theme))
+    
+        for i in self.item_list:
+            self.Append(i)
 
     def OnPortSettings(self, evt):
         """
@@ -468,17 +481,17 @@ class ToolsMenu(wx.Menu):
         :type evt: wx.Event
         """  
         main_window = self.main_window
-        notebookP = self.main_window.MyNotebook
+        notebookP = self.main_window.notebook
         page = notebookP.GetCurrentPage()
         if main_window.serial.isOpen()==False:
-            main_window.Shell.AppendText('Please open serial')
+            main_window.shell.AppendText('Please open serial')
             return False
         main_window.serial.write('\x03'.encode('utf-8'))
         self.main_window.show_cmd = False
         time.sleep(0.05)
 
         if page == None:
-            main_window.Shell.AppendText('Please choose file or input something')
+            main_window.shell.AppendText('Please choose file or input something')
             return False
         print("dir = %s %s"%(page.directory, page.filename))
         if page.directory[len(page.directory) - 1] == '/':
@@ -486,15 +499,15 @@ class ToolsMenu(wx.Menu):
         else:
             pathfile=page.directory + '/' + page.filename
         if page.saved == False:
-            main_window.Shell.append('Please save the file before download')
+            main_window.shell.append('Please save the file before download')
             return False
         elif str(pathfile).find(":")>=0:
             main_window.serial_manager.download(pathfile, page.filename)
             time.sleep(1)
-            #self.main_window.Shell.Clear()
-            self.main_window.Shell.SetValue("Downloaded file : " + page.filename)
+            #self.main_window.shell.Clear()
+            self.main_window.shell.SetValue("Downloaded file : " + page.filename)
             self.main_window.show_cmd = True
-            self.main_window.Shell.SetFocus()
+            self.main_window.shell.SetFocus()
             put_cmd(self.main_window, '\r\n')
             return True
     
@@ -507,21 +520,21 @@ class ToolsMenu(wx.Menu):
         :type evt: wx.Event
         """  
         main_window = self.main_window
-        notebookP = self.main_window.MyNotebook
+        notebookP = self.main_window.notebook
         page = notebookP.GetCurrentPage()
         if main_window.serial.isOpen()==False:
-            main_window.Shell.AppendText('Please open serial')
+            main_window.shell.AppendText('Please open serial')
             return False
         main_window.serial.write('\x03'.encode('utf-8'))
         self.main_window.show_cmd = False
         time.sleep(0.05)
 
         if page == None:
-            main_window.Shell.AppendText('Please choose file or input something')
+            main_window.shell.AppendText('Please choose file or input something')
             return False
         print("dir = %s %s"%(page.directory, page.filename))
         if page.saved == False:
-            main_window.Shell.append('Please save the file before download')
+            main_window.shell.append('Please save the file before download')
             return False
         if page.directory[len(page.directory) - 1] == '/':
             pathfile=page.directory + page.filename
@@ -530,8 +543,8 @@ class ToolsMenu(wx.Menu):
         if str(pathfile).find(":")>=0:
             main_window.serial_manager.download(pathfile, page.filename)
             time.sleep(1)
-            self.main_window.Shell.SetValue("Downloaded file : " + page.filename)
-            self.main_window.Shell.SetFocus()
+            self.main_window.shell.SetValue("Downloaded file : " + page.filename)
+            self.main_window.shell.SetFocus()
             self.main_window.show_cmd = True
             self.main_window.serial_manager.download_and_run(page.filename)
             return True
@@ -545,7 +558,7 @@ class ToolsMenu(wx.Menu):
         """
   
         if not self.main_window.serial.ser.isOpen():
-            self.main_window.Shell.AppendText("already close.")
+            self.main_window.shell.AppendText("already close.")
             return
 
         put_cmd(self.main_window, '\x03')
@@ -553,8 +566,8 @@ class ToolsMenu(wx.Menu):
         self.main_window.serial.ser.close()
         self.main_window.connected = False
         self.main_window.statusbar.SetStatusText("Status: Not Connected", 1)
-        main_window.FileTree.ReCreateTree()
-        self.main_window.Shell.setReadOnly(True)
+        main_window.tree_panel.ReCreateTree()
+        self.main_window.shell.setReadOnly(True)
         speak(self.main_window, "Device Disconnected")
 
     def OnStop(self, evt):
@@ -566,7 +579,7 @@ class ToolsMenu(wx.Menu):
         if self.main_window.serial.ser.isOpen():
             SendCmdAsync(self.main_window, '\x03')
         else:
-            self.main_window.Shell.AppendText("serial not open")
+            self.main_window.shell.AppendText("serial not open")
     
     def OnBurnFirmware(self, event):
         main_window = self.main_window
@@ -580,24 +593,24 @@ class ToolsMenu(wx.Menu):
             if result == wx.ID_OK or event is not None:
                 print(firmware_manager.burn_adress, firmware_manager.port, firmware_manager.bin_path)
                 if not firmware_manager.port or not firmware_manager.bin_path :
-                    with wx.MessageDialog(self, "", "Incorrect Path or Port", wx.OK | wx.ICON_ERROR)as dlg:
+                    with wx.MessageDialog(self.main_window, "", "Incorrect Path or Port", wx.OK | wx.ICON_ERROR)as dlg:
                         dlg.ShowModal()
                         ok = True
                 else:    
-                        sys.stdout = sys.__stdout__
-                        self.main_window_burn = Burnmain_window(main_window)
-                        burn_thread = FirmwareThread(main_window, firmware_manager, self.main_window_burn)
-                        self.main_window_burn.CenterOnParent()
-                        burn_thread.setDaemon(1)
-                        burn_thread.start()
-                        self.main_window_burn.ShowModal()
-                        burn_thread._stop()
-                        burn_thread.join()
-                        speak(self.main_window, "Firmware installed")
-                        self.main_window_burn.txt.Destroy()
-                        self.main_window_burn.Destroy()
-                        sys.stdout = sys.__stdout__
-                        ok = True
+                    sys.stdout = sys.__stdout__
+                    self.main_window_burn = BurnFrame(main_window)
+                    burn_thread = FirmwareThread(main_window, firmware_manager, self.main_window_burn)
+                    self.main_window_burn.CenterOnParent()
+                    burn_thread.setDaemon(1)
+                    burn_thread.start()
+                    self.main_window_burn.ShowModal()
+                    burn_thread._stop()
+                    burn_thread.join()
+                    speak(self.main_window, "Firmware installed")
+                    self.main_window_burn.txt.Destroy()
+                    self.main_window_burn.Destroy()
+                    sys.stdout = sys.__stdout__
+                    ok = True
             else:
                 ok = True
 
@@ -607,24 +620,38 @@ class ToolsMenu(wx.Menu):
         :param evt: Event to trigger the method
         :type evt: wx.Event
         """  
-        menuId = evt.Id
-        i = 0
-        list = [wx.ID_DARK_THEME, wx.ID_LIGHT_THEME, wx.ID_ASTRO_THEME]
-        for x in list:
-            if x == menuId:
-                print('Theme = ' + str(i))
-                break
-            i += 1
-        
-        customize_editor(self.main_window.MyNotebook.GetCurrentPage(), themes[i], py_style)
-        self.main_window.Shell.custom_shell(themes[i])
-        self.main_window.TreeCtrl.custom_tree_ctrl(themes[i])
-        self.main_window.MyNotebook.custom_notebook(themes[i])
-        self.main_window.MyNotebook.theme = i
+        if evt.Id == wx.ID_DARK_THEME:
+            theme_name = 'Dark Theme'
+        else:
+            theme_name = 'Light Theme'
+        print("COCO")
+        try:
+            change_theme_choice(self.main_window, theme_name)
+            page = self.main_window.notebook.GetCurrentPage()
+            if page:
+                customize_editor(page, theme_name)
+            self.main_window.shell.custom_shell(theme_name)
+            self.main_window.workspace_tree.custom_tree_ctrl()
+            self.main_window.device_tree.custom_tree_ctrl()
+            self.main_window.notebook.custom_notebook(theme_name)
+            self.main_window.tree_panel.SetBackgroundColour("Black")
+        except Exception as e:
+            print(e)
 
 #TODO: Menu Help with shortcuts and link on wiki tuto HTML
-# class HelpMenu(wx.Menu):
-#     ""
+class HelpMenu(wx.Menu):
+   def __init__(self, main_window):
+        wx.Menu.__init__(self, "Help")
+
+        self.main_window = main_window
+
+        self.item_list = []
+        self.item_list.append(create_Menu_item(self, wx.ID_ABOUT, "About", None, main_window.theme))
+        self.item_list.append(create_Menu_item(self, wx.ID_SHORTCUT, "Shortcuts List", None, main_window.theme))
+    
+        for i in self.item_list:
+            self.Append(i)
+   
 
 class TopMenu(wx.MenuBar):
     """TopMenu class derivated of wx.MenuBar which contains the Edit and File Menus
@@ -640,20 +667,24 @@ class TopMenu(wx.MenuBar):
         """
         wx.MenuBar.__init__(self)
         self.main_window = main_window
-        self.__set_properties() #:Set properties and variables linked to the class
+        self.__set_properties(main_window) #:Set properties and variables linked to the class
         self.__attach_events__() #:Bind events relatives to this class
 
-    def __set_properties(self):
+    def __set_properties(self, main_window):
         """
         Set properties and define variables of the objet instantiated
         """
         self.MenuFile = FileMenu(self.main_window)
         self.MenuEdit = EditMenu(self.main_window)
         self.MenuTools = ToolsMenu(self.main_window)
+        self.MenuHelp = HelpMenu(self.main_window)
+        self.SetBackgroundColour("Black")
+        self.SetForegroundColour("White")
 
         self.Append(self.MenuFile, "&File")
         self.Append(self.MenuEdit, "&Edit")
-        self.Append(self.MenuTools, "&Tools")
+        self.Append(self.MenuTools, "Tools")
+        self.Append(self.MenuHelp,"Help")
         
     def __attach_events__(self):
         """
@@ -743,5 +774,5 @@ class ToolBar(wx.ToolBar):
         :param evt: Event to trigger the method
         :type evt: wx.Event
         """  
-        self.main_window.Shell.Clear()
+        self.main_window.shell.Clear()
         speak(self.main_window, "Terminal Cleared")

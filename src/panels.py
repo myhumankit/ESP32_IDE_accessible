@@ -1,4 +1,4 @@
-from packages import random, os, codecs, threading, wxSerialConfigDialog, asyncio, sys
+from packages import random, os, codecs, threading, wxSerialConfigDialog, asyncio, sys, json
 import wx.stc as stc
 import wx.py as pysh
 import wx.lib.agw.flatnotebook as fnb
@@ -16,19 +16,19 @@ def create_panels(main_window):
     style = wx.SP_3D | wx.SP_NO_XP_THEME | wx.SP_PERMIT_UNSPLIT | wx.SP_LIVE_UPDATE
     main_window.splitter_v = wx.SplitterWindow(main_window, style=style, name="Dimension")
     main_window.splitter_h = wx.SplitterWindow(main_window.splitter_v, style=style, name="DIMENSION ALL")
-    main_window.MyNotebook = NotebookPanel(main_window.splitter_h, main_window)
-    main_window.FileTree = wx.Panel(main_window.splitter_v)
-    main_window.Shell = ShellPanel(main_window.splitter_h, main_window)
-    main_window.splitter_v.SplitVertically(main_window.FileTree , main_window.splitter_h, 200)
-    main_window.splitter_h.SplitHorizontally(main_window.MyNotebook, main_window.Shell, 400)
+    main_window.notebook = NotebookPanel(main_window.splitter_h, main_window)
+    main_window.tree_panel = wx.Panel(main_window.splitter_v)
+    main_window.shell = ShellPanel(main_window.splitter_h, main_window)
+    main_window.splitter_v.SplitVertically(main_window.tree_panel , main_window.splitter_h, 200)
+    main_window.splitter_h.SplitHorizontally(main_window.notebook, main_window.shell, 400)
     
     vbox = wx.BoxSizer(wx.VERTICAL)
-    main_window.device_tree = DeviceTree(main_window.FileTree, main_window, "", "Device")
-    main_window.workspace_tree = WorkspaceTree(main_window.FileTree, main_window)
-    vbox.Add(main_window.device_tree, 1, wx.EXPAND | wx.ALL)
-    vbox.Add(main_window.workspace_tree, 1, wx.EXPAND | wx.ALL)
-    vbox.Add(ChooseWorkspace(main_window.FileTree, main_window), 1, wx.MINIMIZE)
-    main_window.FileTree.SetSizer(vbox)
+    main_window.device_tree = DeviceTree(main_window.tree_panel, main_window, "", "Device")
+    main_window.workspace_tree = WorkspaceTree(main_window.tree_panel, main_window)
+    vbox.Add(main_window.device_tree, 7, wx.MAXIMIZE)
+    vbox.Add(main_window.workspace_tree, 10, wx.MAXIMIZE)
+    vbox.Add(ChooseWorkspace(main_window.tree_panel, main_window), 1, wx.ALIGN_BOTTOM | wx.MINIMIZE)
+    main_window.tree_panel.SetSizer(vbox)
 
 class MyEditor(pysh.editwindow.EditWindow):
     """Customizable Editor page
@@ -68,7 +68,7 @@ class MyEditor(pysh.editwindow.EditWindow):
         self.directory = ""
         self.saved = False
         self.last_save = ""
-        self.theme = parent.theme
+        self.theme_choice = parent.theme_choice
         self.findData = wx.FindReplaceData()
         self.txt = ""
         self.pos = 0
@@ -81,11 +81,11 @@ class MyEditor(pysh.editwindow.EditWindow):
         :param parent: Notebook Panel
         :type parent: Notebook class
         """
-        print("PARENT THEME = " + str(parent.theme))
+        #print("PARENT THEME = " + str(parent.theme))
         self.SetMarginType(1, stc.STC_MARGIN_NUMBER)
         self.SetMarginWidth(1, 25)
         init_editor_style(self)
-        customize_editor(self, themes[self.theme])
+        customize_editor(self, self.theme_choice)
 
     def __attach_events(self):
         """
@@ -171,6 +171,7 @@ class NotebookPanel(fnb.FlatNotebook):
         """
         style = fnb.FNB_FF2 | wx.FULL_REPAINT_ON_RESIZE | fnb.FNB_COLOURFUL_TABS
         fnb.FlatNotebook.__init__(self, parent=parent, style=style, name="COUCOU")
+
         self.__set_properties(parent, topwindow)
         self.SetBackgroundStyle(wx.BG_STYLE_PAINT)
         self.Bind(wx.EVT_PAINT, self.on_paint)
@@ -181,13 +182,20 @@ class NotebookPanel(fnb.FlatNotebook):
         :param event: Event to repaint the notebook background
         :type event: wx.Event
         """
-
-        self.dc = wx.PaintDC(self)
         x = 0
         y = 0
         w, h = self.GetSize()
-
-        self.dc.GradientFillLinear((x, y, w, h), themes[self.theme][1][4],themes[self.theme][1][5])
+        try:
+            self.dc = wx.PaintDC(self)
+            file = open('./customize.json')
+            theme = json.load(file)
+            theme = theme[self.theme_choice]
+            file.close()
+            self.dc.GradientFillLinear((x, y, w, h), \
+                theme['Panels Colors']['Background notebook gradient 2'], \
+                theme['Panels Colors']['Background notebook gradient 1'])
+        except Exception as e:
+            print("Can't custom notebook background :", e)
 
     def __set_properties(self, parent, topwindow):
         """Set the properties and declare the variables of the instance
@@ -203,9 +211,7 @@ class NotebookPanel(fnb.FlatNotebook):
         self.tab_num = 0
         self.data = ""
         self.dlg = None
-        self.theme = 0
-
-        self.custom_notebook(themes[self.theme])
+        self.theme_choice = 'Dark Theme'
         
     def custom_notebook(self, theme):
         """Custom the Notebook according to the theme passed on args
@@ -213,74 +219,18 @@ class NotebookPanel(fnb.FlatNotebook):
         :param theme: The theme to apply
         :type theme: list
         """
-
-        self.SetActiveTabColour(theme[1][1])
-        self.SetTabAreaColour(theme[1][3])
-        self.SetActiveTabTextColour(theme[1][0])
-        self.SetNonActiveTabTextColour(theme[1][7])
-        
-class FileTreePanel(wx.GenericDirCtrl):
-    def __init__(self, parent, main_window):
-        """constructor for the File/dir Controller on the left
-        
-        :param training_dir: path of training directory with subdirectories
-         '/ham' and '/spam'
-        """
-        wx.GenericDirCtrl.__init__(self, parent = parent)
-        
-        self.__set_properties(main_window)
-        self.__attach_events()
-        self.ReCreateTree()
-
-    def __set_properties(self, main_window):
-        self.main_window = main_window
-        self.theme = main_window.MyNotebook.theme
-        self.tree = self.GetTreeCtrl()
-        self.font = wx.Font(pointSize = 10, family = wx.FONTFAMILY_SWISS, style = wx.FONTSTYLE_SLANT, weight = wx.FONTWEIGHT_BOLD,  
-                      underline = False, faceName ="Fira Code", encoding = 0)
-        self.custom_tree_ctrl(themes[self.theme])
-
-    def __attach_events(self):
-        self.Bind(wx.EVT_DIRCTRL_FILEACTIVATED, self.OnOpenFile)
-        
-    def custom_tree_ctrl(self, theme):
-        """Custom the tree controller of the class
-
-        :param theme: theme to apply on the cutomtree_ctrl
-        :type theme:  
-        """
-        self.tree.SetBackgroundColour(theme[1][1])
-        self.tree.SetFont(self.font)
-
-    def OnOpenFile(self, evt):
-        notebookP = self.main_window.MyNotebook
-        path = self.GetFilePath()
-        file = os.path.split(path)
-        directory = file[0]
-        filename = file[1]
-        filehandle = open(self.GetFilePath())
-        # Check if a new tabe needs to be created to display contents of opened file
-        if (notebookP.GetPageCount() == 1 
-            and notebookP.GetCurrentPage().GetValue() == ""):
-                notebookP.GetCurrentPage().SetValue(filehandle.read())
-                notebookP.GetCurrentPage().filename = filename
-                notebookP.GetCurrentPage().directory = directory
-                notebookP.GetCurrentPage().last_save = notebookP.GetCurrentPage().GetValue()
-                notebookP.GetCurrentPage().saved = True
-        else:
-            notebookP.tab_num += 1
-            new_tab = MyEditor(notebookP, self.main_window, "", False)
-            new_tab.filename = filename
-            new_tab.directory = directory
-            notebookP.AddPage(new_tab, filename, select = True)
-            wx.CallAfter(new_tab.SetFocus)
-            # Populate the tab with file contents
-            new_tab.SetValue(filehandle.read())
-            new_tab.last_save = new_tab.GetValue()
-            new_tab.saved = True
-            notebookP.SetPageText(notebookP.GetSelection(), filename)
-            filehandle.close()
-        
+        try:
+            file = open("./customize.json")
+            theme = json.load(file)
+            file.close()
+            theme = theme['Dark Theme']['Panels Colors']
+            self.SetActiveTabColour(theme['Background tab area'])
+            self.SetTabAreaColour(theme['Background tab area'])
+            self.SetActiveTabTextColour(theme['Active tab text'])
+            self.SetNonActiveTabTextColour(theme['Active tab text'])
+        except Exception:
+            print("Can't Customize Notebook")
+   
 class WorkspaceTree(wx.GenericDirCtrl):
     def __init__(self, parent, main_window):
         """constructor for the File/dir Controller on the left
@@ -296,21 +246,35 @@ class WorkspaceTree(wx.GenericDirCtrl):
 
     def __set_properties(self, main_window):
         self.main_window = main_window
-        self.theme = main_window.MyNotebook.theme
+        self.theme_choice = main_window.notebook.theme_choice
         self.tree = self.GetTreeCtrl()
         self.font = wx.Font(pointSize = 12, family = wx.FONTFAMILY_SWISS, style = wx.FONTSTYLE_SLANT, weight = wx.FONTWEIGHT_NORMAL,  
                       underline = False, faceName ="Fira Code", encoding = 0)
-        self.custom_tree_ctrl(themes[self.theme])
+        self.custom_tree_ctrl()
 
     def __attach_events(self):
         self.Bind(wx.EVT_DIRCTRL_FILEACTIVATED, self.OnOpenFile)
-        
-    def custom_tree_ctrl(self, theme):
-        self.tree.SetBackgroundColour(theme[1][1])
-        self.tree.SetFont(self.font)
+
+    def custom_tree_ctrl(self):
+        """Custom the tree controller
+
+        :param theme: theme to apply on the tree
+        :type theme: list
+        """
+        try:
+            file = open("./customize.json")
+            theme = json.load(file)
+            theme = theme[self.theme_choice]
+            file.close()
+
+            self.tree.SetBackgroundColour(theme['Panels Colors']['Filetree background'])
+            self.tree.SetForegroundColour(theme['Panels Colors']['Text foreground'])
+            self.tree.SetFont(self.font)
+        except Exception as e:
+            print(e)
 
     def OnOpenFile(self, evt):
-        notebookP = self.main_window.MyNotebook
+        notebookP = self.main_window.notebook
         path = self.GetFilePath()
         file = os.path.split(path)
         directory = file[0]
@@ -386,16 +350,24 @@ class ShellPanel(wx.TextCtrl):
     def __set_properties__(self, main_window):
         self.main_window = main_window
         self.SetName("Python Shell")
-        self.theme = main_window.MyNotebook.theme
-        self.custom_shell(themes[self.theme])
+        self.theme_choice = main_window.notebook.theme_choice
+        self.custom_shell("Dark Theme")
 
-    def custom_shell(self, theme):
-        self.SetBackgroundColour("white")
-        self.font = wx.Font(12, wx.MODERN, wx.NORMAL, wx.NORMAL, 0, "Fira code")
-        self.SetFont(self.font)
+    def custom_shell(self, choice_theme):
+        try:
+            file = open("./customize.json")
+            theme = json.load(file)
+            file.close()
+            theme = theme[self.theme_choice]
+            self.font = wx.Font(12, wx.MODERN, wx.NORMAL, wx.NORMAL, 0, "Fira code")
+            self.SetBackgroundColour(theme['Panels Colors']['Shell background'])
+            self.SetFont(self.font)
+        except Exception as e:
+            print(e)
+            print("Can't customize shell")
+            return        
         #font = wx.Font(pointSize = 10, family = wx.FONTFAMILY_SWISS, style = wx.FONTSTYLE_SLANT, weight = wx.FONTWEIGHT_BOLD,  
-        #              underline = False, faceName ="", encoding = 0)
-        #self.SetFont(font)
+        #              underline = False, faceName ="Fira Code", encoding = 0)
     
     async def Asyncappend(self, data):
         self.AppendText(data)
@@ -414,14 +386,14 @@ class DeviceTree(wx.TreeCtrl):
         self.fileidx     = self.il.Add(wx.ArtProvider.GetBitmap(wx.ART_NORMAL_FILE, wx.ART_OTHER, isz))
         self.font = wx.Font(pointSize = 12, family = wx.FONTFAMILY_SWISS, style = wx.FONTSTYLE_SLANT, weight = wx.FONTWEIGHT_NORMAL,
                       underline = False, faceName ="Fira Code", encoding = 0)
-        self.theme = main_window.MyNotebook.theme
+        self.theme_choice = main_window.notebook.theme_choice
         self.root = self.AddRoot(name)
 
         self.SetImageList(self.il)
         self.SetItemData(self.root, None)
         self.SetItemImage(self.root, self.fldridx, wx.TreeItemIcon_Normal)
         self.SetItemImage(self.root, self.fldropenidx, wx.TreeItemIcon_Expanded)
-        self.custom_tree_ctrl(themes[self.theme])
+        self.custom_tree_ctrl()
         self.__attach_events()
 
     def __attach_events(self):
@@ -436,15 +408,24 @@ class DeviceTree(wx.TreeCtrl):
         self.Bind(wx.EVT_RIGHT_DOWN, self.OnRightDown)
         self.Bind(wx.EVT_RIGHT_UP, self.OnRightUp)
         
-    def custom_tree_ctrl(self, theme):
+    def custom_tree_ctrl(self):
         """Custom the tree controller
 
         :param theme: theme to apply on the tree
         :type theme: list
         """
+        try:
+            file = open("./customize.json")
+            theme = json.load(file)
+            theme = theme[self.theme_choice]
+            file.close()
 
-        self.SetBackgroundColour(theme[1][1])
-        self.SetFont(self.font)
+            self.SetBackgroundColour(theme['Panels Colors']['Filetree background'])
+            self.SetForegroundColour(theme['Panels Colors']['Text foreground'])
+            self.SetFont(self.font)
+            self.Font
+        except Exception as e:
+            print(e)
 
     def OnRightDown(self, event):
         pt = event.GetPosition();
@@ -534,7 +515,7 @@ class DeviceTree(wx.TreeCtrl):
                 asyncio.run(SendCmdAsync(self.main_window, "print(a.read())\r\n"))
                 res = self.main_window.read_cmd("print(a.read())")
                 put_cmd(self.main_window, "a.close()\r\n")
-                notebookP = self.main_window.MyNotebook
+                notebookP = self.main_window.notebook
                 notebookP.tab_num += 1
                 new_tab = MyEditor(notebookP, self.main_window, str(res), True)
                 new_tab.filename = name

@@ -1,0 +1,89 @@
+{
+    "Dark Theme" :
+        {
+        "Caret":
+            {
+                "Foreground": "white"
+            }
+        ,
+        "Panels Colors" : 
+            {   
+                "Text background": "black",
+                "Text foreground": "white",
+                "Shell background": "Black",
+                "Editor background": "Black",
+                "Filetree background" : "Black",
+                "Background tab area" : "Grey",
+                "Active tab text" : "white",
+                "No active Tab Text" : "white",
+                "Background notebook gradient 1": "white",
+                "Background notebook gradient 2": "Black",
+                "Menu background": "black",
+                "Menu foreground": "white"
+            }
+        ,
+        "LexerStyleEditor" :
+            {
+            "Strings": "#f0f20f",
+            "Classname": "#07cc1e",
+            "Word": "#ea2cd8",
+            "Character": "OOffdf",
+            "defname": "#07cc1e",
+            "decorator": "#ea2cd8",
+            "default": "#FFFFFF",
+            "Identifier": "#FFFFFF",
+            "Number": "#FF9933",
+            "Operator": "#ea2cd8",
+            "End of line": "#ffff00",
+            "Triple": "#f0f20f",
+            "Triple double": "#f0f20f",
+            "Keywords python": "#ea2cd8",
+            "Comment line": "#434885",
+            "Comment Block + strings ": "#f0f20f"
+            }
+        },
+    "Light Theme" :
+        {
+        "Caret":
+            {
+                "Foreground": "Black"
+            }
+        ,
+        "Panels Colors" : 
+            {   
+                "Text background": "white",
+                "Text foreground": "black",
+                "Shell background": "white",
+                "Editor background": "white",
+                "Filetree background" : "white",
+                "Background tab area" : "white",
+                "Active tab text" : "black",
+                "No active Tab Text" : "black",
+                "Background notebook gradient 1": "black",
+                "Background notebook gradient 2": "white",
+                "Menu background": "white",
+                "Menu foreground": "black"
+            }
+        ,
+        "LexerStyleEditor" :
+            {
+            "Strings": "#44ea1e", 
+            "Classname": "#d08c25",
+            "Word": "#db62f2'",
+            "Character": "#131313",
+            "defname": "#1626ff",
+            "decorator": "#1626ff",
+            "default": "#131313",
+            "Identifier": "#131313",
+            "Number": "#d08c25",
+            "Operator": "#ea2cd8",
+            "End of line": "#44ea1e",
+            "Triple": "#44ea1e",
+            "Triple double": "#44ea1e",
+            "Keywords python": "#db62f2'",
+            "Comment line": "#9798a3",
+            "Comment Block + strings ": "#44ea1e"
+            }
+        }
+   
+}

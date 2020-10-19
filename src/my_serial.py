@@ -80,18 +80,18 @@ class ManageConnection():
         file_to_open = _check_extension_file(filename, ".py")
 
         if not file_to_open:
-            self.main_window.Shell.AppendText("Error extension file is not .py\n...")
+            self.main_window.shell.AppendText("Error extension file is not .py\n...")
             return False
         try:
             fileHandle=open(filepath,'rbU')
         except Exception as e:
             print("Error file : %s"%(e))
-            self.main_window.Shell.AppendText("Error on during file upload\n...")
+            self.main_window.shell.AppendText("Error on during file upload\n...")
     
         put_cmd(self.main_window, '\x03')
         self.main_window.show_cmd = False
-        self.main_window.Shell.Clear()
-        self.main_window.Shell.AppendText("Ready to download this file,please wait!")
+        self.main_window.shell.Clear()
+        self.main_window.shell.AppendText("Ready to download this file,please wait!")
         self._write_in_file(fileHandle, file_to_open)
 
     def write_in_file(self, fileHandle, file_to_open):
@@ -117,7 +117,7 @@ class ManageConnection():
         put_cmd(self.main_window, "myfile.close()\r\n")
 
 def ConnectSerial(self):
-        self.Shell.Clear()
+        self.shell.Clear()
         self.serial.write('\x03'.encode())
 
         startdata=""
@@ -148,14 +148,14 @@ def ConnectSerial(self):
             if n>0:
                 startdata+=(self.serial.read(n)).decode('utf-8')
                 if startdata.find('>>> ')>=0:
-                    self.Shell.AppendText(">>> ")
+                    self.shell.AppendText(">>> ")
                     break
             time.sleep(0.1)
             endTime=time.time()
             if endTime-startTime>2:
                 print(startdata)
                 self.serial.close()
-                self.Shell.AppendText("connect serial timeout")
+                self.shell.AppendText("connect serial timeout")
                 return False
 
         senddata="sys.platform\r"
@@ -173,7 +173,7 @@ def ConnectSerial(self):
             endTime=time.time()
             if endTime-startTime>2:
                 self.serial.close()
-                self.Shell.AppendText("connect serial timeout")
+                self.shell.AppendText("connect serial timeout")
                 return False
 
         self.start_thread_serial()
@@ -205,7 +205,7 @@ def put_cmd(main_window, msg_cmd):
     main_window.serial.flush()
 
 async def SendCmdAsync(main_window, cmd):
-    main_main_window.cmd_return = ""
+    main_window.cmd_return = ""
     print("CMDsend = " +cmd)
     put_cmd(main_window, cmd)
     await asyncio.sleep(main_window.time_to_send) 

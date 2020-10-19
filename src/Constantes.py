@@ -10,6 +10,7 @@ currentTempPath="%s/AppData/Local/uPyCraft/temp/"%rootDirectoryPath
 SERIALRX = wx.NewEventType() #:create a serial data received event
 EVT_SERIALRX = wx.PyEventBinder(SERIALRX, 0) #:bind to serial data receive events
 
+wx.ID_SHORTCUT = wx.NewId()
 wx.ID_CONNECT = wx.NewId() #: New id to Connect the card
 wx.ID_REFLUSH_DIR = wx.NewId() #: New id to Connect the card
 wx.ID_EXAMPLES = wx.NewId() #: New id to Connect the card
@@ -36,8 +37,6 @@ ID_EXIT = wx.NewId()
 ID_RTS = wx.NewId()
 ID_DTR = wx.NewId()
 
-
-
 SERIALRX = wx.NewEventType()
 # bind to serial data receive events
 EVT_SERIALRX = wx.PyEventBinder(SERIALRX, 0)
@@ -54,7 +53,6 @@ NEWLINE_CRLF = 2
 #vert #07cc1e
 #jaune #f0f20f
 #bleu foncé #434885
-
 
 th_dark = [
         '#f0f20f', #:strings editor 0 
@@ -106,8 +104,8 @@ th_light = [
 frame_light = ["White" , "Black"]
 
 #: Themes lists with sub_themes[lexer, frames]
-themes = [[th_dark, frame_dark],
-          [th_light, frame_light],]
+# themes = [[th_dark, frame_dark],
+#           [th_light, frame_light],]
  
 #: List about lexer styles
 py_style = [

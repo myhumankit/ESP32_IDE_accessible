@@ -3,7 +3,8 @@ from threading import Thread
 
 import serial.tools.list_ports
 import subprocess
-import api.api_esptool
+import api.api_esptool as Esp
+from utilitaries import speak
 
 #######FONCTIONS A INTEGRER AU FIL PRINCIPAL
 #TODO: Intégrer progress bar 
@@ -39,13 +40,13 @@ class ChooseBin(wx.FilePickerCtrl):
         wx.FilePickerCtrl.__init__(self, parent, message="Hello", wildcard="*.bin")
 
         self.burn_manager = burn_manager
-        self.__set_properties(parent)
+        self.__set_properties()
         self.Bind(wx.EVT_FILEPICKER_CHANGED, self.change_bin_path)
     
     def __set_properties(self):
         """Custom the current class
         """
-        self.set_label_text("Select path of the bin")
+        self.SetLabelText("Select path of the bin")
     
     def change_bin_path(self, event):
         """Change the binary path by the path selected
@@ -216,9 +217,9 @@ class BurnFrame(wx.Dialog):
         :param parent: Parent class 
         :type parent: :class:MainWindow
         """
-        #
-        #TODO Continuer la doc
-        wx.Dialog.__init__(self, parent, style=wx.DIALOG_ADAPTATION_LOOSE_BUTTONS)
+
+        wx.Dialog.__init__(self, parent, style=wx.DEFAULT_DIALOG_STYLE)
+        self.EnableCloseButton(enable=False)
         self.SetTitle("Burn Firmware Console")
         sizer = wx.BoxSizer(wx.VERTICAL)
         self.txt = wx.TextCtrl(self, style=wx.TE_MULTILINE | wx.TE_READONLY | wx.TE_RICH2)
@@ -235,7 +236,7 @@ class FirmwareThread(Thread):
     :param Thread: Thread class from Python module
     :type Thread: [type]
     """
-    def __init__(self, parent, firmware_manager, console):
+    def __init__(self, main_window, firmware_manager, console):
         """Constructor to init a instance of :class:FirmwareThread
 
         :param parent: MainWindow
@@ -247,6 +248,7 @@ class FirmwareThread(Thread):
         """
 
         Thread.__init__(self)
+        self.main_window = main_window
         self.burn_frame = console
         self.burn_console = console.txt       
         self.board= firmware_manager.board
@@ -270,19 +272,27 @@ class FirmwareThread(Thread):
                 break
             if self.iserase=="yes":
                 try:
+                    speak(self.main_window, "Erase Flash Memory")
                     Esp.Burn(self.burn_console, str(self.board),self.binpath,self.port,"yes", self.burnaddr)
+                    speak(self.main_window, "Memory erased")
                 except Exception as e:
                     time.sleep(3)
                     print(e)
                     self.stop_thread = True
+                    self.burn_frame.EnableCloseButton(enable=True)
+                    speak(self.main_window, "Flash Memory Error")
                     return
             try:
+                speak(self.main_window, "Start Upload Firmware")
                 Esp.Burn(self.burn_console, str(self.board),self.binpath,self.port,"no",self.burnaddr)
             except Exception as e:
                 print(e)
                 self.stop_thread = True
+                self.burn_frame.EnableCloseButton(enable=True)
+                speak(self.main_window, "Firmware Error")
                 return
             if self.board=="esp8266":
                 Esp.downOkReset()
+            self.burn_frame.EnableCloseButton(enable=True)
+            speak(self.main_window, "Firmware Installed")
             self.stop_thread = True
-            self.burn_frame.Destroy()
