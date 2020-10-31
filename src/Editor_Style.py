@@ -9,15 +9,11 @@ import wx.stc as stc
 import wx.py as pysh
 import wx.lib.agw.flatnotebook as fnb
 
-#TODO: finir les thèmes
-
 def change_theme_choice(main_window, theme_name):
     main_window.notebook.theme_choice = theme_name
     main_window.shell.theme_choice = theme_name
     main_window.workspace_tree.theme_choice = theme_name
     main_window.device_tree.theme_choice = theme_name
-
-
 
 def init_editor_style(editor):
     """Init some settings for Editor Window
@@ -109,7 +105,6 @@ def customize_lexer_pystyle(editor, theme, font):
         editor.StyleSetForeground(i, theme['Panels Colors']['Text foreground'])
     for f in theme['LexerStyleEditor']:
         keys.append(f)
-    print(keys)
     for i in py_style:
         editor.StyleSetForeground(i, theme['LexerStyleEditor'][keys[x]])
         x += 1

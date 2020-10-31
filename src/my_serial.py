@@ -42,26 +42,29 @@ class ManageConnection():
         :param msg_cmd: Result of a command
         :type msg_cmd: string
         """
-    
-        count = 0
-        msg_cmd = msg_cmd.split('(')[1]
-        msg_cmd = msg_cmd.split(')')[0]
-        res = tuple(map(str, msg_cmd.split(', ')))
-        list_infos = [self.card, self.nodename, self.release, self.version, \
-                      self.machine]
-        list_res = []
+        try:
+            print("[%s]"%msg_cmd)
+            count = 0
+            msg_cmd = msg_cmd.split('(')[1]
+            msg_cmd = msg_cmd.split(')')[0]
+            res = tuple(map(str, msg_cmd.split(', ')))
+            list_infos = [self.card, self.nodename, self.release, self.version, \
+                            self.machine]
+            list_res = []
 
-        for i in res:
-            i = i.split('=')
-            i = i[1][1:-1]
-            list_res.append(i)
-            count += 1
-
-        self.card = list_res[0]
-        self.nodename = list_res[1]
-        self.release = list_res[2]
-        self.version = list_res[3]
-        self.machine = list_res[4]
+            for i in res:
+                i = i.split('=')
+                i = i[1][1:-1]
+                list_res.append(i)
+                count += 1
+        
+            self.card = list_res[0]
+            self.nodename = list_res[1]
+            self.release = list_res[2]
+            self.version = list_res[3]
+            self.machine = list_res[4]
+        except Exception as e:
+            print(e)
 
     def download_and_run(self, filename):
         """Execute the file gived in params on the MicroPython card
@@ -92,7 +95,7 @@ class ManageConnection():
         self.main_window.show_cmd = False
         self.main_window.shell.Clear()
         self.main_window.shell.AppendText("Ready to download this file,please wait!")
-        self._write_in_file(fileHandle, file_to_open)
+        self.write_in_file(fileHandle, file_to_open)
 
     def write_in_file(self, fileHandle, file_to_open):
         cmd = "myfile=open(\'%s\',\'w\')\r\n"%str(file_to_open)

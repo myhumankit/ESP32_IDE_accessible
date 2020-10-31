@@ -4,11 +4,6 @@ from threading import Thread
 import serial.tools.list_ports
 import subprocess
 import api.api_esptool as Esp
-from utilitaries import speak
-
-#######FONCTIONS A INTEGRER AU FIL PRINCIPAL
-#TODO: Intégrer progress bar 
-    #TODO: -->Si erase, rajouter progress bar sinon non, s'inspirer du hide wxSerialConfig
 
 class FirmwareManager():
     """Class which contains parameters to use esptool
@@ -174,6 +169,7 @@ class UpdateFirmwareDialog(wx.Dialog):
         self.SetSizer(sizer_2)
         sizer_2.Fit(self)
         self.Layout()
+        self.button_ok.SetLabel("Install")
         # end wxGlade
 
     def __attach_events(self):
@@ -272,27 +268,27 @@ class FirmwareThread(Thread):
                 break
             if self.iserase=="yes":
                 try:
-                    speak(self.main_window, "Erase Flash Memory")
+                    self.main_window.speak_on = "Erase Flash Memory"
                     Esp.Burn(self.burn_console, str(self.board),self.binpath,self.port,"yes", self.burnaddr)
-                    speak(self.main_window, "Memory erased")
+                    self.main_window.speak_on = "Memory erased"
                 except Exception as e:
                     time.sleep(3)
                     print(e)
                     self.stop_thread = True
                     self.burn_frame.EnableCloseButton(enable=True)
-                    speak(self.main_window, "Flash Memory Error")
+                    self.main_window.speak_on = "Flash Memory Error"
                     return
             try:
-                speak(self.main_window, "Start Upload Firmware")
+                self.main_window.speak_on = "Start Upload Firmware"
                 Esp.Burn(self.burn_console, str(self.board),self.binpath,self.port,"no",self.burnaddr)
             except Exception as e:
                 print(e)
                 self.stop_thread = True
                 self.burn_frame.EnableCloseButton(enable=True)
-                speak(self.main_window, "Firmware Error")
+                self.main_window.speak_on = "Firmware Error"
                 return
             if self.board=="esp8266":
                 Esp.downOkReset()
             self.burn_frame.EnableCloseButton(enable=True)
-            speak(self.main_window, "Firmware Installed")
+            self.main_window.speak_on = "Firmware Installed"
             self.stop_thread = True

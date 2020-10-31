@@ -153,6 +153,8 @@ class SerialConfigDialog(wx.Dialog):
             # set the rtscts mode
             self.checkbox_xonxoff.SetValue(self.serial.xonxoff)
 
+        self.button_ok.SetLabel("Connect")
+
     def __do_layout(self):
         # begin wxGlade: SerialConfigDialog.__do_layout
         sizer_2 = wx.BoxSizer(wx.VERTICAL)

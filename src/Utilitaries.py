@@ -1,7 +1,6 @@
 from packages import wx, speech, time, json, asyncio, sys
 from my_serial import SendCmdAsync, put_cmd
 
-#TODO établir liste baudrate/sleep
 def save_on_card(main_window, page):
     print(page.directory)
     print(page.filename)
@@ -12,6 +11,7 @@ def save_on_card(main_window, page):
         page.saved = False
         # Grab the content to be saved
         save_as_file_content = page.GetValue()
+        print("|+|",save_as_file_content, "|+|")
         main_window.show_cmd = False
         cmd = "f = os.remove('%s')\r\n" % (page.directory + "/" + page.filename)
         asyncio.run(SendCmdAsync(main_window, cmd))
@@ -25,7 +25,7 @@ def save_on_card(main_window, page):
         page.saved = True
         treeModel(main_window)
         main_window.shell.AppendText("Content Saved\n")
-        speak(main_window, "Content Saved")
+        self.main_window.speak_on = "Content Saved"
 
 def load_img(path):
     return wx.Image(path,wx.BITMAP_TYPE_ANY).ConvertToBitmap()
@@ -111,8 +111,10 @@ def getFileTree(main_window, dir):
         return ret
 
 def treeModel(main_window):
+        main_window.show_cmd = False
         main_window.reflushTreeBool= True
         main_window.cmd_return = ""
+        main_window.device_tree.DeleteChildren(main_window.device_tree.root)
         res=json.loads("{}")
         res=getFileTree(main_window, ".")
 
@@ -126,6 +128,7 @@ def treeModel(main_window):
         except Exception as e:
             print(e)
         main_window.cmd_return =""
+        main_window.show_cmd = True
     
 def ReflushTree(main_window, root, msg):
         if msg=="err":
@@ -158,21 +161,40 @@ def ReflushTree(main_window, root, msg):
                 else:
                     pass
 
-def create_Menu_item(parentMenu, id, text, submenu, theme_name):
+def create_Menu_item(parentMenu, id_id, text, submenu, theme_name):
 
-    item = wx.MenuItem(parentMenu, id=id, text=text, subMenu=submenu)
+    item = wx.MenuItem(id=id_id, text=text, helpString=text, subMenu=submenu)
+    wx.Menu
     try:
         #file = open("./customize.json")
         #theme = json.load(file)
         #file.close()
         #theme = theme[theme_name]
-        font = wx.Font(12, wx.MODERN, wx.NORMAL, wx.NORMAL, 0, "Fira code")
-        #item.SetBackgroundColour(theme['Panels Colors']['Menu background'])
-        #item.SetTextColour(theme['Panels Colors']['Menu foreground'])
-        item.SetFont(font)
         return item
     except Exception as e:
         print(e)
         print("Can't customize ItemMenu")
         return item
-    
+
+def setDefaultProg(main_window,filename):
+    print("setDefaultProg:%s"%filename)
+    main_window.show_cmd = False
+    ProgMsg= ""
+    asyncio.run(SendCmdAsync(main_window, "myfile=open(\'main.py\',\'w\')\r\n"))
+    ProgMsg = main_window.read_cmd("myfile=open(\'main.py\',\'w\')")
+    if ProgMsg.find("Traceback")>=0 or ProgMsg.find("... ")>=0:
+        asyncio.run(SendCmdAsync(main_window, "\x03"))
+        return
+    cmd = "myfile.write(\"exec(open(\'%s\').read(),globals())\")\r\n"%str(filename)
+    asyncio.run(SendCmdAsync(main_window, cmd))
+    ProgMsg = main_window.read_cmd(cmd[:-2])
+    if ProgMsg.find("Traceback")>=0 or ProgMsg.find("... ")>=0:
+        asyncio.run(SendCmdAsync(main_window, "\x03"))
+        return
+    cmd = "myfile.close()\r\n"
+    asyncio.run(SendCmdAsync(main_window, cmd))
+    ProgMsg = main_window.read_cmd(cmd[:-2])
+    if ProgMsg.find("Traceback")>=0 or ProgMsg.find("... ")>=0:
+        asyncio.run(SendCmdAsync(main_window, "\x03"))
+        return
+    main_window.show_cmd = True

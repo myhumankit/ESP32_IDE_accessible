@@ -10,6 +10,9 @@ currentTempPath="%s/AppData/Local/uPyCraft/temp/"%rootDirectoryPath
 SERIALRX = wx.NewEventType() #:create a serial data received event
 EVT_SERIALRX = wx.PyEventBinder(SERIALRX, 0) #:bind to serial data receive events
 
+wx.ID_RUN = wx.NewId()
+wx.ID_RENAME = wx.NewId()
+wx.ID_DIRECTORY = wx.NewId()
 wx.ID_SHORTCUT = wx.NewId()
 wx.ID_CONNECT = wx.NewId() #: New id to Connect the card
 wx.ID_REFLUSH_DIR = wx.NewId() #: New id to Connect the card

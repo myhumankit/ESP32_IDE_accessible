@@ -7,6 +7,7 @@ from utilitaries import *
 from shortcuts import InitShortcuts
 from firmware import FirmwareManager
 from install_fonts import Install_fonts
+import keyboard
 
 #TODO: change focus when new editor tab
 
@@ -29,6 +30,8 @@ class MainWindow(wx.Frame):
         e = wx.FontEnumerator()
         e.EnumerateFacenames()
         elist= e.GetFacenames()
+        self.on_key = True
+
         
     def __set_properties__(self):
         self.serial = serial.Serial()
@@ -37,6 +40,7 @@ class MainWindow(wx.Frame):
         self.settings = TerminalSetup()  # placeholder for the settings
         self.thread = None
         self.alive = threading.Event()
+        self.alive_speak = threading.Event()
         #####
         self.messycode=b''
         self.keyPressMsg=''
@@ -46,6 +50,7 @@ class MainWindow(wx.Frame):
         self.shell_text = ""
         self.get_cmd = False
         self.cmd_return = ""
+        self.last_cmd_red = ""
         #####
         self.who_is_focus = 0
         self.theme = 'Dark Theme'
@@ -53,6 +58,7 @@ class MainWindow(wx.Frame):
         self.statusbar = create_status_bar(self)
         self.serial_manager = ManageConnection(self)
         self.voice_on = True
+        self.speak_on = None
         self.firmware_manager = FirmwareManager()
         
         create_panels(self)
@@ -60,14 +66,20 @@ class MainWindow(wx.Frame):
         InitShortcuts(self)
         
         self.__attach_events()
+        self.start_thread_speak()
          
     def __attach_events(self):
         self.shell.Bind(wx.EVT_CHAR, self.OnKey)
 
+    def start_thread_speak(self):
+        self.thread_speak = threading.Thread(target=self.speak)
+        self.thread_speak.setDaemon(1)
+        self.alive_speak.set()
+        self.thread_speak.start()
+
     def start_thread_serial(self):
         """Start the receiver thread"""
         self.thread = threading.Thread(target=self.thread_listen_port)
-        self.thread.setDaemon(1)
         self.alive.set()
         self.thread.start()
         self.serial.rts = True
@@ -79,6 +91,12 @@ class MainWindow(wx.Frame):
             self.alive.clear()          # clear alive event for thread
             self.thread.join()          # wait until thread has finished
             self.thread = None
+
+    def stop_thread_speak(self):
+         if self.thread_speak is not None:
+            self.alive_speak.clear()          # clear alive event for thread
+            self.thread_speak.join()          # wait until thread has finished
+            self.thread_speak = None
 
     def read_cmd(self, data):
         """Get the return of the cmd sent to the MicroPython card
@@ -105,25 +123,30 @@ class MainWindow(wx.Frame):
 
     def serial_read_data(self, data):
         """Handle input from the serial port."""
-        print(self.show_cmd)
         #data = event.data
+        print(bytes(data))
         if type(data) is bytes:
             print("Text red bytes = " + data.decode('UTF-8', 'replace'))
         else:
             print("Text red = " + data)
         
-        if data == b'\x08': #backspace
+        if data == b'\x08' or data == b'\x08\x1b[K': #or b'\x08\x1b[K\x08\x1b[K':
             txt = self.shell.GetValue()
             cursor = self.shell.GetInsertionPoint()
-            self.shell.SetValue(txt[:-1])
+            self.shell.Clear()
+            self.shell.AppendText(txt[:-1])
             self.shell_text = self.shell_text[:-1]
             self.shell.SetInsertionPoint(cursor)
         elif data == b'\x1b[K':
             pass
         else:
             self.shell_text += data.decode('UTF-8', 'ignore')
+            self.last_cmd_red += data.decode('UTF-8', 'ignore')
             if self.show_cmd == True:
-                asyncio.run(self.shell.Asyncappend(data.decode('UTF-8', 'ignore')))
+                self.shell.AppendText(data.decode('UTF-8', 'ignore'))
+                if not self.on_key:
+                    self.speak_on = data.decode('UTF-8', 'ignore')
+                    self.on_key = True
 
     def thread_listen_port(self):
         """\
@@ -145,6 +168,18 @@ class MainWindow(wx.Frame):
                     b = b.replace(b'\r\n', b'\n')
                 self.serial_read_data(b)
 
+    def speak(self):
+        """\
+        Thread that handles the incoming traffic. Does the basic input
+        transformation (newlines) and call an serial_read_data
+        """
+        while self.alive_speak.isSet():
+                if self.speak_on:
+                    keyboard.press_and_release('maj')
+                    speak(self, self.speak_on)
+                    keyboard.press_and_release('maj')
+                    self.speak_on = None
+            
     def actualize_status_bar(self):
         """Actualize the Status Bar
 
@@ -156,22 +191,47 @@ class MainWindow(wx.Frame):
         else:
             self.statusbar.SetStatusText("Status: %s"%"Not Connected", 1)
 
-    def OnChangeFocus(self, evt):
+    def OnUpFocus(self, evt):
         """Allow to navigate in the differents region of the Frame after an event
 
         :param evt: Event binded to trigger the function
         :type evt: wx.Event https://wxpython.org/Phoenix/docs/html/wx.Event.html
         """
-        widgets = [self.tree_panel, self.notebook.GetCurrentPage(), self.shell]
-        if self.who_is_focus == 1 and widgets[self.who_is_focus] == None:
+        widgets = [self.workspace_tree, self.device_tree, self.shell, self.notebook.GetCurrentPage()]
+        names = ["Computer Files", "Device File Tree", "Shell Panel", "Curent Editor"]
+        print(self.who_is_focus)
+        if self.who_is_focus == 3 and widgets[self.who_is_focus] == None:
             self.who_is_focus += 1
             widgets[self.who_is_focus].SetFocus()
+            self.speak_on = names[self.who_is_focus]
             return
         widgets[self.who_is_focus].SetFocus()
-        if self.who_is_focus < 2:
-            self.who_is_focus += 1
-        else:
+        self.speak_on = names[self.who_is_focus]
+        if self.who_is_focus == 3:
             self.who_is_focus = 0
+        else:
+            self.who_is_focus += 1
+    
+    def OnDownFocus(self, evt):
+        """Allow to navigate in the differents region of the Frame after an event
+
+        :param evt: Event binded to trigger the function
+        :type evt: wx.Event https://wxpython.org/Phoenix/docs/html/wx.Event.html
+        """
+        widgets = [self.workspace_tree, self.device_tree, self.shell, self.notebook.GetCurrentPage()]
+        names = ["Computer Files", "Device File Tree", "Shell Panel", "Curent Editor"]
+        print(self.who_is_focus)
+        if self.who_is_focus == 3 and widgets[self.who_is_focus] == None:
+            self.who_is_focus -= 1
+            widgets[self.who_is_focus].SetFocus()
+            self.speak_on = names[self.who_is_focus]
+            return
+        widgets[self.who_is_focus].SetFocus()
+        self.speak_on = names[self.who_is_focus]
+        if self.who_is_focus == 0:
+            self.who_is_focus = 3
+        else:
+            self.who_is_focus -= 1
     
     def OnZoomIn(self, evt):
         """Zoom On which affects the EditWindow panel
@@ -204,7 +264,7 @@ class MainWindow(wx.Frame):
         :type evt: wx.Event https://wxpython.org/Phoenix/docs/html/wx.Event.html
         """
         self.statusbar.SetFocus()
-        speak(self, self.statusbar.GetStatusText(1))
+        self.speak_on = self.statusbar.GetStatusText(1)
 
     def OnKey(self, evt):
         """\
@@ -215,7 +275,8 @@ class MainWindow(wx.Frame):
         if code < 256:
             code = evt.GetKeyCode()
         if code == 13:                      # is it a newline? (check for CR which is the RETURN key)
-            self.serial.write(b'\n')     # send LF
+            self.serial.write(b'\n')  
+            self.on_key = False   # send LF
         char = chr(code)
         self.serial.write(char.encode('UTF-8', 'replace'))
 
@@ -233,7 +294,7 @@ class MyApp(wx.App):
             --if True the app works
         """        
         wx.InitAllImageHandlers()
-        window = MainWindow("Blind-IDE V1.3.3", (800, 600))
+        window = MainWindow("Blind-IDE V1.3.4", (800, 600))
         self.SetTopWindow(window)
         window.Show()
         return True

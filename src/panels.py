@@ -6,6 +6,10 @@ from editor_style import *
 from find_replace import *
 from constantes import *
 from my_serial import SendCmdAsync, put_cmd
+from utilitaries import create_Menu_item, treeModel, setDefaultProg
+
+#TODO: GROS PROBLEME AVEC LE SHELL TEXT PANEL
+#TODO: rajouter le path workspace dans le json
 
 def create_panels(main_window):
     """Inits the three differents regions(treeCtrl, Notebook, Shell) in the MainWindow
@@ -30,6 +34,7 @@ def create_panels(main_window):
     vbox.Add(ChooseWorkspace(main_window.tree_panel, main_window), 1, wx.ALIGN_BOTTOM | wx.MINIMIZE)
     main_window.tree_panel.SetSizer(vbox)
 
+#TODO: reafaire le OnClose
 class MyEditor(pysh.editwindow.EditWindow):
     """Customizable Editor page
 
@@ -242,7 +247,6 @@ class WorkspaceTree(wx.GenericDirCtrl):
         
         self.__set_properties(main_window)
         self.__attach_events()
-        print(self.GetDefaultPath())
 
     def __set_properties(self, main_window):
         self.main_window = main_window
@@ -312,6 +316,8 @@ class ChooseWorkspace(wx.DirPickerCtrl):
     def __set_properties(self, main_window):
         self.SetLabelText("Set your Workspace")
         self.main_window = main_window
+        print(self.GetLabelText())
+        print(self.GetTextCtrl().SetExtraStyle(wx.TE_READONLY))
     
     def changeWorkspace(self, evt):
         path = self.GetPath()
@@ -344,7 +350,7 @@ class ShellPanel(wx.TextCtrl):
         :param training_dir: path of training directory with subdirectories
          '/ham' and '/spam'
         """
-        wx.TextCtrl.__init__(self, parent=parent, style=wx.TE_MULTILINE | wx.TE_READONLY |wx.TE_RICH2)
+        wx.TextCtrl.__init__(self, parent=parent, style=wx.TE_MULTILINE | wx.TE_READONLY |wx.TE_RICH)
         self.__set_properties__(main_window)
 
     def __set_properties__(self, main_window):
@@ -361,6 +367,7 @@ class ShellPanel(wx.TextCtrl):
             theme = theme[self.theme_choice]
             self.font = wx.Font(12, wx.MODERN, wx.NORMAL, wx.NORMAL, 0, "Fira code")
             self.SetBackgroundColour(theme['Panels Colors']['Shell background'])
+            self.SetDefaultStyle(wx.TextAttr(theme['Panels Colors']['Text foreground'], font=self.font))
             self.SetFont(self.font)
         except Exception as e:
             print(e)
@@ -371,7 +378,7 @@ class ShellPanel(wx.TextCtrl):
     
     async def Asyncappend(self, data):
         self.AppendText(data)
-        
+     
 class DeviceTree(wx.TreeCtrl):
     def __init__(self, parent, main_window, paths, name):
         tID = wx.NewId()
@@ -406,7 +413,7 @@ class DeviceTree(wx.TreeCtrl):
         self.Bind(wx.EVT_RIGHT_DCLICK, self.OnClipboardMenu)
         self.Bind(wx.EVT_LEFT_DCLICK, self.OnLeftDClick)
         self.Bind(wx.EVT_RIGHT_DOWN, self.OnRightDown)
-        self.Bind(wx.EVT_RIGHT_UP, self.OnRightUp)
+        self.Bind(wx.EVT_RIGHT_UP, self.OnClipboardMenu)
         
     def custom_tree_ctrl(self):
         """Custom the tree controller
@@ -476,7 +483,7 @@ class DeviceTree(wx.TreeCtrl):
                 return
 
     def OnLeftDClick(self, event):
-        pt = event.GetPosition();
+        pt = event.GetPosition()
         item, flags = self.HitTest(pt)
         if item:
             sys.stdout.write("OnLeftDClick: %s\n" % self.GetItemText(item))
@@ -503,7 +510,7 @@ class DeviceTree(wx.TreeCtrl):
         if self.item:
             if self.GetItemImage(self.item, which=wx.TreeItemIcon_Normal):
                 print("FILE")
-                #TODO: Create path to open,
+                #TODO: Give A name to the file opened
                 self.path = ""
                 self.root_it = self.GetRootItem()
                 name = self.GetItemText(self.item)
@@ -545,5 +552,115 @@ class DeviceTree(wx.TreeCtrl):
         self.path += name
 
     def OnClipboardMenu(self, evt):
-        #TODO: CREATE THE CLIPBOARD MENU
-        print("hello")
+        img = self.GetItemImage(self.item)
+        if img == self.fldridx or img == self.fldropenidx:
+            print("DIR")
+            menu = ClipboardMenuDevice(True, self.main_window, self.item)
+            self.main_window.PopupMenu(menu)
+            menu.Destroy()
+        else:
+            print("File")
+            menu = ClipboardMenuDevice(False, self.main_window, self.item)
+            self.main_window.PopupMenu(menu)
+            menu.Destroy()
+
+class ClipboardMenuDevice(wx.Menu):
+    """[summary]
+
+    :param wx: [description]
+    :type wx: [type]
+    """
+    def __init__(self, is_dir, main_window, item):
+        wx.Menu.__init__(self)
+        self.is_dir_menu = is_dir
+        self.main_window = main_window
+        self.device_tree = main_window.device_tree
+        self.item = item
+        self.__set_properties(main_window)
+        self.__attach_events()
+
+    def __set_properties(self, main_window):
+        if self.is_dir_menu:
+            self.Append(create_Menu_item(self, wx.ID_NEW, "&New file", None, main_window.theme))
+            self.Append(create_Menu_item(self, wx.ID_DIRECTORY, "&New dir", None, main_window.theme))
+        else:
+            self.Append(create_Menu_item(self, wx.ID_RUN, "&Run", None, main_window.theme))
+            self.Append(create_Menu_item(self, wx.ID_OPEN, "&Open", None, main_window.theme))
+            self.Append(create_Menu_item(self, wx.ID_CLOSE, "&Close", None, main_window.theme))
+            self.Append(create_Menu_item(self, wx.ID_DELETE, "&Delete", None, main_window.theme))
+            self.Append(create_Menu_item(self, wx.ID_DEFAULT, "&Default Run", None, main_window.theme))
+            self.Append(create_Menu_item(self, wx.ID_RENAME, "&Rename", None, main_window.theme))
+
+    #TODO: FAIRE TOUS LES EVENTS
+    def __attach_events(self):
+        self.Bind(wx.EVT_MENU, self.OnNewdir, id=wx.ID_DIRECTORY)
+        self.Bind(wx.EVT_MENU, self.OnRun, id=wx.ID_RUN)
+        self.Bind(wx.EVT_MENU, self.main_window.device_tree.OnActivate, id=wx.ID_OPEN)
+        self.Bind(wx.EVT_MENU, self.OnClose, id=wx.ID_CLOSE)
+        self.Bind(wx.EVT_MENU, self.OnDelete, id=wx.ID_DELETE)
+        self.Bind(wx.EVT_MENU, self.OnDefaultRun, id=wx.ID_DEFAULT)
+
+    def OnRun(self, evt):
+        self.device_tree.path = ""
+        self.device_tree.root_it = self.device_tree.GetRootItem()
+        name = self.device_tree.GetItemText(self.item)
+        self.device_tree.get_path_item(self.item, name)
+        asyncio.run(SendCmdAsync(self.main_window, "exec(open('%s').read())\r\n"%self.device_tree.path))
+
+    def OnNewdir(self, evt):
+        self.device_tree.path = ""
+        self.device_tree.root_it = self.device_tree.GetRootItem()
+        name = self.device_tree.GetItemText(self.item)
+        self.device_tree.get_path_item(self.item, name)
+        ok = False
+        while not ok:
+            with wx.TextEntryDialog(self.main_window, "Select the name of the new directory") as dlg:
+                dlg.CenterOnParent()
+                result = dlg.ShowModal()
+                if result == wx.ID_OK or evt is not None:
+                    path = self.device_tree.path + "/" + dlg.GetValue()
+                    asyncio.run(SendCmdAsync(self.main_window, "os.mkdir('%s',0755)\r\n"%self.device_tree.path))
+                    ok = True
+                    treeModel(self.main_window)
+                else:
+                    ok = True
+
+    def OnClose(self, evt):
+        #CHECK SI UNE PAGE AVEC LE NOM DU PATH EST OUVERTE DANS L'EDITEUR
+        path = self.item.GetPath()
+        print(path)
+
+    def OnDelete(self, evt):
+        self.device_tree.path = ""
+        self.device_tree.root_it = self.device_tree.GetRootItem()
+        name = self.device_tree.GetItemText(self.item)
+        self.device_tree.get_path_item(self.item, name)
+        asyncio.run(SendCmdAsync(self.main_window, "os.remove('%s')\r\n"%self.device_tree.path))
+        treeModel(self.main_window)
+
+    def OnDefaultRun(self, evt):
+        self.device_tree.path = ""
+        self.device_tree.root_it = self.device_tree.GetRootItem()
+        name = self.device_tree.GetItemText(self.item)
+        self.device_tree.get_path_item(self.item, name)
+        setDefaultProg(self.main_window, self.device_tree.path)
+        treeModel(self.main_window)
+
+    def OnNewFile(self, evt):
+        self.device_tree.path = ""
+        self.device_tree.root_it = self.device_tree.GetRootItem()
+        name = self.device_tree.GetItemText(self.item)
+        self.device_tree.get_path_item(self.item, name)
+        ok = False
+        while not ok:
+            with wx.TextEntryDialog(self.main_window, "Select the name of the new file") as dlg:
+                dlg.CenterOnParent()
+                result = dlg.ShowModal()
+                if result == wx.ID_OK or evt is not None:
+                    path = self.device_tree.path + "/" + dlg.GetValue()
+                    asyncio.run(SendCmdAsync(self.main_window, "myfile = open('%s', 'w')\r\n"%self.device_tree.path))
+                    asyncio.run(SendCmdAsync(self.main_window, "myfile.close()\r\n"))
+                    ok = True
+                    treeModel(self.main_window)
+                else:
+                    ok = True

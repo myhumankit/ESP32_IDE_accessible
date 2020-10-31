@@ -7,8 +7,18 @@ def InitF6(main_window):
     :return: entrie(here tuple) for AcceleratorTable
     :rtype: tuple(int, int, int)
     """        
-    main_window.Bind(wx.EVT_MENU, main_window.OnChangeFocus, id=wx.ID_MOVE)
+    main_window.Bind(wx.EVT_MENU, main_window.OnUpFocus, id=wx.ID_MOVE)
     return (wx.ACCEL_NORMAL,  wx.WXK_F6, wx.ID_MOVE)
+
+def InitMajF6(main_window):
+    """F6 to navigate between regions (previous)
+    :param main_window: see InitShorcuts->param
+    :type main_window: idem
+    :return: entrie(here tuple) for AcceleratorTable
+    :rtype: tuple(int, int, int)
+    """        
+    main_window.Bind(wx.EVT_MENU, main_window.OnDownFocus, id=wx.ID_MOVE)
+    return (wx.ACCEL_SHIFT,  wx.WXK_F6, wx.ID_MOVE)
 
 def InitCTRL_plus(main_window):
     """Ctrl + = to zoom on the editor
@@ -50,5 +60,6 @@ def InitShortcuts(main_window):
                                     InitCTRL_plus(main_window),
                                     InitCTRL_moins(main_window),
                                     InitCTRL_fin(main_window),
+                                    InitMajF6(main_window)
                                     ])
     main_window.SetAcceleratorTable(accel_tbl)      
