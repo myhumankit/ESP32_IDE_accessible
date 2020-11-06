@@ -2,7 +2,7 @@
 Module which has functions and classes to manage the connection and communication with the card
 """
 
-from packages import wx, os, time, asyncio
+import wx, os, time, asyncio
 from constantes import *
 
 class TerminalSetup:
@@ -203,7 +203,7 @@ def put_cmd(main_window, msg_cmd):
     :param msg_cmd: command to send
     :type msg_cmd: str
     """
-                
+    main_window.show_cmd = False
     main_window.serial.write(msg_cmd.encode('utf-8'))
     main_window.serial.flush()
 

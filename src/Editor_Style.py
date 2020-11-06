@@ -2,7 +2,7 @@
 Module to Customize Panels with differents themes
 """
 
-from packages import wx, random, os, json
+import wx, random, os, json
 from constantes import *
 
 import wx.stc as stc

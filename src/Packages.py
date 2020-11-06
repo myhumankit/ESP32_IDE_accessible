@@ -13,7 +13,8 @@ import random #:https://docs.python.org/fr/3/library/random.html
 import codecs #:https://docs.python.org/fr/3/library/codecs.html
 import serial #:https://pyserial.readthedocs.io/en/latest/shortintro.html
 import threading #:https://docs.python.org/fr/3/library/threading.html
-import wxSerialConfigDialog #:see wxSerialConfigDialog module
+from Panels import wxSerialConfigDialog #:see wxSerialConfigDialog module
+from Panels import Device_tree
 import json #:https://docs.python.org/fr/3/library/.html
 import asyncio #:https://docs.python.org/fr/3/library/asyncio.html
 import string #:https://docs.python.org/fr/3/library/string.html

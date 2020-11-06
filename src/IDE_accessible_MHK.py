@@ -1,13 +1,17 @@
+
 from packages import *
 from menus import *
-from panels import *
+from all_panels import *
 from my_serial import *
 from constantes import *
 from utilitaries import *
 from shortcuts import InitShortcuts
 from firmware import FirmwareManager
-from install_fonts import Install_fonts
+from api.install_fonts import Install_fonts
 import keyboard
+from threading import Thread
+import pyttsx3
+
 
 #TODO: change focus when new editor tab
 
@@ -31,19 +35,18 @@ class MainWindow(wx.Frame):
         e.EnumerateFacenames()
         elist= e.GetFacenames()
         self.on_key = True
-
+        self.keypressmsg = ""
         
     def __set_properties__(self):
         self.serial = serial.Serial()
-        self.serial.timeout = 0.01
-        self.time_to_send = 0.5   # make sure that the alive event can be checked from time to time
+        self.serial.timeout = 0.5
+        self.time_to_send = 0.01   # make sure that the alive event can be checked from time to time
         self.settings = TerminalSetup()  # placeholder for the settings
         self.thread = None
         self.alive = threading.Event()
         self.alive_speak = threading.Event()
         #####
-        self.messycode=b''
-        self.keyPressMsg=''
+        self.messycode=b""
         self.recvdata=""
         self.show_cmd = True
         self.connected = False
@@ -51,31 +54,27 @@ class MainWindow(wx.Frame):
         self.get_cmd = False
         self.cmd_return = ""
         self.last_cmd_red = ""
+        self.last_enter = True
         #####
         self.who_is_focus = 0
         self.theme = 'Dark Theme'
         self.top_menu = init_top_menu(self)
         self.statusbar = create_status_bar(self)
         self.serial_manager = ManageConnection(self)
-        self.voice_on = True
+        self.voice_on = pyttsx3.init()
         self.speak_on = None
         self.firmware_manager = FirmwareManager()
-        
+
         create_panels(self)
         init_toolbar(self)
         InitShortcuts(self)
         
         self.__attach_events()
-        self.start_thread_speak()
+        #self.thread_speak = Speak(self)
+        #self.thread_speak.start()
          
     def __attach_events(self):
         self.shell.Bind(wx.EVT_CHAR, self.OnKey)
-
-    def start_thread_speak(self):
-        self.thread_speak = threading.Thread(target=self.speak)
-        self.thread_speak.setDaemon(1)
-        self.alive_speak.set()
-        self.thread_speak.start()
 
     def start_thread_serial(self):
         """Start the receiver thread"""
@@ -92,12 +91,6 @@ class MainWindow(wx.Frame):
             self.thread.join()          # wait until thread has finished
             self.thread = None
 
-    def stop_thread_speak(self):
-         if self.thread_speak is not None:
-            self.alive_speak.clear()          # clear alive event for thread
-            self.thread_speak.join()          # wait until thread has finished
-            self.thread_speak = None
-
     def read_cmd(self, data):
         """Get the return of the cmd sent to the MicroPython card
 
@@ -111,42 +104,71 @@ class MainWindow(wx.Frame):
         if b:
             self.is_data  = True
             # newline transformation
-            if self.settings.newline == NEWLINE_CR:
-                b = b.replace(b'\r', b'\n')
-            elif self.settings.newline == NEWLINE_LF:
-                pass
-            elif self.settings.newline == NEWLINE_CRLF:
-                b = b.replace(b'\r\n', b'\n')
+            b = b.replace(b'\r\n', b'\n')
         self.serial_read_data(b)
     
         return GetCmdReturn(self.shell_text, data)
 
     def serial_read_data(self, data):
         """Handle input from the serial port."""
-        #data = event.data
-        print(bytes(data))
-        if type(data) is bytes:
-            print("Text red bytes = " + data.decode('UTF-8', 'replace'))
+        msg = self.keypressmsg
+        if data == b'':
+            return
+        #print(bytes(data))
+        check = str(data)
+        print("DEDCODE = |", check, "|")
+        if  msg == "\x08":
+            print("ERASE")
+            self.keypressmsg = "debug"
+            return remove_char(self.shell, self) 
+        elif msg == "\x1b\x5b\x44":
+            return move_key_left(self.shell)
+        elif msg == "\x1b\x5b\x43":
+            return move_key_right(self.shell)
+        elif self.keypressmsg == "debug":
+            self.keypressmsg = "else"
+            return
+        self.shell_text += data.decode('UTF-8', 'replace')
+        self.last_cmd_red += data.decode('UTF-8', 'replace')
+        if self.show_cmd == True:
+            self.shell.AppendText(data.decode('UTF-8', 'replace'))
+            if self.last_enter:
+                asyncio.run(speak(self, data.decode('UTF-8', 'replace')))
+                self.last_enter = False
+            if not self.on_key:
+                self.on_key = True
+                self.last_enter = True
+            
+
+    def OnKey(self, evt):
+        """\
+        Key event handler. If the key is in the ASCII range, write it to the
+        serial port. Newline handling is also done here.
+        """
+        code = evt.GetUnicodeKey()
+        if code < 256:
+            code = evt.GetKeyCode()
+        print("keypress", code)
+        if code == 13:                      # is it a newline? (check for CR which is the RETURN key)
+            self.serial.write(b'\n')  
+            self.on_key = False   # send LF
+        if code == 314:
+            self.keypressmsg = "\x1b\x5b\x44"
+            self.serial.write(b'\x1b\x5b\x44')
+            return
+        if code == wx.WXK_RIGHT:
+            self.keypressmsg = "\x1b\x5b\x43"
+            self.serial.write(b'\x1b\x5b\x43')
+            return
+        if code == 8:
+            self.keypressmsg = "\x08"
+            self.serial.write(b'\x08')
+            return
         else:
-            print("Text red = " + data)
-        
-        if data == b'\x08' or data == b'\x08\x1b[K': #or b'\x08\x1b[K\x08\x1b[K':
-            txt = self.shell.GetValue()
-            cursor = self.shell.GetInsertionPoint()
-            self.shell.Clear()
-            self.shell.AppendText(txt[:-1])
-            self.shell_text = self.shell_text[:-1]
-            self.shell.SetInsertionPoint(cursor)
-        elif data == b'\x1b[K':
-            pass
-        else:
-            self.shell_text += data.decode('UTF-8', 'ignore')
-            self.last_cmd_red += data.decode('UTF-8', 'ignore')
-            if self.show_cmd == True:
-                self.shell.AppendText(data.decode('UTF-8', 'ignore'))
-                if not self.on_key:
-                    self.speak_on = data.decode('UTF-8', 'ignore')
-                    self.on_key = True
+            self.keypressmsg = "else"
+        char = chr(code)
+        self.serial.write(char.encode('UTF-8', 'replace'))
+        self.serial.flush()
 
     def thread_listen_port(self):
         """\
@@ -157,7 +179,7 @@ class MainWindow(wx.Frame):
             #print("J'y passe")
             b = self.serial.read(self.serial.in_waiting)
             self.is_data = False
-            if b and b != b'\x00':
+            if b: #and b != b'\x00':
                 self.is_data  = True
                 # newline transformation
                 if self.settings.newline == NEWLINE_CR:
@@ -168,18 +190,6 @@ class MainWindow(wx.Frame):
                     b = b.replace(b'\r\n', b'\n')
                 self.serial_read_data(b)
 
-    def speak(self):
-        """\
-        Thread that handles the incoming traffic. Does the basic input
-        transformation (newlines) and call an serial_read_data
-        """
-        while self.alive_speak.isSet():
-                if self.speak_on:
-                    keyboard.press_and_release('maj')
-                    speak(self, self.speak_on)
-                    keyboard.press_and_release('maj')
-                    self.speak_on = None
-            
     def actualize_status_bar(self):
         """Actualize the Status Bar
 
@@ -197,17 +207,17 @@ class MainWindow(wx.Frame):
         :param evt: Event binded to trigger the function
         :type evt: wx.Event https://wxpython.org/Phoenix/docs/html/wx.Event.html
         """
-        widgets = [self.workspace_tree, self.device_tree, self.shell, self.notebook.GetCurrentPage()]
-        names = ["Computer Files", "Device File Tree", "Shell Panel", "Curent Editor"]
-        print(self.who_is_focus)
-        if self.who_is_focus == 3 and widgets[self.who_is_focus] == None:
-            self.who_is_focus += 1
+        widgets = [self.device_tree, self.shell, self.notebook.GetCurrentPage()]
+        names = ["Device File Tree", "Shell Panel", "Curent Editor"]
+        if self.who_is_focus == 2 and widgets[self.who_is_focus] == None:
+            self.who_is_focus = 0
             widgets[self.who_is_focus].SetFocus()
-            self.speak_on = names[self.who_is_focus]
+            asyncio.run(speak(self, names[self.who_is_focus]))
             return
         widgets[self.who_is_focus].SetFocus()
-        self.speak_on = names[self.who_is_focus]
-        if self.who_is_focus == 3:
+        asyncio.run(speak(self, names[self.who_is_focus]))
+        #self.speak_on = names[self.who_is_focus]
+        if self.who_is_focus == 2:
             self.who_is_focus = 0
         else:
             self.who_is_focus += 1
@@ -218,18 +228,20 @@ class MainWindow(wx.Frame):
         :param evt: Event binded to trigger the function
         :type evt: wx.Event https://wxpython.org/Phoenix/docs/html/wx.Event.html
         """
-        widgets = [self.workspace_tree, self.device_tree, self.shell, self.notebook.GetCurrentPage()]
-        names = ["Computer Files", "Device File Tree", "Shell Panel", "Curent Editor"]
-        print(self.who_is_focus)
-        if self.who_is_focus == 3 and widgets[self.who_is_focus] == None:
+        widgets = [self.device_tree, self.shell, self.notebook.GetCurrentPage()]
+        names = ["Device File Tree", "Shell Panel", "Curent Editor"]
+        if self.who_is_focus == 2 and widgets[self.who_is_focus] == None:
             self.who_is_focus -= 1
             widgets[self.who_is_focus].SetFocus()
-            self.speak_on = names[self.who_is_focus]
+            #self.speak_on = names[self.who_is_focus]
+            asyncio.run(speak(self, names[self.who_is_focus]))
+            #self.speak_on = names[self.who_is_focus]
             return
         widgets[self.who_is_focus].SetFocus()
-        self.speak_on = names[self.who_is_focus]
+        asyncio.run(speak(self, names[self.who_is_focus]))
+        #self.speak_on = names[self.who_is_focus]
         if self.who_is_focus == 0:
-            self.who_is_focus = 3
+            self.who_is_focus = 2
         else:
             self.who_is_focus -= 1
     
@@ -263,22 +275,22 @@ class MainWindow(wx.Frame):
         :param evt: Event binded to trigger the function
         :type evt: wx.Event https://wxpython.org/Phoenix/docs/html/wx.Event.html
         """
+        page = self.notebook.GetCurrentPage()
+        if page and page.HasFocus:
+            page.DocumentEnd()
+            return
         self.statusbar.SetFocus()
         self.speak_on = self.statusbar.GetStatusText(1)
 
-    def OnKey(self, evt):
-        """\
-        Key event handler. If the key is in the ASCII range, write it to the
-        serial port. Newline handling is also done here.
-        """
-        code = evt.GetUnicodeKey()
-        if code < 256:
-            code = evt.GetKeyCode()
-        if code == 13:                      # is it a newline? (check for CR which is the RETURN key)
-            self.serial.write(b'\n')  
-            self.on_key = False   # send LF
-        char = chr(code)
-        self.serial.write(char.encode('UTF-8', 'replace'))
+    def right_click_shortcut(self, evt):
+        if self.device_tree.HasFocus():
+            self.device_tree.OnClipboardMenu(None)
+
+    def set_focus_editor(self, evt):
+        page = self.notebook.GetCurrentPage()
+
+        if page:
+            page.SetFocus()
 
 class MyApp(wx.App):
     """Minimal class to launch the app
@@ -292,7 +304,7 @@ class MyApp(wx.App):
         :rtype: Bool
             --if False exit or error
             --if True the app works
-        """        
+        """
         wx.InitAllImageHandlers()
         window = MainWindow("Blind-IDE V1.3.4", (800, 600))
         self.SetTopWindow(window)
@@ -318,3 +330,4 @@ if __name__ == "__main__":
             print("install ttf false.")
     app = MyApp()
     app.MainLoop()
+    time.sleep(10)

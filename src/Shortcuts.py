@@ -7,8 +7,38 @@ def InitF6(main_window):
     :return: entrie(here tuple) for AcceleratorTable
     :rtype: tuple(int, int, int)
     """        
-    main_window.Bind(wx.EVT_MENU, main_window.OnUpFocus, id=wx.ID_MOVE)
-    return (wx.ACCEL_NORMAL,  wx.WXK_F6, wx.ID_MOVE)
+    main_window.Bind(wx.EVT_MENU, main_window.OnUpFocus, id=wx.ID_CONVERT)
+    return (wx.ACCEL_NORMAL,  wx.WXK_F6, wx.ID_CONVERT)
+
+def InitF9(main_window):
+    """F6 to navigate between regions
+    :param main_window: see InitShorcuts->param
+    :type main_window: idem
+    :return: entrie(here tuple) for AcceleratorTable
+    :rtype: tuple(int, int, int)
+    """        
+    main_window.Bind(wx.EVT_MENU, main_window.device_tree.set_focus_tree, id=wx.ID_MOVE)
+    return (wx.ACCEL_NORMAL,  wx.WXK_F9, wx.ID_MOVE)
+
+def InitF10(main_window):
+    """F6 to navigate between regions
+    :param main_window: see InitShorcuts->param
+    :type main_window: idem
+    :return: entrie(here tuple) for AcceleratorTable
+    :rtype: tuple(int, int, int)
+    """        
+    main_window.Bind(wx.EVT_MENU, main_window.set_focus_editor, id=wx.ID_MOVE)
+    return (wx.ACCEL_NORMAL,  wx.WXK_F10, wx.ID_MOVE)
+
+def InitF11(main_window):
+    """F6 to navigate between regions
+    :param main_window: see InitShorcuts->param
+    :type main_window: idem
+    :return: entrie(here tuple) for AcceleratorTable
+    :rtype: tuple(int, int, int)
+    """
+    main_window.Bind(wx.EVT_MENU, main_window.shell.set_focus_shell, id=wx.ID_MOVE)
+    return (wx.ACCEL_NORMAL,  wx.WXK_F11, wx.ID_MOVE)
 
 def InitMajF6(main_window):
     """F6 to navigate between regions (previous)
@@ -17,8 +47,18 @@ def InitMajF6(main_window):
     :return: entrie(here tuple) for AcceleratorTable
     :rtype: tuple(int, int, int)
     """        
-    main_window.Bind(wx.EVT_MENU, main_window.OnDownFocus, id=wx.ID_MOVE)
-    return (wx.ACCEL_SHIFT,  wx.WXK_F6, wx.ID_MOVE)
+    main_window.Bind(wx.EVT_MENU, main_window.OnDownFocus, id=wx.ID_MOVE_FRAME)
+    return (wx.ACCEL_SHIFT,  wx.WXK_F6, wx.ID_MOVE_FRAME)
+
+def InitMajF10(main_window):
+    """Simulate a right click 
+    :param main_window: see InitShorcuts->param
+    :type main_window: idem
+    :return: entrie(here tuple) for AcceleratorTable
+    :rtype: tuple(int, int, int)
+    """        
+    main_window.Bind(wx.EVT_MENU, main_window.right_click_shortcut, id=wx.ID_JUSTIFY_RIGHT)
+    return (wx.ACCEL_SHIFT,  wx.WXK_F10, wx.ID_JUSTIFY_RIGHT)
 
 def InitCTRL_plus(main_window):
     """Ctrl + = to zoom on the editor
@@ -57,9 +97,13 @@ def InitShortcuts(main_window):
         :Type main_window: wx.main_window
     """
     accel_tbl = wx.AcceleratorTable([InitF6(main_window),
+                                    InitF9(main_window),
+                                    InitF10(main_window),
+                                    InitF11(main_window),
                                     InitCTRL_plus(main_window),
                                     InitCTRL_moins(main_window),
                                     InitCTRL_fin(main_window),
-                                    InitMajF6(main_window)
+                                    InitMajF6(main_window),
+                                    InitMajF10(main_window)
                                     ])
     main_window.SetAcceleratorTable(accel_tbl)      

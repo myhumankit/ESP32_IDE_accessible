@@ -32,7 +32,7 @@ class ChooseBin(wx.FilePickerCtrl):
         :param burn_manager: :class:FirmwareManager to fill 
         :type burn_manager: :class:FirmwareManager
         """
-        wx.FilePickerCtrl.__init__(self, parent, message="Hello", wildcard="*.bin")
+        wx.FilePickerCtrl.__init__(self, parent, message="Select the binary to install", wildcard="*.bin", name="select the binary to install", style=wx.FLP_FILE_MUST_EXIST)
 
         self.burn_manager = burn_manager
         self.__set_properties()
@@ -292,3 +292,35 @@ class FirmwareThread(Thread):
             self.burn_frame.EnableCloseButton(enable=True)
             self.main_window.speak_on = "Firmware Installed"
             self.stop_thread = True
+
+def burn_firmware(main_window ,event):
+    firmware_manager = main_window.firmware_manager
+    ok = False
+    while not ok:
+        with UpdateFirmwareDialog(main_window, firmware_manager) as dialog_serial_cfg:
+            dialog_serial_cfg.CenterOnParent()
+            result = dialog_serial_cfg.ShowModal()
+        # open port if not called on startup, open it on startup and OK too
+        if result == wx.ID_OK or event is not None:
+            print(firmware_manager.burn_adress, firmware_manager.port, firmware_manager.bin_path)
+            if not firmware_manager.port or not firmware_manager.bin_path :
+                with wx.MessageDialog(main_window, "", "Incorrect Path or Port", wx.OK | wx.ICON_ERROR)as dlg:
+                    dlg.ShowModal()
+                    ok = True
+            else:    
+                sys.stdout = sys.__stdout__
+                main_window_burn = BurnFrame(main_window)
+                burn_thread = FirmwareThread(main_window, firmware_manager, main_window_burn)
+                main_window_burn.CenterOnParent()
+                burn_thread.setDaemon(1)
+                burn_thread.start()
+                main_window_burn.ShowModal()
+                burn_thread._stop()
+                burn_thread.join()
+                main_window.speak_on = "Firmware installed"
+                main_window_burn.txt.Destroy()
+                main_window_burn.Destroy()
+                sys.stdout = sys.__stdout__
+                ok = True
+        else:
+            ok = True
