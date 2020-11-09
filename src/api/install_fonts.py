@@ -118,7 +118,7 @@ def Install_fonts(argv):
     for arg in argv:
         try:
             if arg.endswith('.otf') or arg.endswith('.ttf'):
-                print('Installing ' + arg)
+                #print('Installing ' + arg)
                 install_font(arg)
         except Exception as e:
             print(e)

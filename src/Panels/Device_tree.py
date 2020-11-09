@@ -1,5 +1,5 @@
 import wx, asyncio, json, os, sys, string
-from utilitaries import SendCmdAsync, put_cmd
+from utilitaries import SendCmdAsync, put_cmd, get_cmd_result
 from all_panels import MyEditor
 
 class DeviceTree(wx.TreeCtrl):
@@ -141,7 +141,7 @@ class DeviceTree(wx.TreeCtrl):
         if self.item:
             sys.stdout.write("OnSelChanged: %s\n" % self.GetItemText(self.item))
             #items = self.GetSelections()
-            #print(map(self.GetItemText, items))
+            ##print(map(self.GetItemText, items))
         event.Skip()
 
     def OnActivate(self, event):
@@ -177,14 +177,14 @@ class DeviceTree(wx.TreeCtrl):
         """
         docstring
         """
-        print("FILE")
+        #print("FILE")
         name = self.GetItemText(self.item)
         self.get_path_item(self.item, name)
-        print("Path = ", self.path)
-        asyncio.run(SendCmdAsync(self.main_window, "a = open('%s','r')\r\n" % self.path))
-        asyncio.run(SendCmdAsync(self.main_window, "print(a.read())\r\n"))
-        res = self.main_window.read_cmd("print(a.read())")
-        asyncio.run(SendCmdAsync(self.main_window, "a.close()\r\n"))
+        #print("Path = ", self.path)
+        self.main_window.q_serial.put("a = open('%s','r')\r\n" % self.path)
+        self.main_window.q_serial.put("#print(a.read())\r\n")
+        res = self.main_window.result
+        self.main_window.q_serial.put("a.close()\r\n")
         self.main_window.shell_text = ""
         notebookP = self.main_window.notebook
         new_tab = MyEditor(notebookP, self.main_window, str(res), True)
@@ -207,12 +207,12 @@ class DeviceTree(wx.TreeCtrl):
     def OnClipboardMenu(self, evt):
         img = self.GetItemImage(self.item)
         if img == self.fldridx or img == self.fldropenidx:
-            print("DIR")
+            #print("DIR")
             menu = ClipboardMenuDevice(True, self.main_window, self.item)
             self.main_window.PopupMenu(menu)
             menu.Destroy()
         else:
-            print("File")
+            #print("File")
             menu = ClipboardMenuDevice(False, self.main_window, self.item)
             self.main_window.PopupMenu(menu)
             menu.Destroy()
@@ -260,7 +260,7 @@ class ClipboardMenuDevice(wx.Menu):
         self.device_tree.root_it = self.device_tree.GetRootItem()
         name = self.device_tree.GetItemText(self.item)
         self.device_tree.get_path_item(self.item, name)
-        asyncio.run(SendCmdAsync(self.main_window, "exec(open('%s').read())\r\n"%self.device_tree.path))
+        self.main_window.q_serial.put("exec(open('%s').read())\r\n"%self.device_tree.path)
 
     def OnNewdir(self, evt):
         self.device_tree.path = ""
@@ -274,7 +274,7 @@ class ClipboardMenuDevice(wx.Menu):
                 result = dlg.ShowModal()
                 if result == wx.ID_OK or evt is not None:
                     path = self.device_tree.path + "/" + dlg.GetValue()
-                    asyncio.run(SendCmdAsync(self.main_window, "os.mkdir('%s',0755)\r\n"%self.device_tree.path))
+                    self.main_window.q_serial.put( "os.mkdir('%s',0755)\r\n"%self.device_tree.path)
                     ok = True
                     treeModel(self.main_window)
                 else:
@@ -283,14 +283,14 @@ class ClipboardMenuDevice(wx.Menu):
     def OnClose(self, evt):
         #CHECK SI UNE PAGE AVEC LE NOM DU PATH EST OUVERTE DANS L'EDITEUR
         path = self.item.GetPath()
-        print(path)
+        #print(path)
 
     def OnDelete(self, evt):
         self.device_tree.path = ""
         self.device_tree.root_it = self.device_tree.GetRootItem()
         name = self.device_tree.GetItemText(self.item)
         self.device_tree.get_path_item(self.item, name)
-        asyncio.run(SendCmdAsync(self.main_window, "os.remove('%s')\r\n"%self.device_tree.path))
+        self.main_window.q_serial.put( "os.remove('%s')\r\n"%self.device_tree.path)
         treeModel(self.main_window)
 
     def OnDefaultRun(self, evt):
@@ -313,49 +313,43 @@ class ClipboardMenuDevice(wx.Menu):
                 result = dlg.ShowModal()
                 if result == wx.ID_OK or evt is not None:
                     path = self.device_tree.path + "/" + dlg.GetValue()
-                    asyncio.run(SendCmdAsync(self.main_window, "myfile = open('%s', 'w')\r\n"%self.device_tree.path))
-                    asyncio.run(SendCmdAsync(self.main_window, "myfile.close()\r\n"))
+                    self.main_window.q_serial.put( "myfile = open('%s', 'w')\r\n"%self.device_tree.path)
+                    self.main_window.q_serial.put( "myfile.close()\r\n")
                     ok = True
                     treeModel(self.main_window)
                 else:
                     ok = True
 
 def setDefaultProg(main_window,filename):
-    print("setDefaultProg:%s"%filename)
+    #print("setDefaultProg:%s"%filename)
     main_window.show_cmd = False
     ProgMsg= ""
-    asyncio.run(SendCmdAsync(main_window, "myfile=open(\'main.py\',\'w\')\r\n"))
-    ProgMsg = main_window.read_cmd("myfile=open(\'main.py\',\'w\')")
+    cmd = "myfile=open(\'main.py\',\'w\')\r\n"
+    ProgMsg = get_cmd_result(main_window, cmd)
     if ProgMsg.find("Traceback")>=0 or ProgMsg.find("... ")>=0:
-        asyncio.run(SendCmdAsync(main_window, "\x03"))
+        main_window.q_serial.put("\x03")
         return
     cmd = "myfile.write(\"exec(open(\'%s\').read(),globals())\")\r\n"%str(filename)
-    asyncio.run(SendCmdAsync(main_window, cmd))
-    ProgMsg = main_window.read_cmd(cmd[:-2])
+    ProgMsg = get_cmd_result(main_window, cmd)
     if ProgMsg.find("Traceback")>=0 or ProgMsg.find("... ")>=0:
-        asyncio.run(SendCmdAsync(main_window, "\x03"))
+        main_window.q_serial.put("\x03")
         return
     cmd = "myfile.close()\r\n"
-    asyncio.run(SendCmdAsync(main_window, cmd))
-    ProgMsg = main_window.read_cmd(cmd[:-2])
+    ProgMsg = get_cmd_result(main_window, cmd)
     if ProgMsg.find("Traceback")>=0 or ProgMsg.find("... ")>=0:
-        asyncio.run(SendCmdAsync(main_window, "\x03"))
+        main_window.q_serial.put("\x03")
         return
     main_window.show_cmd = True
 
 def getFileTree(main_window, dir):
-        print("GET FILE TREE : %s"%(dir))
+        #print("GET FILE TREE : %s"%(dir))
         main_window.cmd_return = ""
         main_window.get_cmd = True
-        asyncio.run(SendCmdAsync(main_window, "os.listdir(\'%s\')\r\n"%dir))
-        result = main_window.read_cmd("os.listdir(\'%s\')"%dir)
-        print("RETURN: " + result)
+        result = get_cmd_result(main_window, "os.listdir(\'%s\')\r\n"%dir)
         if result=="err":
             return result
-        print("ON Y EST")
-        #if gestion erreur
         filemsg=result[result.find("["):result.find("]")+1]
-        print("FILEMSG = " + filemsg)
+        #print("FILEMSG = " + filemsg)
 
         ret=json.loads("{}")
         ret[dir]=[]
@@ -369,22 +363,21 @@ def getFileTree(main_window, dir):
                 pass
             else:
                 filelist.append(i)
-        print("FILE LIST =" ,filelist)
+        #print("FILE LIST =" ,filelist)
         for i in filelist:
-            asyncio.run(SendCmdAsync(main_window, "os.stat(\'%s\')\r\n"%(dir + "/" + i)))
-            res = main_window.read_cmd("os.stat(\'%s\')"%(dir + "/" + i))
+            res = get_cmd_result(main_window, "os.stat(\'%s\')\r\n"%(dir + "/" + i))
             if res == "err":
                 return res
             isdir=res.split("\n")[1]
             isdir=isdir.split(", ")
-            print("ISDIR = ", isdir)
+            #print("ISDIR = ", isdir)
             try:
                 adir = isdir[0]
                 if adir.find("(")>=0:
                     adir = adir[1:]
                 if adir.find(")")>=0:
                     adir = adir[:-1]
-                print("ADIR = ", adir)
+                #print("ADIR = ", adir)
                 if int(adir)==0o040000:
                     if i=="System Volume Information":
                         pass
@@ -393,7 +386,7 @@ def getFileTree(main_window, dir):
                 else:
                     ret[dir].append(i)
             except Exception as e:
-                print("ERROr: " + e)
+                #print("ERROr: " + e)
                 return "err"
         return ret
 
@@ -408,8 +401,8 @@ def treeModel(main_window):
         if res=="err":
             main_window.cmd_return = ""
             return
-        print("RESSSSSSS")
-        print(res)
+        #print("RESSSSSSS")
+        #print(res)
         try:
             ReflushTree(main_window,main_window.device_tree.device,res['.'])
         except Exception as e:
@@ -419,10 +412,10 @@ def treeModel(main_window):
     
 def ReflushTree(main_window, device, msg):
         if msg=="err":
-            print("soucii")
+            #print("soucii")
             return
-        print("reflushTree=====================%s"%msg)
-        print("MSG " + str(msg))
+        #print("reflushTree=====================%s"%msg)
+        #print("MSG " + str(msg))
         tree = main_window.device_tree
         if type(msg) is str: #: fichier
             child = tree.AppendItem(device, msg)
@@ -447,8 +440,8 @@ def ReflushTree(main_window, device, msg):
                     pass
 
 def save_on_card(main_window, page):
-    print(page.directory)
-    print(page.filename)
+    #print(page.directory)
+    #print(page.filename)
     notebookP = main_window.notebook
 
     # Check if save is required
@@ -456,18 +449,18 @@ def save_on_card(main_window, page):
         page.saved = False
         # Grab the content to be saved
         save_as_file_content = page.GetValue()
-        print("|+|",save_as_file_content, "|+|")
+        #print("|+|",save_as_file_content, "|+|")
         main_window.show_cmd = False
         cmd = "f = os.remove('%s')\r\n" % (page.directory + "/" + page.filename)
-        asyncio.run(SendCmdAsync(main_window, cmd))
+        main_window.q_serial.put(cmd)
         cmd = "f = open('%s', 'wb')\r\n" % (page.directory + "/" + page.filename)
-        asyncio.run(SendCmdAsync(main_window, cmd))
+        main_window.q_serial.put(cmd)
         cmd = "f.write(%s)\r\n" % save_as_file_content
-        asyncio.run(SendCmdAsync(main_window, cmd))
+        main_window.q_serial.put(cmd)
         cmd = "f.close()\r\n"
-        asyncio.run(SendCmdAsync(main_window, cmd))
+        main_window.q_serial.put(cmd)
         page.last_save = save_as_file_content
         page.saved = True
         treeModel(main_window)
         main_window.shell.AppendText("Content Saved\n")
-        self.main_window.speak_on = "Content Saved"
+        self.main_window.q_serial.put("Content Saved")

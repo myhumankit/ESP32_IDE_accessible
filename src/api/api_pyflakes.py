@@ -179,8 +179,8 @@ def main(prog=None, args=None):
     reporter = modReporter._makeDefaultReporter()
     
     args=argsSave
-    #print __
-    #print args
+    ##print __
+    ##print args
     if args:
         warnings = checkRecursive(args, reporter)
         return

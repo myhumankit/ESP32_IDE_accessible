@@ -43,7 +43,7 @@ class ManageConnection():
         :type msg_cmd: string
         """
         try:
-            print("[%s]"%msg_cmd)
+            #print("[%s]"%msg_cmd)
             count = 0
             msg_cmd = msg_cmd.split('(')[1]
             msg_cmd = msg_cmd.split(')')[0]
@@ -79,7 +79,7 @@ class ManageConnection():
       
     def download(self, filepath ,filename):
         filepath = filepath.replace("\\","/")
-        print("download===============================%s\n"%filename)
+        #print("download===============================%s\n"%filename)
         file_to_open = _check_extension_file(filename, ".py")
 
         if not file_to_open:
@@ -88,7 +88,7 @@ class ManageConnection():
         try:
             fileHandle=open(filepath,'rbU')
         except Exception as e:
-            print("Error file : %s"%(e))
+            #print("Error file : %s"%(e))
             self.main_window.shell.AppendText("Error on during file upload\n...")
     
         put_cmd(self.main_window, '\x03')
@@ -129,9 +129,9 @@ def ConnectSerial(self):
             n = self.serial.inWaiting()
             if n>0:
                 startdata += (self.serial.read(n)).decode(encoding='utf-8',errors='ignore')
-                print("[%s]"%startdata)
+                #print("[%s]"%startdata)
                 if startdata.find('>>> '):
-                    print("OK")
+                    #print("OK")
                     break
             time.sleep(0.1)
             endTime=time.time()
@@ -139,6 +139,7 @@ def ConnectSerial(self):
                 self.serial.close()
                 if not self.serial.isOpen():
                     print("UPDATE FIRMWARE")
+                    return False
                 return False
         senddata="import sys\r\n"
         put_cmd(self, "import sys\r\n")
@@ -156,7 +157,7 @@ def ConnectSerial(self):
             time.sleep(0.1)
             endTime=time.time()
             if endTime-startTime>2:
-                print(startdata)
+                #print(startdata)
                 self.serial.close()
                 self.shell.AppendText("connect serial timeout")
                 return False
@@ -189,10 +190,10 @@ def _check_extension_file(filename, extension):
             finalname = str(filename)
             return finalname
         else:
-            print("error path",)
+            #print("error path",)
             return None    
     else:
-        print("error extension")
+        #print("error extension")
         return None    
 
 def put_cmd(main_window, msg_cmd): 
@@ -209,6 +210,6 @@ def put_cmd(main_window, msg_cmd):
 
 async def SendCmdAsync(main_window, cmd):
     main_window.cmd_return = ""
-    print("CMDsend = " +cmd)
+    #print("CMDsend = " +cmd)
     put_cmd(main_window, cmd)
     await asyncio.sleep(main_window.time_to_send) 

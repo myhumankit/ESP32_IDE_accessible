@@ -260,7 +260,7 @@ class FirmwareThread(Thread):
         else:
             self.burnaddr=0x1000
         
-        print("burn=====board:%s path:%s port:%s adress:%s "% (str(self.board), self.binpath, self.port, self.burnaddr))
+        #print("burn=====board:%s path:%s port:%s adress:%s "% (str(self.board), self.binpath, self.port, self.burnaddr))
 
     def run(self):
         while True:
@@ -268,29 +268,29 @@ class FirmwareThread(Thread):
                 break
             if self.iserase=="yes":
                 try:
-                    self.main_window.speak_on = "Erase Flash Memory"
+                    self.main_window.q_speak.put("Erase Flash Memory")
                     Esp.Burn(self.burn_console, str(self.board),self.binpath,self.port,"yes", self.burnaddr)
-                    self.main_window.speak_on = "Memory erased"
+                    self.main_window.q_speak.put("Memory erased")
                 except Exception as e:
                     time.sleep(3)
                     print(e)
                     self.stop_thread = True
                     self.burn_frame.EnableCloseButton(enable=True)
-                    self.main_window.speak_on = "Flash Memory Error"
+                    self.main_window.q_speak.put("Flash Memory Error")
                     return
             try:
-                self.main_window.speak_on = "Start Upload Firmware"
+                self.main_window.q_speak.put("Start Upload Firmware")
                 Esp.Burn(self.burn_console, str(self.board),self.binpath,self.port,"no",self.burnaddr)
             except Exception as e:
                 print(e)
                 self.stop_thread = True
                 self.burn_frame.EnableCloseButton(enable=True)
-                self.main_window.speak_on = "Firmware Error"
+                self.main_window.q_speak.put("Firmware Error")
                 return
             if self.board=="esp8266":
                 Esp.downOkReset()
             self.burn_frame.EnableCloseButton(enable=True)
-            self.main_window.speak_on = "Firmware Installed"
+            self.main_window.q_speak.put("Firmware Installed")
             self.stop_thread = True
 
 def burn_firmware(main_window ,event):
@@ -302,7 +302,7 @@ def burn_firmware(main_window ,event):
             result = dialog_serial_cfg.ShowModal()
         # open port if not called on startup, open it on startup and OK too
         if result == wx.ID_OK or event is not None:
-            print(firmware_manager.burn_adress, firmware_manager.port, firmware_manager.bin_path)
+            #print(firmware_manager.burn_adress, firmware_manager.port, firmware_manager.bin_path)
             if not firmware_manager.port or not firmware_manager.bin_path :
                 with wx.MessageDialog(main_window, "", "Incorrect Path or Port", wx.OK | wx.ICON_ERROR)as dlg:
                     dlg.ShowModal()
@@ -317,7 +317,7 @@ def burn_firmware(main_window ,event):
                 main_window_burn.ShowModal()
                 burn_thread._stop()
                 burn_thread.join()
-                main_window.speak_on = "Firmware installed"
+                main_window.q_speak.put("Firmware installed")
                 main_window_burn.txt.Destroy()
                 main_window_burn.Destroy()
                 sys.stdout = sys.__stdout__

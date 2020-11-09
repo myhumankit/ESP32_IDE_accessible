@@ -16,8 +16,8 @@ class HelpMenu(wx.Menu):
         self.Bind(wx.EVT_MENU, self.OnHelp, id=wx.ID_HELP)
     
     def OnHelp(self, evt):
-        print("help")
+        #print("help")
         webbrowser.open("./Help/help.html")
     def OnAbout(self, evt):
-        print("about")
+        #print("about")
         webbrowser.open("./Help/about.html")

@@ -76,7 +76,7 @@ class FileMenu(wx.Menu):
             page.last_save = save_as_file_contents
             page.saved = True
         self.main_window.shell.AppendText("Content Saved\n")
-        self.main_window.speak_on = "Content Saved"
+        self.main_window.q_speak.put("Content Saved")
 
     def OnSaveAs(self, evt):
         """Open a wx.filedialog to Save as a file the text of the current editor
@@ -104,7 +104,7 @@ class FileMenu(wx.Menu):
             page.directory = save_as_directory
             page.last_save = save_as_file_contents
             page.saved = True
-            self.main_window.speak_on = "Content Saved"
+            self.main_window.q_speak.put( "Content Saved")
         dialog.Destroy()
 
     def OnOpen(self, evt):
@@ -162,7 +162,7 @@ class FileMenu(wx.Menu):
         new_tab = MyEditor(self.main_window.notebook, self.main_window, "", False)
         notebookP.AddPage(new_tab, "Tab %s" % new_tab.id, select=True)
         notebookP.GetCurrentPage().SetFocus()
-        print(new_tab.id)
+        #print(new_tab.id)
 
     def OnClosePage(self, evt):
         """Close the current page and update id order

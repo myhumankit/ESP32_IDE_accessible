@@ -157,5 +157,4 @@ class ToolBar(wx.ToolBar):
         :type evt: wx.Event
         """  
         self.main_window.shell.Clear()
-        asyncio.run(speak(self, names[self.who_is_focus]))
-        #self.main_window.speak_on = "Terminal Cleared"
+        self.main_window.q_speak.put("Terminal Cleared")

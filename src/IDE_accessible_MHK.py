@@ -11,7 +11,8 @@ from api.install_fonts import Install_fonts
 import keyboard
 from threading import Thread
 import pyttsx3
-
+import queue
+from ReadWriteDevice import *
 
 #TODO: change focus when new editor tab
 
@@ -36,15 +37,15 @@ class MainWindow(wx.Frame):
         elist= e.GetFacenames()
         self.on_key = True
         self.keypressmsg = ""
+        self.result = ""
         
     def __set_properties__(self):
         self.serial = serial.Serial()
         self.serial.timeout = 0.5
-        self.time_to_send = 0.01   # make sure that the alive event can be checked from time to time
+        self.time_to_send = 0.1   # make sure that the alive event can be checked from time to time
         self.settings = TerminalSetup()  # placeholder for the settings
         self.thread = None
         self.alive = threading.Event()
-        self.alive_speak = threading.Event()
         #####
         self.messycode=b""
         self.recvdata=""
@@ -70,11 +71,18 @@ class MainWindow(wx.Frame):
         InitShortcuts(self)
         
         self.__attach_events()
-        #self.thread_speak = Speak(self)
-        #self.thread_speak.start()
+        self.start_thread_speak()
          
     def __attach_events(self):
         self.shell.Bind(wx.EVT_CHAR, self.OnKey)
+
+    def start_thread_speak(self):
+        """Start the receiver thread"""
+        self.q_speak = queue.Queue()
+        self.speak_thread = Speak(self.q_speak, self)
+        self.speak_thread.daemon = True
+        self.speak_thread.start()
+
 
     def start_thread_serial(self):
         """Start the receiver thread"""
@@ -83,6 +91,10 @@ class MainWindow(wx.Frame):
         self.thread.start()
         self.serial.rts = True
         self.serial.dtr = True
+        self.q_serial = queue.Queue()
+        self.read_thread = readWriteUart(self.q_serial, self)
+        self.read_thread.daemon = True
+        self.read_thread.start()
 
     def stop_thread_serial(self):
         """Stop the receiver thread, wait until it's finished."""
@@ -104,7 +116,12 @@ class MainWindow(wx.Frame):
         if b:
             self.is_data  = True
             # newline transformation
-            b = b.replace(b'\r\n', b'\n')
+            if self.settings.newline == NEWLINE_CR:
+                b = b.replace(b'\r', b'\n')
+            elif self.settings.newline == NEWLINE_LF:
+                pass
+            elif self.settings.newline == NEWLINE_CRLF:
+                b = b.replace(b'\r\n', b'\n')
         self.serial_read_data(b)
     
         return GetCmdReturn(self.shell_text, data)
@@ -114,11 +131,11 @@ class MainWindow(wx.Frame):
         msg = self.keypressmsg
         if data == b'':
             return
-        #print(bytes(data))
+        ##print(bytes(data))
         check = str(data)
-        print("DEDCODE = |", check, "|")
+        #print("DEDCODE = |", check, "|")
         if  msg == "\x08":
-            print("ERASE")
+            #print("ERASE")
             self.keypressmsg = "debug"
             return remove_char(self.shell, self) 
         elif msg == "\x1b\x5b\x44":
@@ -133,13 +150,12 @@ class MainWindow(wx.Frame):
         if self.show_cmd == True:
             self.shell.AppendText(data.decode('UTF-8', 'replace'))
             if self.last_enter:
-                asyncio.run(speak(self, data.decode('UTF-8', 'replace')))
+                self.q_speak.put(data.decode('UTF-8', 'replace'))
                 self.last_enter = False
             if not self.on_key:
                 self.on_key = True
                 self.last_enter = True
             
-
     def OnKey(self, evt):
         """\
         Key event handler. If the key is in the ASCII range, write it to the
@@ -148,7 +164,7 @@ class MainWindow(wx.Frame):
         code = evt.GetUnicodeKey()
         if code < 256:
             code = evt.GetKeyCode()
-        print("keypress", code)
+        #print("keypress", code)
         if code == 13:                      # is it a newline? (check for CR which is the RETURN key)
             self.serial.write(b'\n')  
             self.on_key = False   # send LF
@@ -176,7 +192,6 @@ class MainWindow(wx.Frame):
         transformation (newlines) and call an serial_read_data
         """
         while self.alive.isSet():
-            #print("J'y passe")
             b = self.serial.read(self.serial.in_waiting)
             self.is_data = False
             if b: #and b != b'\x00':
@@ -212,10 +227,10 @@ class MainWindow(wx.Frame):
         if self.who_is_focus == 2 and widgets[self.who_is_focus] == None:
             self.who_is_focus = 0
             widgets[self.who_is_focus].SetFocus()
-            asyncio.run(speak(self, names[self.who_is_focus]))
+            self.q_speak.put(names[self.who_is_focus])
             return
         widgets[self.who_is_focus].SetFocus()
-        asyncio.run(speak(self, names[self.who_is_focus]))
+        self.q_speak.put(names[self.who_is_focus])
         #self.speak_on = names[self.who_is_focus]
         if self.who_is_focus == 2:
             self.who_is_focus = 0
@@ -234,11 +249,11 @@ class MainWindow(wx.Frame):
             self.who_is_focus -= 1
             widgets[self.who_is_focus].SetFocus()
             #self.speak_on = names[self.who_is_focus]
-            asyncio.run(speak(self, names[self.who_is_focus]))
+            self.q_speak.put(names[self.who_is_focus])
             #self.speak_on = names[self.who_is_focus]
             return
         widgets[self.who_is_focus].SetFocus()
-        asyncio.run(speak(self, names[self.who_is_focus]))
+        self.q_speak.put(names[self.who_is_focus])
         #self.speak_on = names[self.who_is_focus]
         if self.who_is_focus == 0:
             self.who_is_focus = 2
@@ -326,8 +341,8 @@ if __name__ == "__main__":
             fonts = ["./FiraCode-Medium.ttf", "./FiraCode-Regular.ttf", \
                      "./FiraCode-Retina.ttf", "./FiraCode-Light.ttf"]
             Install_fonts(fonts)
-        except:
-            print("install ttf false.")
+        except Exception as e:
+            print(e)
+            #print("install ttf false.")
     app = MyApp()
     app.MainLoop()
-    time.sleep(10)

@@ -133,10 +133,10 @@ class EditMenu(wx.Menu):
         appendMsg=page.filename
         
         if str(stdout)=="" and str(stderr)=="":
-            self.main_window.speak_on = "No Error Detected !"
+            self.main_window.q_speak.put("No Error Detected !")
             pass
         else:
-            self.main_window.speak_on = "Some Errors or Warnings Detected, check"
+            self.main_window.q_speak.put( "Some Errors or Warnings Detected, check")
             if stdout!="":
                 stdout=stdout.split("\n")
                 for i in stdout:

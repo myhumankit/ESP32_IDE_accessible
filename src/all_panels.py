@@ -78,7 +78,7 @@ class MyEditor(pysh.editwindow.EditWindow):
         :param parent: Notebook Panel
         :type parent: Notebook class
         """
-        #print("PARENT THEME = " + str(parent.theme))
+        ##print("PARENT THEME = " + str(parent.theme))
         self.SetMarginType(1, stc.STC_MARGIN_NUMBER)
         self.SetMarginWidth(1, 25)
         init_editor_style(self)
@@ -148,7 +148,7 @@ class MyEditor(pysh.editwindow.EditWindow):
         :param evt: Event to close the dialog
         :type evt: wx.Event
         """
-        print("FindReplaceDialog closing...\n")
+        #print("FindReplaceDialog closing...\n")
         evt.GetDialog().Destroy()
 
 class NotebookPanel(fnb.FlatNotebook):
@@ -282,7 +282,7 @@ class ShellPanel(wx.TextCtrl):
             self.SetFont(self.font)
         except Exception as e:
             print(e)
-            print("Can't customize shell")
+            #print("Can't customize shell")
             return        
         #font = wx.Font(pointSize = 10, family = wx.FONTFAMILY_SWISS, style = wx.FONTSTYLE_SLANT, weight = wx.FONTWEIGHT_BOLD,  
         #              underline = False, faceName ="Fira Code", encoding = 0)

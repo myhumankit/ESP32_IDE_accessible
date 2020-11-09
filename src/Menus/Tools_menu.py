@@ -2,7 +2,7 @@ from packages import wx, serial, wxSerialConfigDialog, asyncio, time
 from Panels.Device_tree import treeModel
 from firmware import burn_firmware
 from editor_style import change_theme_choice, customize_editor
-from utilitaries import put_cmd, SendCmdAsync, SetView, speak
+from utilitaries import put_cmd, SendCmdAsync, speak
 import my_serial
 
 class ToolsMenu(wx.Menu):
@@ -73,20 +73,17 @@ class ToolsMenu(wx.Menu):
             main_window.connected = True
             #TODO: Découper la fonction
             try:
-                asyncio.run(SetView(main_window, False))
+                main_window.show_cmd = True
                 put_cmd(main_window, "import os\r\n")
-                asyncio.run(SendCmdAsync(main_window, "os.uname()\r\n"))
-                self.main_window.serial_manager.get_card_infos(self.main_window.read_cmd("os.uname()"))
-                print(self.main_window.serial_manager.card)
-                put_cmd(self.main_window, "\r\n")
+                main_window.q_serial.put("os.uname()\r\n")
+                main_window.q_serial.join()
+                self.main_window.serial_manager.get_card_infos(self.main_window.result)
                 self.main_window.actualize_status_bar()
                 treeModel(main_window)
-                asyncio.run(SetView(main_window, True))
-                asyncio.run(speak(self.main_window,  "Device Connected"))
-                #self.main_window.speak_on = "Device Connected"
-                print(self.main_window.serial_manager.card)
+                # main_window.q_speak.put((self.main_window,  "Device Connected"))
+                self.main_window.q_speak.put("Device Connected")
             except Exception as e:
-                print(e)
+                #print(e)
                 self.main_window.speak_on = "Connection Error Retry"
                 main_window.serial.close()
                 main_window.shell.Clear()
@@ -110,7 +107,7 @@ class ToolsMenu(wx.Menu):
         if page == None:
             main_window.shell.AppendText('Please choose file or input something')
             return False
-        print("dir = %s %s"%(page.directory, page.filename))
+        #print("dir = %s %s"%(page.directory, page.filename))
         if page.directory[len(page.directory) - 1] == '/':
             pathfile=page.directory + page.filename
         else:
@@ -149,7 +146,7 @@ class ToolsMenu(wx.Menu):
         if page == None:
             main_window.shell.AppendText('Please choose file or input something')
             return False
-        print("dir = %s %s"%(page.directory, page.filename))
+        #print("dir = %s %s"%(page.directory, page.filename))
         if page.saved == False:
             main_window.shell.AppendText('Please save the file before download')
             return False
@@ -196,7 +193,7 @@ class ToolsMenu(wx.Menu):
         :type evt: wx.Event
         """  
         if self.main_window.serial.ser.isOpen():
-            asyncio.run(SendCmdAsync(self.main_window, '\x03'))
+            self.main_window.q_serial.put( '\x03')
         else:
             self.main_window.shell.AppendText("serial not open")
     
@@ -214,7 +211,7 @@ class ToolsMenu(wx.Menu):
             theme_name = 'Dark Theme'
         else:
             theme_name = 'Light Theme'
-        print("COCO")
+        #print("COCO")
         try:
             change_theme_choice(self.main_window, theme_name)
             page = self.main_window.notebook.GetCurrentPage()

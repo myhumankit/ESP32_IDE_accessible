@@ -5,17 +5,17 @@ from threading import Thread
 def load_img(path):
     return wx.Image(path,wx.BITMAP_TYPE_ANY).ConvertToBitmap()
 
-async def speak(main_window, txt):
-    print(txt)
+def speak(main_window, txt):
+    #print(txt)
     main_window.voice_on.say(txt)
     main_window.voice_on.runAndWait()
 
 def remove_char(shell, main_window):
     txt = shell.GetValue()
     cursor = shell.GetInsertionPoint()
-    print(cursor)
+    #print(cursor)
     shell.Remove(cursor - 1, cursor)
-    print(cursor)
+    #print(cursor)
     #shell.Clear()
     #main_window.shell_text = shell.GetValue()
     #shell.SetInsertionPoint(cursor)
@@ -47,28 +47,28 @@ def GetCmdReturn(shell_text, cmd):
         return_cmd = shell_text.split(cmd, 1)[1]
         return_cmd = return_cmd[:-4]
     except Exception:
-        print ("ERROR: |" + shell_text +  "|")
+        #print ("ERROR: |" + shell_text +  "|")
         return "err"
-    print ("SUCCESS:" + return_cmd)
+    #print ("SUCCESS:" + return_cmd)
+    #print("END SUCCESS")
     return return_cmd
-
-async def SetView(main_window, info):
-    main_window.show_cmd = info
-
 
 class Speak(Thread):
     """Thread chargé simplement d'afficher une lettre dans la console."""
 
-    def __init__(self, main_window):
+    def __init__(self, queue_speak, main_window):
         Thread.__init__(self)
         self.main_window = main_window
+        self.q = queue_speak
 
     def run(self):
         """Code à exécuter pendant l'exécution du thread."""
         while True:
-            if self.main_window.speak_on:
-                print(self.main_window.speak_on)
-                speak(self.main_window, self.main_window.speak_on)
-                self.main_window.speak_on = None
-                
+            if not self.q.empty():
+                speak(self.main_window, self.q.get())
+                self.q.task_done()
 
+def get_cmd_result(main_window, cmd):
+    main_window.q_serial.put(cmd)
+    main_window.q_serial.join()
+    return main_window.result

@@ -47,7 +47,7 @@ def customize_editor(editor, theme_choice):
         theme = theme[theme_choice]
         file.close()
         editor.SetCaretForeground(theme['Caret']['Foreground'])
-        #print(theme[0][1])
+        ##print(theme[0][1])
         #default
         # editor.StyleSetSpec(stc.STC_STYLE_DEFAULT,'fore:#0000AA,back:#00000')
         # editor.StyleSetSpec(wx.stc.STC_STYLE_LINENUMBER,'fore:#FFFF00,back:#0000A')
@@ -62,7 +62,7 @@ def customize_editor(editor, theme_choice):
         customize_lexer_stcstyle(editor, theme['Panels Colors'], font)
         customize_lexer_pystyle(editor, theme, font)
     except Exception:
-        print("Can't customize Editor")
+        #print("Can't customize Editor")
         return
 
 def customize_lexer_stcstyle(editor, theme, font):
