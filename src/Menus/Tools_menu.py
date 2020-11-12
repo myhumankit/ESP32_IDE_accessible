@@ -2,7 +2,7 @@ from packages import wx, serial, wxSerialConfigDialog, asyncio, time
 from Panels.Device_tree import treeModel
 from firmware import burn_firmware
 from editor_style import change_theme_choice, customize_editor
-from utilitaries import put_cmd, SendCmdAsync, speak
+from utilitaries import put_cmd, SendCmdAsync, my_speak
 import my_serial
 
 class ToolsMenu(wx.Menu):
@@ -73,17 +73,17 @@ class ToolsMenu(wx.Menu):
             main_window.connected = True
             #TODO: Découper la fonction
             try:
-                main_window.show_cmd = True
+                main_window.show_cmd = False
                 put_cmd(main_window, "import os\r\n")
-                main_window.q_serial.put("os.uname()\r\n")
-                main_window.q_serial.join()
-                self.main_window.serial_manager.get_card_infos(self.main_window.result)
-                self.main_window.actualize_status_bar()
+                main_window.exec_cmd("os.uname()\r\n")
+                main_window.serial_manager.get_card_infos(main_window.result)
+                main_window.actualize_status_bar()
                 treeModel(main_window)
-                # main_window.q_speak.put((self.main_window,  "Device Connected"))
-                self.main_window.q_speak.put("Device Connected")
+                my_speak(main_window, "Device connected")
+                main_window.show_cmd = True
+                #my_speak(self.main_window, "Device Connected")
             except Exception as e:
-                #print(e)
+                print(e)
                 self.main_window.speak_on = "Connection Error Retry"
                 main_window.serial.close()
                 main_window.shell.Clear()
@@ -193,7 +193,7 @@ class ToolsMenu(wx.Menu):
         :type evt: wx.Event
         """  
         if self.main_window.serial.ser.isOpen():
-            self.main_window.q_serial.put( '\x03')
+            self.main_window.exec_cmd(  '\x03')
         else:
             self.main_window.shell.AppendText("serial not open")
     
@@ -211,17 +211,14 @@ class ToolsMenu(wx.Menu):
             theme_name = 'Dark Theme'
         else:
             theme_name = 'Light Theme'
-        #print("COCO")
         try:
             change_theme_choice(self.main_window, theme_name)
             page = self.main_window.notebook.GetCurrentPage()
             if page:
                 customize_editor(page, theme_name)
             self.main_window.shell.custom_shell(theme_name)
-            self.main_window.workspace_tree.custom_tree_ctrl()
             self.main_window.device_tree.custom_tree_ctrl()
             self.main_window.notebook.custom_notebook(theme_name)
-            self.main_window.tree_panel.SetBackgroundColour("Black")
         except Exception as e:
             print(e)
 

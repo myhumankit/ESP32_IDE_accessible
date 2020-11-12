@@ -8,11 +8,10 @@ from utilitaries import *
 from shortcuts import InitShortcuts
 from firmware import FirmwareManager
 from api.install_fonts import Install_fonts
-import keyboard
 from threading import Thread
 import pyttsx3
-import queue
 from ReadWriteDevice import *
+
 
 #TODO: change focus when new editor tab
 
@@ -28,7 +27,7 @@ class MainWindow(wx.Frame):
         :type name: str
         :param size: define dimensions of the window (width, height)
         :type size: tuple(int, int)
-        """              
+        """
         wx.Frame.__init__(self, None, 1, title = name, size = size)
         self.SetIcon(wx.Icon("./img/Icone.png"))
         self.__set_properties__()
@@ -63,7 +62,7 @@ class MainWindow(wx.Frame):
         self.statusbar = create_status_bar(self)
         self.serial_manager = ManageConnection(self)
         self.voice_on = pyttsx3.init()
-        self.speak_on = None
+        self.speak_on = True
         self.firmware_manager = FirmwareManager()
 
         create_panels(self)
@@ -71,18 +70,18 @@ class MainWindow(wx.Frame):
         InitShortcuts(self)
         
         self.__attach_events()
-        self.start_thread_speak()
          
     def __attach_events(self):
         self.shell.Bind(wx.EVT_CHAR, self.OnKey)
+        self.Bind(wx.EVT_CLOSE, self.top_menu.MenuFile.OnExit)
 
-    def start_thread_speak(self):
-        """Start the receiver thread"""
-        self.q_speak = queue.Queue()
-        self.speak_thread = Speak(self.q_speak, self)
-        self.speak_thread.daemon = True
-        self.speak_thread.start()
-
+    def exec_cmd(self, cmd):
+        self.read_thread = Exec_cmd(cmd, self)
+        self.read_thread.start()
+        self.read_thread.join()
+        self.read_cmd(cmd[:-2])
+        print("RES==", self.result)
+        return self.result
 
     def start_thread_serial(self):
         """Start the receiver thread"""
@@ -91,10 +90,7 @@ class MainWindow(wx.Frame):
         self.thread.start()
         self.serial.rts = True
         self.serial.dtr = True
-        self.q_serial = queue.Queue()
-        self.read_thread = readWriteUart(self.q_serial, self)
-        self.read_thread.daemon = True
-        self.read_thread.start()
+        self.read_thread = None
 
     def stop_thread_serial(self):
         """Stop the receiver thread, wait until it's finished."""
@@ -124,7 +120,7 @@ class MainWindow(wx.Frame):
                 b = b.replace(b'\r\n', b'\n')
         self.serial_read_data(b)
     
-        return GetCmdReturn(self.shell_text, data)
+        self.result = GetCmdReturn(self.last_cmd_red, data)
 
     def serial_read_data(self, data):
         """Handle input from the serial port."""
@@ -145,16 +141,20 @@ class MainWindow(wx.Frame):
         elif self.keypressmsg == "debug":
             self.keypressmsg = "else"
             return
-        self.shell_text += data.decode('UTF-8', 'replace')
-        self.last_cmd_red += data.decode('UTF-8', 'replace')
+        self.shell_text += data.decode('UTF-8', 'ignore')
+        self.last_cmd_red += data.decode('UTF-8', 'ignore')
         if self.show_cmd == True:
-            self.shell.AppendText(data.decode('UTF-8', 'replace'))
-            if self.last_enter:
-                self.q_speak.put(data.decode('UTF-8', 'replace'))
-                self.last_enter = False
-            if not self.on_key:
-                self.on_key = True
-                self.last_enter = True
+            try:
+                wx.CallAfter(self.shell.WriteText, data.decode('UTF-8', 'ignore'))
+                if self.last_enter:
+                    print("DEBUG2")
+                    my_speak(self, data.decode('UTF-8', 'ignore'))
+                    self.last_enter = False
+                if not self.on_key:
+                    self.on_key = True
+                    self.last_enter = True
+            except Exception as e:
+                print(e)
             
     def OnKey(self, evt):
         """\
@@ -183,7 +183,7 @@ class MainWindow(wx.Frame):
         else:
             self.keypressmsg = "else"
         char = chr(code)
-        self.serial.write(char.encode('UTF-8', 'replace'))
+        self.serial.write(char.encode('UTF-8', 'ignore'))
         self.serial.flush()
 
     def thread_listen_port(self):
@@ -227,10 +227,10 @@ class MainWindow(wx.Frame):
         if self.who_is_focus == 2 and widgets[self.who_is_focus] == None:
             self.who_is_focus = 0
             widgets[self.who_is_focus].SetFocus()
-            self.q_speak.put(names[self.who_is_focus])
+            my_speak(self, names[self.who_is_focus])
             return
         widgets[self.who_is_focus].SetFocus()
-        self.q_speak.put(names[self.who_is_focus])
+        my_speak(self, names[self.who_is_focus])
         #self.speak_on = names[self.who_is_focus]
         if self.who_is_focus == 2:
             self.who_is_focus = 0
@@ -248,13 +248,10 @@ class MainWindow(wx.Frame):
         if self.who_is_focus == 2 and widgets[self.who_is_focus] == None:
             self.who_is_focus -= 1
             widgets[self.who_is_focus].SetFocus()
-            #self.speak_on = names[self.who_is_focus]
-            self.q_speak.put(names[self.who_is_focus])
-            #self.speak_on = names[self.who_is_focus]
+            my_speak(self, names[self.who_is_focus])
             return
         widgets[self.who_is_focus].SetFocus()
-        self.q_speak.put(names[self.who_is_focus])
-        #self.speak_on = names[self.who_is_focus]
+        my_speak(self, names[self.who_is_focus])
         if self.who_is_focus == 0:
             self.who_is_focus = 2
         else:
@@ -346,3 +343,4 @@ if __name__ == "__main__":
             #print("install ttf false.")
     app = MyApp()
     app.MainLoop()
+    print("FIN")

@@ -1,6 +1,7 @@
 import wx, os
 from all_panels import MyEditor
 from Panels.Device_tree import save_on_card
+from utilitaries import my_speak
 
 class FileMenu(wx.Menu):
     """Inits a instance of a wx.Menu to create a Theme menu and his buttons (Copy, Paste, Find,...)
@@ -26,10 +27,8 @@ class FileMenu(wx.Menu):
         :param evt: Event to trigger the method
         :type evt: wx.Event
         """
-        self.main_window.serial.close()
         self.main_window.stop_thread_serial()
-        self.thread_speak.join()
-        self.main_window.DestroyChildren()
+        self.main_window.serial.close()
         self.main_window.Destroy()
 
         
@@ -76,7 +75,7 @@ class FileMenu(wx.Menu):
             page.last_save = save_as_file_contents
             page.saved = True
         self.main_window.shell.AppendText("Content Saved\n")
-        self.main_window.q_speak.put("Content Saved")
+        my_speak(self.main_window, "Content Saved")
 
     def OnSaveAs(self, evt):
         """Open a wx.filedialog to Save as a file the text of the current editor
@@ -104,7 +103,7 @@ class FileMenu(wx.Menu):
             page.directory = save_as_directory
             page.last_save = save_as_file_contents
             page.saved = True
-            self.main_window.q_speak.put( "Content Saved")
+            my_speak( "Content Saved")
         dialog.Destroy()
 
     def OnOpen(self, evt):
@@ -115,8 +114,8 @@ class FileMenu(wx.Menu):
             """  
             notebookP = self.main_window.notebook
             dialog = wx.FileDialog(self.main_window, 
-                               "Choose a File", 
-                               notebookP.GetCurrentPage().directory, 
+                               "Choose a File",  
+                               "",
                                "", 
                                "*", 
                                wx.FD_OPEN)

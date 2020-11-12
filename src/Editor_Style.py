@@ -12,7 +12,6 @@ import wx.lib.agw.flatnotebook as fnb
 def change_theme_choice(main_window, theme_name):
     main_window.notebook.theme_choice = theme_name
     main_window.shell.theme_choice = theme_name
-    main_window.workspace_tree.theme_choice = theme_name
     main_window.device_tree.theme_choice = theme_name
 
 def init_editor_style(editor):
@@ -21,14 +20,18 @@ def init_editor_style(editor):
     :param editor: editorWindow
     :type editor: wx.py.editwindow.EditWindow
     """
+    font = wx.Font(12, wx.MODERN, wx.NORMAL, wx.NORMAL, 0, "Fira code")
+
     editor.SetIndentationGuides(stc.STC_IV_LOOKFORWARD)
     editor.SetEOLMode(stc.STC_EOL_CRLF)
-    editor.setDisplayLineNumbers(True)
+    #editor.setDisplayLineNumbers(True)
     editor.SetLexer(wx.stc.STC_LEX_PYTHON)
     editor.SetIndent(4)
     editor.SetTabIndents(4)
     editor.AutoCompleteDirectories()
     editor.AutoCompleteFileNames()
+    editor.SetFont(font)
+    
     #editor.SetFontQuality(stc.STC_EFF_QUALITY_LCD_OPTIMIZED)
     #editor.SetUseAntiAliasing(True)
 
@@ -53,8 +56,8 @@ def customize_editor(editor, theme_choice):
         # editor.StyleSetSpec(wx.stc.STC_STYLE_LINENUMBER,'fore:#FFFF00,back:#0000A')
         # editor.StyleSetSpec(wx.stc.STC_STYLE_BRACELIGHT,'fore:#FFFF00,back:#0000A')
         font = wx.Font(pointSize = 10,
-                    family = wx.FONTFAMILY_SWISS,
-                    style = wx.FONTSTYLE_SLANT,
+                    family = wx.FONTFAMILY_DEFAULT,
+                    style = wx.FONTSTYLE_NORMAL,
                     weight = wx.FONTWEIGHT_NORMAL,  
                     underline = False,
                     faceName ="Fira Code",

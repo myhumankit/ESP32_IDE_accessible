@@ -1,4 +1,4 @@
-import wx, os, sys, time, speech, serial, asyncio
+import wx, os, sys, time, serial, asyncio
 
 from my_serial import put_cmd
 from all_panels import *
@@ -157,4 +157,4 @@ class ToolBar(wx.ToolBar):
         :type evt: wx.Event
         """  
         self.main_window.shell.Clear()
-        self.main_window.q_speak.put("Terminal Cleared")
+        my_speak(self.main_window, "Terminal Cleared")

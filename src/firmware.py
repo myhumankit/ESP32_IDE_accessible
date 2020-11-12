@@ -4,6 +4,7 @@ from threading import Thread
 import serial.tools.list_ports
 import subprocess
 import api.api_esptool as Esp
+from utilitaries import my_speak
 
 class FirmwareManager():
     """Class which contains parameters to use esptool
@@ -268,29 +269,29 @@ class FirmwareThread(Thread):
                 break
             if self.iserase=="yes":
                 try:
-                    self.main_window.q_speak.put("Erase Flash Memory")
+                    my_speak(self.main_window, "Erase Flash Memory")
                     Esp.Burn(self.burn_console, str(self.board),self.binpath,self.port,"yes", self.burnaddr)
-                    self.main_window.q_speak.put("Memory erased")
+                    my_speak(self.main_window, "Memory erased")
                 except Exception as e:
                     time.sleep(3)
                     print(e)
                     self.stop_thread = True
                     self.burn_frame.EnableCloseButton(enable=True)
-                    self.main_window.q_speak.put("Flash Memory Error")
+                    my_speak(self.main_window, "Flash Memory Error")
                     return
             try:
-                self.main_window.q_speak.put("Start Upload Firmware")
+                my_speak(self.main_window, "Start Upload Firmware")
                 Esp.Burn(self.burn_console, str(self.board),self.binpath,self.port,"no",self.burnaddr)
             except Exception as e:
                 print(e)
                 self.stop_thread = True
                 self.burn_frame.EnableCloseButton(enable=True)
-                self.main_window.q_speak.put("Firmware Error")
+                my_speak(self.main_window, "Firmware Error")
                 return
             if self.board=="esp8266":
                 Esp.downOkReset()
             self.burn_frame.EnableCloseButton(enable=True)
-            self.main_window.q_speak.put("Firmware Installed")
+            my_speak(self.main_window, "Firmware Installed")
             self.stop_thread = True
 
 def burn_firmware(main_window ,event):
@@ -317,7 +318,7 @@ def burn_firmware(main_window ,event):
                 main_window_burn.ShowModal()
                 burn_thread._stop()
                 burn_thread.join()
-                main_window.q_speak.put("Firmware installed")
+                my_speak(main_window, "Firmware installed")
                 main_window_burn.txt.Destroy()
                 main_window_burn.Destroy()
                 sys.stdout = sys.__stdout__

@@ -4,7 +4,6 @@ Module which contains all external modules used + some custom modules
 
 import wx #:https://docs.wxpython.org/
 import os #:https://docs.python.org/fr/3/library/os.html
-import speech #:see import win32com.client as wincl on Google
 import queue #:https://docs.python.org/fr/3/library/queue.html
 import time #:https://docs.python.org/fr/3/library/time.html
 import sys #:https://docs.python.org/fr/3/library/sys.html

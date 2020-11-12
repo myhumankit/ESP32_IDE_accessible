@@ -1,28 +1,24 @@
 import queue
 import time
-from threading import Thread
-from utilitaries import SendCmdAsync
+from threading import Thread, active_count
+from utilitaries import SendCmdAsync, put_cmd
 import asyncio
+import wx
 
-class readWriteUart(Thread):
-    def __init__(self, q, parent):
+class Exec_cmd(Thread):
+    def __init__(self, cmd, parent):
         Thread.__init__(self)
         self.main_window=parent
-        self.queue= q
+        self.cmd = cmd
         
     def run(self):
-        while True:
-            if self.main_window.serial.isOpen():
-                if not self.queue.empty():
-                    cmd=self.queue.get(timeout=1)
-                    self.main_window.result = "err"
-                    while self.main_window.result == "err":
-                        asyncio.run(SendCmdAsync(self.main_window, cmd))
-                        self.main_window.result = self.main_window.read_cmd(cmd[:-2])
-                        #print(self.main_window.result)
-                    self.queue.task_done()
-            else:
-                time.sleep(0.01)
+        if self.main_window.serial.isOpen():
+                cmd= self.cmd
+                self.main_window.result = ""
+                asyncio.run(SendCmdAsync(self.main_window, cmd))
+                print(active_count())
+        else:
+            time.sleep(0.01)
 
 def convert_cmd(cmd, writemsg):
     if type(cmd) is bytes:

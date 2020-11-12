@@ -1,5 +1,26 @@
 import wx
 
+
+wx.ID_VOCAL = wx.NewId()
+
+def stopvocal(main_window):
+    print("GROSSSSS")
+    if not main_window.speak_on:
+        main_window.speak_on = True
+    else:
+        main_window.speak_on = False
+
+
+def InitCTRL(main_window):
+    """F6 to navigate between regions
+    :param main_window: see InitShorcuts->param
+    :type main_window: idem
+    :return: entrie(here tuple) for AcceleratorTable
+    :rtype: tuple(int, int, int)
+    """
+    main_window.Bind(wx.EVT_MENU, lambda x: stopvocal(main_window), id=wx.ID_VOCAL)
+    return (wx.ACCEL_CTRL,  ord('m'), wx.ID_VOCAL)
+
 def InitF6(main_window):
     """F6 to navigate between regions
     :param main_window: see InitShorcuts->param
@@ -100,6 +121,7 @@ def InitShortcuts(main_window):
                                     InitF9(main_window),
                                     InitF10(main_window),
                                     InitF11(main_window),
+                                    InitCTRL(main_window),
                                     InitCTRL_plus(main_window),
                                     InitCTRL_moins(main_window),
                                     InitCTRL_fin(main_window),

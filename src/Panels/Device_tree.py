@@ -1,25 +1,25 @@
 import wx, asyncio, json, os, sys, string
-from utilitaries import SendCmdAsync, put_cmd, get_cmd_result
-from all_panels import MyEditor
+from utilitaries import my_speak
+from Panels.Editor import MyEditor
+import time
 
 class DeviceTree(wx.TreeCtrl):
     def __init__(self, parent, main_window, paths, name):
-        tID = wx.NewId()
         # Use the WANTS_CHARS style so the panel doesn't eat the Return key.
         wx.TreeCtrl.__init__(self, parent)
         self.main_window = main_window
         paths = paths
         isz = (16,16)
         self.il = wx.ImageList(isz[0], isz[1])
-        self.fldridx     = self.il.Add(wx.ArtProvider.GetBitmap(wx.ART_FOLDER,      wx.ART_OTHER, isz))
+        self.fldridx = self.il.Add(wx.ArtProvider.GetBitmap(wx.ART_FOLDER_OPEN, wx.ART_OTHER, isz))
         self.fldropenidx = self.il.Add(wx.ArtProvider.GetBitmap(wx.ART_FOLDER_OPEN, wx.ART_OTHER, isz))
-        self.fileidx     = self.il.Add(wx.ArtProvider.GetBitmap(wx.ART_NORMAL_FILE, wx.ART_OTHER, isz))
+        self.fileidx = self.il.Add(wx.ArtProvider.GetBitmap(wx.ART_NORMAL_FILE, wx.ART_OTHER, isz))
         self.font = wx.Font(pointSize = 12, family = wx.FONTFAMILY_SWISS, style = wx.FONTSTYLE_SLANT, weight = wx.FONTWEIGHT_NORMAL,
                       underline = False, faceName ="Fira Code", encoding = 0)
         self.theme_choice = main_window.notebook.theme_choice
         self.main_root = self.AddRoot("")
         self.device = self.AppendItem(self.main_root, "Device")
-        self.sd = self.AppendItem(self.main_root, "Sd")
+        self.sd = self.AppendItem(self.main_root, "Librairies")
         self.workspace = self.AppendItem(self.main_root, "Workspace")
         self.Expand(self.main_root)
 
@@ -141,7 +141,7 @@ class DeviceTree(wx.TreeCtrl):
         if self.item:
             sys.stdout.write("OnSelChanged: %s\n" % self.GetItemText(self.item))
             #items = self.GetSelections()
-            ##print(map(self.GetItemText, items))
+            #print(map(self.GetItemText, items))
         event.Skip()
 
     def OnActivate(self, event):
@@ -163,6 +163,13 @@ class DeviceTree(wx.TreeCtrl):
         """
         parent_it = self.GetItemParent(item)
         list = []
+        print("device = " , self.GetItemText(self.device))
+        print("item = " , self.GetItemText(self.item))
+        print("parent = " , self.GetItemText(parent_it))
+        if self.GetItemText(item) == "Device":
+            self.path = "."
+            return
+        print("device = " , self.GetItemText(self.device))
         while parent_it != self.device:
             list.insert(0, self.GetItemText(parent_it))
             parent_it = self.GetItemParent(parent_it)
@@ -177,14 +184,13 @@ class DeviceTree(wx.TreeCtrl):
         """
         docstring
         """
-        #print("FILE")
         name = self.GetItemText(self.item)
         self.get_path_item(self.item, name)
-        #print("Path = ", self.path)
-        self.main_window.q_serial.put("a = open('%s','r')\r\n" % self.path)
-        self.main_window.q_serial.put("#print(a.read())\r\n")
+        self.main_window.exec_cmd( "a = open('%s','r')\r\n" % self.path)
+        self.main_window.exec_cmd("print(a.read())\r\n")
+        self.main_window.read_cmd("print(a.read())")
         res = self.main_window.result
-        self.main_window.q_serial.put("a.close()\r\n")
+        self.main_window.exec_cmd( "a.close()\r\n")
         self.main_window.shell_text = ""
         notebookP = self.main_window.notebook
         new_tab = MyEditor(notebookP, self.main_window, str(res), True)
@@ -207,18 +213,19 @@ class DeviceTree(wx.TreeCtrl):
     def OnClipboardMenu(self, evt):
         img = self.GetItemImage(self.item)
         if img == self.fldridx or img == self.fldropenidx:
-            #print("DIR")
+            print("DIR")
             menu = ClipboardMenuDevice(True, self.main_window, self.item)
             self.main_window.PopupMenu(menu)
             menu.Destroy()
         else:
-            #print("File")
+            print("File")
             menu = ClipboardMenuDevice(False, self.main_window, self.item)
             self.main_window.PopupMenu(menu)
             menu.Destroy()
 
     def set_focus_tree(self, evt):
         self.SetFocus()
+
 class ClipboardMenuDevice(wx.Menu):
     """[summary]
 
@@ -238,6 +245,7 @@ class ClipboardMenuDevice(wx.Menu):
         if self.is_dir_menu:
             self.Append(wx.ID_NEW, "&New file")
             self.Append(wx.ID_DIRECTORY, "&New Directory")
+            self.Append(wx.ID_DELETE, "&Delete")
         else:
             self.Append(wx.ID_RUN, "&Run")
             self.Append(wx.ID_OPEN, "&Open")
@@ -248,19 +256,25 @@ class ClipboardMenuDevice(wx.Menu):
 
     #TODO: FAIRE TOUS LES EVENTS
     def __attach_events(self):
-        self.Bind(wx.EVT_MENU, self.OnNewdir, id=wx.ID_DIRECTORY)
-        self.Bind(wx.EVT_MENU, self.OnRun, id=wx.ID_RUN)
-        self.Bind(wx.EVT_MENU, self.main_window.device_tree.OnActivate, id=wx.ID_OPEN)
-        self.Bind(wx.EVT_MENU, self.OnClose, id=wx.ID_CLOSE)
-        self.Bind(wx.EVT_MENU, self.OnDelete, id=wx.ID_DELETE)
-        self.Bind(wx.EVT_MENU, self.OnDefaultRun, id=wx.ID_DEFAULT)
+        if self.is_dir_menu:
+            self.Bind(wx.EVT_MENU, self.OnNewFile, id=wx.ID_NEW)
+            self.Bind(wx.EVT_MENU, self.OnNewdir, id=wx.ID_DIRECTORY)
+            self.Bind(wx.EVT_MENU, self.OnDelete, id=wx.ID_DELETE)
+        else:
+            
+            self.Bind(wx.EVT_MENU, self.OnRun, id=wx.ID_RUN)
+            self.Bind(wx.EVT_MENU, self.main_window.device_tree.OnActivate, id=wx.ID_OPEN)
+            self.Bind(wx.EVT_MENU, self.OnClose, id=wx.ID_CLOSE)
+            self.Bind(wx.EVT_MENU, self.OnDelete, id=wx.ID_DELETE)
+            self.Bind(wx.EVT_MENU, self.OnDefaultRun, id=wx.ID_DEFAULT)
+    
 
     def OnRun(self, evt):
         self.device_tree.path = ""
         self.device_tree.root_it = self.device_tree.GetRootItem()
         name = self.device_tree.GetItemText(self.item)
         self.device_tree.get_path_item(self.item, name)
-        self.main_window.q_serial.put("exec(open('%s').read())\r\n"%self.device_tree.path)
+        self.main_window.exec_cmd("exec(open('%s').read())\r\n"%self.device_tree.path)
 
     def OnNewdir(self, evt):
         self.device_tree.path = ""
@@ -274,24 +288,29 @@ class ClipboardMenuDevice(wx.Menu):
                 result = dlg.ShowModal()
                 if result == wx.ID_OK or evt is not None:
                     path = self.device_tree.path + "/" + dlg.GetValue()
-                    self.main_window.q_serial.put( "os.mkdir('%s',0755)\r\n"%self.device_tree.path)
-                    ok = True
+                    self.main_window.exec_cmd("os.mkdir('%s')\r\n"%path)
                     treeModel(self.main_window)
+                    ok = True
                 else:
                     ok = True
 
     def OnClose(self, evt):
         #CHECK SI UNE PAGE AVEC LE NOM DU PATH EST OUVERTE DANS L'EDITEUR
         path = self.item.GetPath()
-        #print(path)
+        print(path)
 
     def OnDelete(self, evt):
         self.device_tree.path = ""
         self.device_tree.root_it = self.device_tree.GetRootItem()
         name = self.device_tree.GetItemText(self.item)
         self.device_tree.get_path_item(self.item, name)
-        self.main_window.q_serial.put( "os.remove('%s')\r\n"%self.device_tree.path)
-        treeModel(self.main_window)
+        if self.is_dir_menu:
+            self.main_window.exec_cmd("\r\n\r\n")
+            self.main_window.exec_cmd("os.rmdir('%s')\r\n"%self.device_tree.path)
+        else:
+            self.main_window.exec_cmd("os.remove('%s')\r\n"%self.device_tree.path)
+        self.device_tree.Delete(self.item)
+        #treeModel(self.main_window)
 
     def OnDefaultRun(self, evt):
         self.device_tree.path = ""
@@ -302,10 +321,12 @@ class ClipboardMenuDevice(wx.Menu):
         treeModel(self.main_window)
 
     def OnNewFile(self, evt):
+        print("New file")
         self.device_tree.path = ""
-        self.device_tree.root_it = self.device_tree.GetRootItem()
+        #self.device_tree.root_it = self.device_tree.GetRootItem()
         name = self.device_tree.GetItemText(self.item)
         self.device_tree.get_path_item(self.item, name)
+        print(self.device_tree.path)
         ok = False
         while not ok:
             with wx.TextEntryDialog(self.main_window, "Select the name of the new file") as dlg:
@@ -313,43 +334,44 @@ class ClipboardMenuDevice(wx.Menu):
                 result = dlg.ShowModal()
                 if result == wx.ID_OK or evt is not None:
                     path = self.device_tree.path + "/" + dlg.GetValue()
-                    self.main_window.q_serial.put( "myfile = open('%s', 'w')\r\n"%self.device_tree.path)
-                    self.main_window.q_serial.put( "myfile.close()\r\n")
+                    self.main_window.exec_cmd("myfile = open('%s', 'w')\r\n"%path)
+                    self.main_window.exec_cmd("myfile.close()\r\n")
                     ok = True
                     treeModel(self.main_window)
                 else:
                     ok = True
 
 def setDefaultProg(main_window,filename):
-    #print("setDefaultProg:%s"%filename)
+    print("setDefaultProg:%s"%filename)
     main_window.show_cmd = False
     ProgMsg= ""
     cmd = "myfile=open(\'main.py\',\'w\')\r\n"
-    ProgMsg = get_cmd_result(main_window, cmd)
+    ProgMsg = main_window.exec_cmd(cmd)
     if ProgMsg.find("Traceback")>=0 or ProgMsg.find("... ")>=0:
-        main_window.q_serial.put("\x03")
+        main_window.exec_cmd("\x03")
         return
     cmd = "myfile.write(\"exec(open(\'%s\').read(),globals())\")\r\n"%str(filename)
-    ProgMsg = get_cmd_result(main_window, cmd)
+    ProgMsg = main_window.exec_cmd(cmd)
     if ProgMsg.find("Traceback")>=0 or ProgMsg.find("... ")>=0:
-        main_window.q_serial.put("\x03")
+        main_window.exec_cmd("\x03")
         return
     cmd = "myfile.close()\r\n"
-    ProgMsg = get_cmd_result(main_window, cmd)
+    ProgMsg = main_window.exec_cmd(cmd)
     if ProgMsg.find("Traceback")>=0 or ProgMsg.find("... ")>=0:
-        main_window.q_serial.put("\x03")
+        main_window.exec_cmd("\x03")
         return
     main_window.show_cmd = True
 
 def getFileTree(main_window, dir):
-        #print("GET FILE TREE : %s"%(dir))
+        print("GET FILE TREE : %s"%(dir))
         main_window.cmd_return = ""
         main_window.get_cmd = True
-        result = get_cmd_result(main_window, "os.listdir(\'%s\')\r\n"%dir)
+        #TODO: exec_cmd a la place de get_cmd_result
+        result = main_window.exec_cmd("os.listdir(\'%s\')\r\n"%dir)
         if result=="err":
             return result
         filemsg=result[result.find("["):result.find("]")+1]
-        #print("FILEMSG = " + filemsg)
+        print("FILEMSG = " + filemsg)
 
         ret=json.loads("{}")
         ret[dir]=[]
@@ -363,21 +385,21 @@ def getFileTree(main_window, dir):
                 pass
             else:
                 filelist.append(i)
-        #print("FILE LIST =" ,filelist)
+        print("FILE LIST =" ,filelist)
         for i in filelist:
-            res = get_cmd_result(main_window, "os.stat(\'%s\')\r\n"%(dir + "/" + i))
+            res = main_window.exec_cmd("os.stat(\'%s\')\r\n"%(dir + "/" + i))
             if res == "err":
                 return res
             isdir=res.split("\n")[1]
             isdir=isdir.split(", ")
-            #print("ISDIR = ", isdir)
+            print("ISDIR = ", isdir)
             try:
                 adir = isdir[0]
                 if adir.find("(")>=0:
                     adir = adir[1:]
                 if adir.find(")")>=0:
                     adir = adir[:-1]
-                #print("ADIR = ", adir)
+                print("ADIR = ", adir)
                 if int(adir)==0o040000:
                     if i=="System Volume Information":
                         pass
@@ -386,13 +408,13 @@ def getFileTree(main_window, dir):
                 else:
                     ret[dir].append(i)
             except Exception as e:
-                #print("ERROr: " + e)
+                print("ERROr: " + e)
                 return "err"
         return ret
 
 def treeModel(main_window):
         main_window.show_cmd = False
-        main_window.reflushTreeBool= True
+        main_window.reflushTreeBool = True
         main_window.cmd_return = ""
         main_window.device_tree.DeleteChildren(main_window.device_tree.device)
         res=json.loads("{}")
@@ -401,8 +423,8 @@ def treeModel(main_window):
         if res=="err":
             main_window.cmd_return = ""
             return
-        #print("RESSSSSSS")
-        #print(res)
+        print("RESSSSSSS")
+        print(res)
         try:
             ReflushTree(main_window,main_window.device_tree.device,res['.'])
         except Exception as e:
@@ -412,10 +434,10 @@ def treeModel(main_window):
     
 def ReflushTree(main_window, device, msg):
         if msg=="err":
-            #print("soucii")
+            print("soucii")
             return
-        #print("reflushTree=====================%s"%msg)
-        #print("MSG " + str(msg))
+        print("reflushTree=====================%s"%msg)
+        print("MSG " + str(msg))
         tree = main_window.device_tree
         if type(msg) is str: #: fichier
             child = tree.AppendItem(device, msg)
@@ -426,7 +448,7 @@ def ReflushTree(main_window, device, msg):
             for i in msg:
                 k=eval("%s"%msg[i])
                 i=i.split("/")
-                child = tree.AppendItem(device, i[1])
+                child = tree.AppendItem(device, i[len(i) - 1])
                 tree.SetItemImage(child, tree.fldridx, wx.TreeItemIcon_Normal)
                 tree.SetItemImage(child, tree.fldropenidx, wx.TreeItemIcon_Expanded)
                 ReflushTree(main_window, child, k)
@@ -440,8 +462,8 @@ def ReflushTree(main_window, device, msg):
                     pass
 
 def save_on_card(main_window, page):
-    #print(page.directory)
-    #print(page.filename)
+    print(page.directory)
+    print(page.filename)
     notebookP = main_window.notebook
 
     # Check if save is required
@@ -449,18 +471,19 @@ def save_on_card(main_window, page):
         page.saved = False
         # Grab the content to be saved
         save_as_file_content = page.GetValue()
-        #print("|+|",save_as_file_content, "|+|")
-        main_window.show_cmd = False
-        cmd = "f = os.remove('%s')\r\n" % (page.directory + "/" + page.filename)
-        main_window.q_serial.put(cmd)
-        cmd = "f = open('%s', 'wb')\r\n" % (page.directory + "/" + page.filename)
-        main_window.q_serial.put(cmd)
-        cmd = "f.write(%s)\r\n" % save_as_file_content
-        main_window.q_serial.put(cmd)
+        
+        print("|+|", str(save_as_file_content), "|+|")
+        time.sleep(5)
+        main_window.show_cmd = True
+        cmd = "f = os.remove('%s')\r\n" % (page.directory)
+        main_window.exec_cmd(cmd)
+        cmd = "f = open('%s', 'wb')\r\n" % (page.directory)
+        main_window.exec_cmd(cmd)
+        cmd = "f.write(%s)\r\n" % save_as_file_content.encode('utf8')
+        main_window.exec_cmd(cmd)
         cmd = "f.close()\r\n"
-        main_window.q_serial.put(cmd)
+        main_window.exec_cmd(cmd)
         page.last_save = save_as_file_content
         page.saved = True
-        treeModel(main_window)
-        main_window.shell.AppendText("Content Saved\n")
-        self.main_window.q_serial.put("Content Saved")
+        wx.CallAfter(main_window.shell.AppendText, "Content Saved\n")
+        my_speak(main_window, "Content Saved")

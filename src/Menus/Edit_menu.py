@@ -1,6 +1,7 @@
 import wx, sys
 from constantes import *
 from api.api_pyflakes import main as CheckPySyntax
+from utilitaries import my_speak
 
 class EditMenu(wx.Menu):
     """Inits a instance of a wx.Menu to create a Theme menu and his buttons (Copy, Paste, Find,...)
@@ -133,10 +134,10 @@ class EditMenu(wx.Menu):
         appendMsg=page.filename
         
         if str(stdout)=="" and str(stderr)=="":
-            self.main_window.q_speak.put("No Error Detected !")
+            my_speak(self.main_window, "No Error Detected !")
             pass
         else:
-            self.main_window.q_speak.put( "Some Errors or Warnings Detected, check")
+            my_speak(self.main_window, "Some Errors or Warnings Detected, check")
             if stdout!="":
                 stdout=stdout.split("\n")
                 for i in stdout:
