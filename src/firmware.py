@@ -278,7 +278,7 @@ class FirmwareThread(Thread):
                     self.stop_thread = True
                     self.burn_frame.EnableCloseButton(enable=True)
                     my_speak(self.main_window, "Flash Memory Error")
-                    return
+                    break
             try:
                 my_speak(self.main_window, "Start Upload Firmware")
                 Esp.Burn(self.burn_console, str(self.board),self.binpath,self.port,"no",self.burnaddr)
@@ -287,12 +287,13 @@ class FirmwareThread(Thread):
                 self.stop_thread = True
                 self.burn_frame.EnableCloseButton(enable=True)
                 my_speak(self.main_window, "Firmware Error")
-                return
+                break
             if self.board=="esp8266":
                 Esp.downOkReset()
             self.burn_frame.EnableCloseButton(enable=True)
             my_speak(self.main_window, "Firmware Installed")
             self.stop_thread = True
+            break
 
 def burn_firmware(main_window ,event):
     firmware_manager = main_window.firmware_manager
@@ -316,8 +317,8 @@ def burn_firmware(main_window ,event):
                 burn_thread.setDaemon(1)
                 burn_thread.start()
                 main_window_burn.ShowModal()
-                burn_thread._stop()
                 burn_thread.join()
+                burn_thread= None
                 my_speak(main_window, "Firmware installed")
                 main_window_burn.txt.Destroy()
                 main_window_burn.Destroy()

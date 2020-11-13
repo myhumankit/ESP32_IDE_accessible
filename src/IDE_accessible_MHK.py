@@ -54,7 +54,7 @@ class MainWindow(wx.Frame):
         self.get_cmd = False
         self.cmd_return = ""
         self.last_cmd_red = ""
-        self.last_enter = True
+        self.last_enter = False
         #####
         self.who_is_focus = 0
         self.theme = 'Dark Theme'
@@ -63,6 +63,7 @@ class MainWindow(wx.Frame):
         self.serial_manager = ManageConnection(self)
         self.voice_on = pyttsx3.init()
         self.speak_on = True
+        self.speak_thread = None
         self.firmware_manager = FirmwareManager()
 
         create_panels(self)
@@ -129,9 +130,9 @@ class MainWindow(wx.Frame):
             return
         ##print(bytes(data))
         check = str(data)
-        #print("DEDCODE = |", check, "|")
+        txt = data.decode('UTF-8', 'ignore')
+        print("DEDCODE = |", check, "|")
         if  msg == "\x08":
-            #print("ERASE")
             self.keypressmsg = "debug"
             return remove_char(self.shell, self) 
         elif msg == "\x1b\x5b\x44":
@@ -141,15 +142,17 @@ class MainWindow(wx.Frame):
         elif self.keypressmsg == "debug":
             self.keypressmsg = "else"
             return
-        self.shell_text += data.decode('UTF-8', 'ignore')
-        self.last_cmd_red += data.decode('UTF-8', 'ignore')
+        self.shell_text += txt
+        self.last_cmd_red += txt
         if self.show_cmd == True:
             try:
-                wx.CallAfter(self.shell.WriteText, data.decode('UTF-8', 'ignore'))
+                wx.CallAfter(self.shell.WriteText, txt)
                 if self.last_enter:
-                    print("DEBUG2")
-                    my_speak(self, data.decode('UTF-8', 'ignore'))
-                    self.last_enter = False
+                    self.cmd_return += txt
+                    if txt.find(">>>") >= 0:
+                        my_speak(self, self.cmd_return)
+                        self.cmd_return = ""
+                        self.last_enter = False
                 if not self.on_key:
                     self.on_key = True
                     self.last_enter = True
@@ -164,7 +167,7 @@ class MainWindow(wx.Frame):
         code = evt.GetUnicodeKey()
         if code < 256:
             code = evt.GetKeyCode()
-        #print("keypress", code)
+        print("keypress", code)
         if code == 13:                      # is it a newline? (check for CR which is the RETURN key)
             self.serial.write(b'\n')  
             self.on_key = False   # send LF
@@ -222,6 +225,7 @@ class MainWindow(wx.Frame):
         :param evt: Event binded to trigger the function
         :type evt: wx.Event https://wxpython.org/Phoenix/docs/html/wx.Event.html
         """
+        print("UP")
         widgets = [self.device_tree, self.shell, self.notebook.GetCurrentPage()]
         names = ["Device File Tree", "Shell Panel", "Curent Editor"]
         if self.who_is_focus == 2 and widgets[self.who_is_focus] == None:
@@ -231,7 +235,6 @@ class MainWindow(wx.Frame):
             return
         widgets[self.who_is_focus].SetFocus()
         my_speak(self, names[self.who_is_focus])
-        #self.speak_on = names[self.who_is_focus]
         if self.who_is_focus == 2:
             self.who_is_focus = 0
         else:
@@ -243,6 +246,7 @@ class MainWindow(wx.Frame):
         :param evt: Event binded to trigger the function
         :type evt: wx.Event https://wxpython.org/Phoenix/docs/html/wx.Event.html
         """
+        print("DOWN")
         widgets = [self.device_tree, self.shell, self.notebook.GetCurrentPage()]
         names = ["Device File Tree", "Shell Panel", "Curent Editor"]
         if self.who_is_focus == 2 and widgets[self.who_is_focus] == None:

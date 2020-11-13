@@ -18,12 +18,12 @@ class ToolsMenu(wx.Menu):
         self.themes_submenu = ThemesMenu(main_window)
 
         self.Append(wx.ID_SETTINGS, "Connection Settings\tF2")
-        self.Append(wx.ID_DOWNLOAD, "Upload")
+        self.Append(wx.ID_CANCEL, "Close Connection\tF3")
+        self.Append(wx.ID_DOWNLOAD, "Upload\tF4")
         self.Append(wx.ID_EXECUTE, "UploadandRun\tF5")
-        self.Append(wx.ID_STOP, "Stop")
+        self.Append(wx.ID_STOP, "Stop\tF6")
         self.Append(wx.ID_BURN_FIRMWARE, "BurnFirmware\tF7")
         self.Append(wx.ID_BOARD, "Themes", self.themes_submenu)
-        self.Append(wx.ID_CANCEL, "Close Connection")
 
     def OnPortSettings(self, evt):
         """
@@ -140,7 +140,6 @@ class ToolsMenu(wx.Menu):
             main_window.shell.AppendText('Please open serial')
             return False
         main_window.serial.write('\x03'.encode('utf-8'))
-        self.main_window.show_cmd = False
         time.sleep(0.05)
 
         if page == None:
@@ -150,6 +149,8 @@ class ToolsMenu(wx.Menu):
         if page.saved == False:
             main_window.shell.AppendText('Please save the file before download')
             return False
+        
+        self.main_window.show_cmd = False
         if page.directory[len(page.directory) - 1] == '/':
             pathfile=page.directory + page.filename
         else:
@@ -184,7 +185,7 @@ class ToolsMenu(wx.Menu):
         self.main_window.device_tree.DeleteChildren(self.main_window.device_tree.device)
         self.main_window.shell.Clear()
         self.main_window.shell.SetEditable(False)
-        self.main_window.speak_on = "Device Disconnected"
+        my_speak(self.main_window, "Device Disconnected")
 
     def OnStop(self, evt):
         """Stop the program on executing

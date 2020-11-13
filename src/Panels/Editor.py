@@ -115,7 +115,7 @@ class NvdaEditor(wx.TextCtrl):
         #print("FindReplaceDialog closing...\n")
         evt.GetDialog().Destroy()
 
-class MyEditor(stc.StyledTextCtrl):
+class MyEditor(pysh.editwindow.EditWindow):
     """Customizable Editor page
 
     :param pysh.editwindow.EditWindow: see https://wxpython.org/Phoenix/docs/html/wx.py.html
@@ -131,12 +131,13 @@ class MyEditor(stc.StyledTextCtrl):
         :type parent: MainWindow class
         """
 
-        stc.StyledTextCtrl.__init__(self, parent=parent)
+        pysh.editwindow.EditWindow.__init__(self, parent=parent)
 
         self.__set_properties(parent, topwindow, on_card)
         self.__set_style(parent)
         self.__attach_events()
         self.custom_stc()
+        self.SetValue(text)
     
     def custom_stc(self):
         self.CmdKeyAssign(ord('+'), stc.STC_SCMOD_CTRL, stc.STC_CMD_ZOOMIN)
@@ -365,10 +366,7 @@ class MyEditor(stc.StyledTextCtrl):
         :param parent: Notebook Panel
         :type parent: Notebook class
         """
-        ##print("PARENT THEME = " + str(parent.theme))
-        #self.SetMarginType(1, stc.STC_MARGIN_NUMBER)
-        #self.SetMarginWidth(1, 0)
-
+        self.setDisplayLineNumbers(True)
         init_editor_style(self)
         customize_editor(self, self.theme_choice)
 

@@ -186,12 +186,14 @@ class DeviceTree(wx.TreeCtrl):
         """
         name = self.GetItemText(self.item)
         self.get_path_item(self.item, name)
+        self.main_window.show_cmd = False
         self.main_window.exec_cmd( "a = open('%s','r')\r\n" % self.path)
         self.main_window.exec_cmd("print(a.read())\r\n")
         self.main_window.read_cmd("print(a.read())")
         res = self.main_window.result
         self.main_window.exec_cmd( "a.close()\r\n")
         self.main_window.shell_text = ""
+        self.main_window.show_cmd = True
         notebookP = self.main_window.notebook
         new_tab = MyEditor(notebookP, self.main_window, str(res), True)
         new_tab.filename = name
@@ -268,7 +270,6 @@ class ClipboardMenuDevice(wx.Menu):
             self.Bind(wx.EVT_MENU, self.OnDelete, id=wx.ID_DELETE)
             self.Bind(wx.EVT_MENU, self.OnDefaultRun, id=wx.ID_DEFAULT)
     
-
     def OnRun(self, evt):
         self.device_tree.path = ""
         self.device_tree.root_it = self.device_tree.GetRootItem()
@@ -474,7 +475,7 @@ def save_on_card(main_window, page):
         
         print("|+|", str(save_as_file_content), "|+|")
         time.sleep(5)
-        main_window.show_cmd = True
+        main_window.show_cmd = False
         cmd = "f = os.remove('%s')\r\n" % (page.directory)
         main_window.exec_cmd(cmd)
         cmd = "f = open('%s', 'wb')\r\n" % (page.directory)
@@ -487,3 +488,4 @@ def save_on_card(main_window, page):
         page.saved = True
         wx.CallAfter(main_window.shell.AppendText, "Content Saved\n")
         my_speak(main_window, "Content Saved")
+        main_window.show_cmd = True

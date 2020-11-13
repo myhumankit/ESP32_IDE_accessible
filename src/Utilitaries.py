@@ -7,16 +7,14 @@ def load_img(path):
     return wx.Image(path,wx.BITMAP_TYPE_ANY).ConvertToBitmap()
 
 def speak(main_window, txt):
-    #print(txt)
-    try:
-        main_window.voice_on.say(txt)
-        main_window.voice_on.runAndWait()
-        main_window.voice_on.stop()
-    except RuntimeError:
-        main_window.voice_on.stop()
-        main_window.voice_on.say(txt)
-        main_window.voice_on.runAndWait()
-        main_window.voice_on.stop()
+    print("SPEAK = ", txt)
+    #try:
+    main_window.voice_on.say(txt)
+    # except RuntimeError:
+    #     main_window.voice_on.stop()
+    #     main_window.voice_on.say(txt)
+    #     main_window.voice_on.runAndWait()
+    #     main_window.voice_on.stop()
         
 
 def remove_char(shell, main_window):
@@ -72,13 +70,17 @@ class Speak(Thread):
 
     def run(self):
         speak(self.main_window, self.info)
-        print("pass")
+        self.main_window.voice_on.runAndWait()
 
 def my_speak(main_window, txt):
-    if main_window.speak_on: 
+    if main_window.speak_on:
+        if main_window.speak_thread is not None:
+            self.main_window.voice_on.stop()
+            main_window.speak_thread.join()
         main_window.speak_thread = Speak(main_window, txt)
         main_window.speak_thread.daemon = True
         main_window.speak_thread.start()
+        main_window.voice_on.stop()
         main_window.speak_thread = None
 
 def get_cmd_result(main_window, cmd):

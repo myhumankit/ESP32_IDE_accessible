@@ -1,7 +1,9 @@
 import wx
 
-
 wx.ID_VOCAL = wx.NewId()
+wx.ID_EDITOR_FOCUS = wx.NewId()
+wx.ID_SHELL_FOCUS = wx.NewId()
+wx.ID_TREE_FOCUS = wx.NewId()
 
 def stopvocal(main_window):
     print("GROSSSSS")
@@ -9,7 +11,6 @@ def stopvocal(main_window):
         main_window.speak_on = True
     else:
         main_window.speak_on = False
-
 
 def InitCTRL(main_window):
     """F6 to navigate between regions
@@ -38,8 +39,8 @@ def InitF9(main_window):
     :return: entrie(here tuple) for AcceleratorTable
     :rtype: tuple(int, int, int)
     """        
-    main_window.Bind(wx.EVT_MENU, main_window.device_tree.set_focus_tree, id=wx.ID_MOVE)
-    return (wx.ACCEL_NORMAL,  wx.WXK_F9, wx.ID_MOVE)
+    main_window.Bind(wx.EVT_MENU, main_window.device_tree.set_focus_tree, id=wx.ID_TREE_FOCUS)
+    return (wx.ACCEL_NORMAL,  wx.WXK_F9, wx.ID_TREE_FOCUS)
 
 def InitF10(main_window):
     """F6 to navigate between regions
@@ -48,8 +49,8 @@ def InitF10(main_window):
     :return: entrie(here tuple) for AcceleratorTable
     :rtype: tuple(int, int, int)
     """        
-    main_window.Bind(wx.EVT_MENU, main_window.set_focus_editor, id=wx.ID_MOVE)
-    return (wx.ACCEL_NORMAL,  wx.WXK_F10, wx.ID_MOVE)
+    main_window.Bind(wx.EVT_MENU, main_window.set_focus_editor, id=wx.ID_EDITOR_FOCUS)
+    return (wx.ACCEL_NORMAL,  wx.WXK_F10, wx.ID_EDITOR_FOCUS)
 
 def InitF11(main_window):
     """F6 to navigate between regions
@@ -58,8 +59,8 @@ def InitF11(main_window):
     :return: entrie(here tuple) for AcceleratorTable
     :rtype: tuple(int, int, int)
     """
-    main_window.Bind(wx.EVT_MENU, main_window.shell.set_focus_shell, id=wx.ID_MOVE)
-    return (wx.ACCEL_NORMAL,  wx.WXK_F11, wx.ID_MOVE)
+    main_window.Bind(wx.EVT_MENU, main_window.shell.set_focus_shell, id=wx.ID_SHELL_FOCUS)
+    return (wx.ACCEL_NORMAL,  wx.WXK_F11, wx.ID_SHELL_FOCUS)
 
 def InitMajF6(main_window):
     """F6 to navigate between regions (previous)

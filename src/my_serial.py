@@ -76,6 +76,7 @@ class ManageConnection():
         time.sleep(1)
         put_cmd(self.main_window,'\x03')
         put_cmd(self.main_window, "exec(open(\'%s\').read(),globals())\r\n"%str(filename))
+        self.main_window.shell.SetFocus()
       
     def download(self, filepath ,filename):
         filepath = filepath.replace("\\","/")
@@ -150,7 +151,7 @@ def ConnectSerial(self):
         while True:
             n = self.serial.inWaiting()
             if n>0:
-                startdata+=(self.serial.read(n)).decode('utf-8')
+                startdata+=(self.serial.read(n)).decode('utf-8', 'ignore')
                 if startdata.find('>>> ')>=0:
                     self.shell.AppendText(">>> ")
                     break
