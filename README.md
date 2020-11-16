@@ -36,7 +36,7 @@ V 1.0 02/10/2020 --> First Version, connection with ESP and Pyboard(with a firmw
 
 ## Meta
 
-Evan Sabre – evansabre@hotmail.fr
+Evan Sabre – evan.sabre@epitech.eu
 
 Distributed under the MIT license. See ``LICENSE`` for more information.
 
