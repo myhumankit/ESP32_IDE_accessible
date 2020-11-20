@@ -1,9 +1,15 @@
-from packages import wx, serial, wxSerialConfigDialog, asyncio, time
+import wx
+import time
+from Panels import wxSerialConfigDialog
 from Panels.Device_tree import treeModel
-from firmware import burn_firmware
+from Serial_manager.firmware import burn_firmware
 from editor_style import change_theme_choice, customize_editor
-from utilitaries import put_cmd, SendCmdAsync, my_speak
-import my_serial
+from editor_style import activate_highlighted_syntax
+from Utils.voice_synthese import my_speak
+from Serial_manager.send_infos import put_cmd
+from Serial_manager.connexion import ConnectSerial
+from Panels.Device_tree import save_on_card
+
 
 class ToolsMenu(wx.Menu):
     """Class to create a Tools menu and his buttons (Copy, Paste, Find,...)
@@ -11,11 +17,12 @@ class ToolsMenu(wx.Menu):
     :param: Class to derivate
     :type: wx.Menu see https://wxpython.org/Phoenix/docs/html/wx.Menu.html
     """
-    def __init__(self, main_window):
+
+    def __init__(self, frame):
         wx.Menu.__init__(self, "Tools")
 
-        self.main_window = main_window
-        self.themes_submenu = ThemesMenu(main_window)
+        self.frame = frame
+        self.themes_submenu = ThemesMenu(frame)
 
         self.Append(wx.ID_SETTINGS, "Connection Settings\tF2")
         self.Append(wx.ID_CANCEL, "Close Connection\tF3")
@@ -29,139 +36,141 @@ class ToolsMenu(wx.Menu):
         """
         Show the port settings dialog. The reader thread is stopped for the
         settings change.
-        
+
         :param evt: Event to trigger the method
         :type evt: wx.Event
-        """  
+        """
         ok = False
-        main_window = self.main_window
+        frame = self.frame
         while not ok:
             with wxSerialConfigDialog.SerialConfigDialog(
-                    self.main_window,
+                    self.frame,
                     -1,
                     "",
-                    show=wxSerialConfigDialog.SHOW_BAUDRATE | wxSerialConfigDialog.SHOW_FORMAT | wxSerialConfigDialog.SHOW_FLOW,
-                    serial=main_window.serial) as dialog_serial_cfg:
+                    show=wxSerialConfigDialog.SHOW_BAUDRATE |
+                    wxSerialConfigDialog.SHOW_FORMAT |
+                    wxSerialConfigDialog.SHOW_FLOW,
+                    serial=frame.serial) as dialog_serial_cfg:
                 dialog_serial_cfg.CenterOnParent()
                 result = dialog_serial_cfg.ShowModal()
             # open port if not called on startup, open it on startup and OK too
-            if result == wx.ID_OK or evt is not None:
+            if result == wx.ID_OK:
                 try:
-                    main_window.serial.open()
-                except serial.SerialException as e:
-                    with wx.MessageDialog(self.main_window, str(e), "Serial Port Error", wx.OK | wx.ICON_ERROR)as dlg:
+                    frame.serial.open()
+                    ok = True
+                except Exception as e:
+                    with wx.MessageDialog(self.frame, str(e),
+                                          "Serial Port Error",
+                                          wx.OK | wx.ICON_ERROR) as dlg:
                         dlg.ShowModal()
                         ok = True
-                else:
-                    dialog_serial_cfg.SetTitle("Serial Terminal on {} [{},{},{},{}{}{}]".format(
-                        main_window.serial.portstr,
-                        main_window.serial.baudrate,
-                        main_window.serial.bytesize,
-                        main_window.serial.parity,
-                        main_window.serial.stopbits,
-                        ' RTS/CTS' if main_window.serial.rtscts else '',
-                        ' Xon/Xoff' if main_window.serial.xonxoff else '',
-                        ))
-                    ok = True
+                    return
             else:
                 # on startup, dialog aborted
-                main_window.alive.clear()
+                frame.alive.clear()
                 ok = True
-        if main_window.serial.isOpen() == True:
-            if not my_serial.ConnectSerial(main_window):
+        if frame.serial.isOpen() is True:
+            if ConnectSerial(frame) is False:
                 return
-            main_window.connected = True
-            #TODO: Découper la fonction
+            frame.connected = True
+            # TODO: Découper la fonction
             try:
-                main_window.show_cmd = False
-                put_cmd(main_window, "import os\r\n")
-                main_window.exec_cmd("os.uname()\r\n")
-                main_window.serial_manager.get_card_infos(main_window.result)
-                main_window.actualize_status_bar()
-                treeModel(main_window)
-                my_speak(main_window, "Device connected")
-                main_window.show_cmd = True
-                #my_speak(self.main_window, "Device Connected")
+                frame.start_thread_serial()
+                frame.show_cmd = False
+                put_cmd(frame, "import os\r\n")
+                frame.exec_cmd("os.uname()\r\n")
+                if frame.result.find("upgrade") >= 0:
+                    frame.serial.close()
+                    frame.shell.Clear()
+                    frame.shell.WriteText("Device memory corrupted:Upgrade your device with F7")
+                    return
+                frame.serial_manager.get_card_infos(frame.result)
+                frame.actualize_status_bar()
+                treeModel(frame)
+                my_speak(frame, "Device connected")
+                frame.show_cmd = True
+                wx.CallAfter(frame.shell.Clear)
+                put_cmd(frame, "\r\n")
             except Exception as e:
                 print(e)
-                self.main_window.speak_on = "Connection Error Retry"
-                main_window.serial.close()
-                main_window.shell.Clear()
-    
+                self.frame.speak_on = "Connection Error Retry"
+                wx.CallAfter(frame.shell.Clear)
+
     def Ondownload(self, evt):
         """Download the file found on the current tab if it was saved
 
         :param evt: Event to trigger the method
         :type evt: wx.Event
-        """  
-        main_window = self.main_window
-        notebookP = self.main_window.notebook
+        """
+        frame = self.frame
+        notebookP = self.frame.notebook
         page = notebookP.GetCurrentPage()
-        if main_window.serial.isOpen()==False:
-            main_window.shell.AppendText('Please open serial')
-            return False
-        main_window.serial.write('\x03'.encode('utf-8'))
-        self.main_window.show_cmd = False
-        time.sleep(0.05)
 
-        if page == None:
-            main_window.shell.AppendText('Please choose file or input something')
+        if frame.serial.isOpen() is False:
+            frame.shell.AppendText('Please open serial')
             return False
-        #print("dir = %s %s"%(page.directory, page.filename))
-        if page.directory[len(page.directory) - 1] == '/':
-            pathfile=page.directory + page.filename
-        else:
-            pathfile=page.directory + '/' + page.filename
-        if page.saved == False:
-            main_window.shell.append('Please save the file before download')
+        frame.serial.write('\x03'.encode('utf-8'))
+        self.frame.show_cmd = False
+        if not page:
+            frame.shell.AppendText('Please choose file or input something')
             return False
-        elif str(pathfile).find(":")>=0:
-            main_window.serial_manager.download(pathfile, page.filename)
-            time.sleep(1)
-            #self.main_window.shell.Clear()
-            self.main_window.shell.SetValue("Downloaded file : " + page.filename)
-            self.main_window.show_cmd = True
-            self.main_window.shell.SetFocus()
-            put_cmd(self.main_window, '\r\n')
-            return True
-    
-        return False
+        if page.on_card is True:
+            frame.shell.AppendText('Please choose file or input something')
+        try:
+            if page.directory[len(page.directory) - 1] == '/':
+                pathfile = page.directory + page.filename
+            else:
+                pathfile = page.directory + '/' + page.filename
+            if page.saved is False:
+                frame.shell.append('Please save the file before download')
+                return False
+            elif str(pathfile).find(":") >= 0:
+                frame.serial_manager.download(pathfile, page.filename)
+                self.frame.shell.Clear()
+                self.frame.shell.WriteText("Downloaded file : " + page.filename)
+                self.frame.show_cmd = True
+                self.frame.shell.SetFocus()
+                put_cmd(self.frame, '\r\n')
+                return True
+            return False
+        except Exception:
+            create_new_file(frame)
 
     def OnRun(self, evt):
-        """Upload the file + run 
+        """Upload the file + run
 
         :param evt: Event to trigger the method
         :type evt: wx.Event
-        """  
-        main_window = self.main_window
-        notebookP = self.main_window.notebook
+        """
+        frame = self.frame
+        notebookP = self.frame.notebook
         page = notebookP.GetCurrentPage()
-        if main_window.serial.isOpen()==False:
-            main_window.shell.AppendText('Please open serial')
+        if frame.serial.isOpen() is False:
+            frame.shell.AppendText('Please open serial')
             return False
-        main_window.serial.write('\x03'.encode('utf-8'))
+        frame.serial.write('\x03'.encode('utf-8'))
         time.sleep(0.05)
 
-        if page == None:
-            main_window.shell.AppendText('Please choose file or input something')
+        if page is None:
+            frame.shell.AppendText('Please choose file or input something')
             return False
-        #print("dir = %s %s"%(page.directory, page.filename))
-        if page.saved == False:
-            main_window.shell.AppendText('Please save the file before download')
+        # print("dir = %s %s"%(page.directory, page.filename))
+        if page.saved is False:
+            frame.shell.AppendText('Please save the file before download')
             return False
-        
-        self.main_window.show_cmd = False
+
+        self.frame.show_cmd = False
         if page.directory[len(page.directory) - 1] == '/':
-            pathfile=page.directory + page.filename
+            pathfile = page.directory + page.filename
         else:
-            pathfile=page.directory + '/' + page.filename
-        if str(pathfile).find(":")>=0:
-            main_window.serial_manager.download(pathfile, page.filename)
+            pathfile = page.directory + '/' + page.filename
+        if str(pathfile).find(":") >= 0:
+            frame.serial_manager.download(pathfile, page.filename)
             time.sleep(1)
-            self.main_window.shell.SetValue("Downloaded file : " + page.filename)
-            self.main_window.shell.SetFocus()
-            self.main_window.show_cmd = True
-            self.main_window.serial_manager.download_and_run(page.filename)
+            self.frame.shell.WriteText("Downloaded file : " + page.filename)
+            self.frame.shell.SetFocus()
+            self.frame.show_cmd = True
+            self.frame.serial_manager.download_and_run(page.filename)
             return True
         return False
 
@@ -171,57 +180,60 @@ class ToolsMenu(wx.Menu):
         :param evt: Event to trigger the method
         :type evt: wx.Event
         """
-  
-        if not self.main_window.serial.isOpen():
-            self.main_window.shell.AppendText("already close.")
+
+        if not self.frame.serial.isOpen():
+            self.frame.shell.AppendText("already close.")
             return
 
-        put_cmd(self.main_window, '\x03')
+        put_cmd(self.frame, '\x03')
         time.sleep(0.1)
-        self.main_window.serial.close()
-        self.main_window.connected = False
-        self.main_window.stop_thread_serial()
-        self.main_window.statusbar.SetStatusText("Status: Not Connected", 1)
-        self.main_window.device_tree.DeleteChildren(self.main_window.device_tree.device)
-        self.main_window.shell.Clear()
-        self.main_window.shell.SetEditable(False)
-        my_speak(self.main_window, "Device Disconnected")
+        self.frame.serial.close()
+        self.frame.connected = False
+        self.frame.stop_thread_serial()
+        self.frame.statusbar.SetStatusText("Status: Not Connected", 1)
+        self.frame.device_tree.DeleteChildren(self.frame.device_tree.device)
+        self.frame.shell.Clear()
+        self.frame.shell.SetEditable(False)
+        my_speak(self.frame, "Device Disconnected")
 
     def OnStop(self, evt):
         """Stop the program on executing
 
         :param evt: Event to trigger the method
         :type evt: wx.Event
-        """  
-        if self.main_window.serial.ser.isOpen():
-            self.main_window.exec_cmd(  '\x03')
+        """
+        if self.frame.serial.isOpen():
+            self.put_cmd(self.frame, '\x03')
         else:
-            self.main_window.shell.AppendText("serial not open")
-    
+            self.frame.shell.AppendText("serial not open")
+
     def OnBurnFirmware(self, event):
-        main_window = self.main_window
-        burn_firmware(self.main_window, event)
+        burn_firmware(self.frame, event)
 
     def OnChangeTheme(self, evt):
-        """Change the theme of the main_window and the lexer style
+        """Change the theme of the frame and the lexer style
 
         :param evt: Event to trigger the method
         :type evt: wx.Event
-        """  
+        """
+
         if evt.Id == wx.ID_DARK_THEME:
             theme_name = 'Dark Theme'
-        else:
+        elif evt.Id == wx.ID_LIGHT_THEME:
             theme_name = 'Light Theme'
+        else:
+            return activate_highlighted_syntax(self.frame.notebook)
         try:
-            change_theme_choice(self.main_window, theme_name)
-            page = self.main_window.notebook.GetCurrentPage()
+            change_theme_choice(self.frame, theme_name)
+            page = self.frame.notebook.GetCurrentPage()
             if page:
                 customize_editor(page, theme_name)
-            self.main_window.shell.custom_shell(theme_name)
-            self.main_window.device_tree.custom_tree_ctrl()
-            self.main_window.notebook.custom_notebook(theme_name)
+            self.frame.shell.custom_shell(theme_name)
+            self.frame.device_tree.custom_tree_ctrl()
+            self.frame.notebook.custom_notebook(theme_name)
         except Exception as e:
             print(e)
+
 
 class ThemesMenu(wx.Menu):
     """Inits a instance of a wx.Menu to create a Theme menu and his buttons (Copy, Paste, Find,...)
@@ -229,8 +241,34 @@ class ThemesMenu(wx.Menu):
     :return: the Theme menu filled by buttons
     :rtype: wx.Menu see https://wxpython.org/Phoenix/docs/html/wx.Menu.html
     """
-    def __init__(self, main_window):
+
+    def __init__(self, frame):
         wx.Menu.__init__(self, "")
-        
+
         self.Append(wx.ID_DARK_THEME, "&Dark")
         self.Append(wx.ID_LIGHT_THEME, "&Light")
+        self.Append(wx.ID_NVDA_THEME, "&NVDA Compatible")
+
+
+def create_new_file(frame):
+    ok = False
+    txt = "Select the name of the new file"
+    frame.show_cmd = False
+    while not ok:
+        with wx.TextEntryDialog(frame, txt) as dlg:
+            dlg.CenterOnParent()
+            result = dlg.ShowModal()
+            if result == wx.ID_OK:
+                path = "./" + dlg.GetValue()
+                frame.exec_cmd("myfile = open('%s', 'w')\r\n" % path)
+                frame.exec_cmd("myfile.close()\r\n")
+                page = frame.notebook.GetCurrentPage()
+                page.directory = path
+                page.filename = dlg.GetValue()
+                save_on_card(frame, page)
+                treeModel(frame)
+                ok = True
+            else:
+                ok = True
+    frame.show_cmd = True
+

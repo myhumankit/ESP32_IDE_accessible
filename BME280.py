@@ -1,13 +1,8 @@
-from machine import I2C
-
 import time
 
 # BME280 default address.
 
 BME280_I2CADDR = 0x76
-
-
-
 # Operating Modes
 
 BME280_OSAMPLE_1 = 1
@@ -565,4 +560,3 @@ class BME280:
     hd = h * 100 // 1024 - hi * 100
 
     return "{}.{:02d}%".format(hi, hd)
-

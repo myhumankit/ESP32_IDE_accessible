@@ -1,130 +1,22 @@
-import  keyword
-import  wx
-import  wx.stc  as  stc
+import keyword
+import wx
+import wx.stc as stc
 import wx.py as pysh
 from editor_style import customize_editor, init_editor_style
+from Utils.find_replace import find_next, replace
 
-class NvdaEditor(wx.TextCtrl):
+
+class Styled_Editor(pysh.editwindow.EditWindow):
     """Customizable Editor page
 
-    :param pysh.editwindow.EditWindow: see https://wxpython.org/Phoenix/docs/html/wx.py.html
+    :param pysh.editwindow.EditWindow:
+     see https://wxpython.org/Phoenix/docs/html/wx.py.html
     :type pysh.editwindow.EditWindow: wx.py.editwindow.EditWindow
     """
 
     def __init__(self, parent, topwindow, text, on_card):
         """ Constructor to init a Tab on the Notebook
-        
-        :param parent: NotebookPanel class
-        :type parent: NotebookPanel class
-        :param topwindow: the MainWindow in this case
-        :type parent: MainWindow class
-        """
 
-        stc.StyledTextCtrl.__init__(self, parent=parent, style= wx.TE_MULTILINE | wx.TE_RICH2)
-
-        self.__set_properties(parent, topwindow, on_card)
-        self.__set_style(parent)
-
-    def __set_properties(self, parent, topwindow, on_card):
-        """Set the properties and declare the variables of the instance
-        
-        :param parent: NotebookPanel class
-        :type parent: NotebookPanel class
-        :param topwindow: the MainWindow in this case
-        :type parent: MainWindow class
-        """
-        self.topwindow = topwindow
-        self.id = parent.tab_num + 1
-        self.filename = ""
-        self.directory = ""
-        self.saved = False
-        self.last_save = ""
-        self.theme_choice = parent.theme_choice
-        self.findData = wx.FindReplaceData()
-        self.txt = ""
-        self.pos = 0
-        self.size = 0
-        self.on_card = on_card
-
-    def __set_style(self, parent):
-        """Load the first style of the editor
-
-        :param parent: Notebook Panel
-        :type parent: Notebook class
-        """
-        self.SetBackgroundColour("Black")
-        self.SetFont(wx.Font(12, wx.MODERN, wx.NORMAL, wx.NORMAL, 0, "Fira code"))
-        
-    def bind_find_events(self, win):
-        """Bind events of the find and replace dialog
-
-        :param win: the main main_window
-        :type win: MainWindow class
-        """
-        win.Bind(wx.EVT_FIND, self.OnFind)
-        win.Bind(wx.EVT_FIND_NEXT, self.OnFind)
-        win.Bind(wx.EVT_FIND_REPLACE, self.OnFind)
-        win.Bind(wx.EVT_FIND_REPLACE_ALL, self.OnFind)
-        win.Bind(wx.EVT_FIND_CLOSE, self.OnFindClose)
-
-    def OnShowFindReplace(self, evt=None):
-        """Show the Find and Replace dialog and call the bind_find_events method
-
-        :param evt: , defaults to None
-        :type evt: wx.Event, optional
-        """
-        dlg = wx.FindReplaceDialog(self, self.findData, "Find & Replace", wx.FR_REPLACEDIALOG)
-
-        self.bind_find_events(dlg)
-        dlg.Show(True)
-
-    def OnFind(self, evt):
-        """Method to find a string on the current tab editor
-
-        :param evt: Event which decide to what execute
-        :type evt: wx.Event
-        """
-        self.txt = self.GetValue()
-        map = {
-            wx.wxEVT_COMMAND_FIND : "FIND",
-            wx.wxEVT_COMMAND_FIND_NEXT : "FIND_NEXT",
-            wx.wxEVT_COMMAND_FIND_REPLACE : "REPLACE",
-            wx.wxEVT_COMMAND_FIND_REPLACE_ALL : "REPLACE_ALL",
-            }
-
-        et = evt.GetEventType()
-
-        if et in map:
-            evtType = map[et]
-        if et in [wx.wxEVT_COMMAND_FIND_NEXT]:
-            find_next(self, evt)
-        if et in [wx.wxEVT_COMMAND_FIND_REPLACE]:
-            replace(self, evt)
-        if et in [wx.wxEVT_COMMAND_FIND_REPLACE_ALL]:
-            while find_next(self, evt) == True:
-                replace(self, evt)
-        else:
-            replaceTxt = ""
-
-    def OnFindClose(self, evt):
-        """Close the find and replace dialog
-
-        :param evt: Event to close the dialog
-        :type evt: wx.Event
-        """
-        #print("FindReplaceDialog closing...\n")
-        evt.GetDialog().Destroy()
-
-class MyEditor(pysh.editwindow.EditWindow):
-    """Customizable Editor page
-
-    :param pysh.editwindow.EditWindow: see https://wxpython.org/Phoenix/docs/html/wx.py.html
-    :type pysh.editwindow.EditWindow: wx.py.editwindow.EditWindow
-    """
-
-    def __init__(self, parent, topwindow, text, on_card):
-        """ Constructor to init a Tab on the Notebook
-        
         :param parent: NotebookPanel class
         :type parent: NotebookPanel class
         :param topwindow: the MainWindow in this case
@@ -134,39 +26,42 @@ class MyEditor(pysh.editwindow.EditWindow):
         pysh.editwindow.EditWindow.__init__(self, parent=parent)
 
         self.__set_properties(parent, topwindow, on_card)
-        self.__set_style(parent)
+        self.set_style(parent)
         self.__attach_events()
         self.custom_stc()
         self.SetValue(text)
-    
+
     def custom_stc(self):
         self.CmdKeyAssign(ord('+'), stc.STC_SCMOD_CTRL, stc.STC_CMD_ZOOMIN)
         self.CmdKeyAssign(ord('-'), stc.STC_SCMOD_CTRL, stc.STC_CMD_ZOOMOUT)
 
-        self.SetLexer(stc.STC_LEX_PYTHON)
         self.SetKeyWords(0, " ".join(keyword.kwlist))
 
         self.SetProperty("fold", "1")
         self.SetProperty("tab.timmy.whinge.level", "1")
-        self.SetMargins(0,0)
+        self.SetMargins(0, 0)
 
         self.SetViewWhiteSpace(False)
-        # Setup a margin to hold fold markers
-        #self.SetFoldFlags(16)  ###  WHAT IS THIS VALUE?  WHAT ARE THE OTHER FLAGS?  DOES IT MATTER?
         self.SetMarginType(2, stc.STC_MARGIN_SYMBOL)
         self.SetMarginMask(2, stc.STC_MASK_FOLDERS)
         self.SetMarginSensitive(2, True)
         self.SetMarginWidth(2, 12)
 
         # Like a flattened tree control using circular headers and curved joins
-        self.MarkerDefine(stc.STC_MARKNUM_FOLDEROPEN,    stc.STC_MARK_CIRCLEMINUS,          "white", "#404040")
-        self.MarkerDefine(stc.STC_MARKNUM_FOLDER,        stc.STC_MARK_CIRCLEPLUS,           "white", "#404040")
-        self.MarkerDefine(stc.STC_MARKNUM_FOLDERSUB,     stc.STC_MARK_VLINE,                "white", "#404040")
-        self.MarkerDefine(stc.STC_MARKNUM_FOLDERTAIL,    stc.STC_MARK_LCORNERCURVE,         "white", "#404040")
-        self.MarkerDefine(stc.STC_MARKNUM_FOLDEREND,     stc.STC_MARK_CIRCLEPLUSCONNECTED,  "white", "#404040")
-        self.MarkerDefine(stc.STC_MARKNUM_FOLDEROPENMID, stc.STC_MARK_CIRCLEMINUSCONNECTED, "white", "#404040")
-        self.MarkerDefine(stc.STC_MARKNUM_FOLDERMIDTAIL, stc.STC_MARK_TCORNERCURVE,         "white", "#404040")
-
+        self.MarkerDefine(stc.STC_MARKNUM_FOLDEROPEN,
+                          stc.STC_MARK_CIRCLEMINUS,          "white", "#404040")
+        self.MarkerDefine(stc.STC_MARKNUM_FOLDER,
+                          stc.STC_MARK_CIRCLEPLUS,           "white", "#404040")
+        self.MarkerDefine(stc.STC_MARKNUM_FOLDERSUB,
+                          stc.STC_MARK_VLINE,                "white", "#404040")
+        self.MarkerDefine(stc.STC_MARKNUM_FOLDERTAIL,
+                          stc.STC_MARK_LCORNERCURVE,         "white", "#404040")
+        self.MarkerDefine(stc.STC_MARKNUM_FOLDEREND,
+                          stc.STC_MARK_CIRCLEPLUSCONNECTED,  "white", "#404040")
+        self.MarkerDefine(stc.STC_MARKNUM_FOLDEROPENMID,
+                          stc.STC_MARK_CIRCLEMINUSCONNECTED, "white", "#404040")
+        self.MarkerDefine(stc.STC_MARKNUM_FOLDERMIDTAIL,
+                          stc.STC_MARK_TCORNERCURVE,         "white", "#404040")
 
         self.Bind(stc.EVT_STC_UPDATEUI, self.OnUpdateUI)
         self.Bind(stc.EVT_STC_MARGINCLICK, self.OnMarginClick)
@@ -188,12 +83,6 @@ class MyEditor(pysh.editwindow.EditWindow):
                                  'fubar(param1, param2)')
             # Code completion
             else:
-                #lst = []
-                #for x in range(50000):
-                #    lst.append('%05d' % x)
-                #st = " ".join(lst)
-                #print(len(st))
-                #self.AutoCompShow(0, st)
 
                 kw = keyword.kwlist[:]
                 kw.append("zzzzzz?2")
@@ -202,7 +91,7 @@ class MyEditor(pysh.editwindow.EditWindow):
                 kw.append("zzaaaaa?2")
                 kw.append("zzbaaaa?2")
                 kw.append("this_is_a_longer_value")
-                #kw.append("this_is_a_much_much_much_much_much_much_much_longer_value")
+                # kw.append("this_is_a_much_much_much_much_much_much_much_longer_value")
 
                 kw.sort()  # Python sorts are case sensitive
                 self.AutoCompSetIgnoreCase(False)  # so this needs to match
@@ -242,14 +131,10 @@ class MyEditor(pysh.editwindow.EditWindow):
         if braceAtCaret >= 0:
             braceOpposite = self.BraceMatch(braceAtCaret)
 
-        if braceAtCaret != -1  and braceOpposite == -1:
+        if braceAtCaret != -1 and braceOpposite == -1:
             self.BraceBadLight(braceAtCaret)
         else:
             self.BraceHighlight(braceAtCaret, braceOpposite)
-            #pt = self.PointFromPosition(braceOpposite)
-            #self.Refresh(True, wxRect(pt.x, pt.y, 5,5))
-            #print(pt)
-            #self.Refresh(False)
 
     def OnMarginClick(self, evt):
         # fold and unfold as needed
@@ -341,7 +226,7 @@ class MyEditor(pysh.editwindow.EditWindow):
 
     def __set_properties(self, parent, topwindow, on_card):
         """Set the properties and declare the variables of the instance
-        
+
         :param parent: NotebookPanel class
         :type parent: NotebookPanel class
         :param topwindow: the MainWindow in this case
@@ -359,8 +244,9 @@ class MyEditor(pysh.editwindow.EditWindow):
         self.pos = 0
         self.size = 0
         self.on_card = on_card
+        self.parent = parent
 
-    def __set_style(self, parent):
+    def set_style(self, parent):
         """Load the first style of the editor
 
         :param parent: Notebook Panel
@@ -375,11 +261,11 @@ class MyEditor(pysh.editwindow.EditWindow):
         Bind events related to this class
         """
         self.Bind(wx.EVT_TEXT, self.topwindow.actualize_status_bar)
-        
+
     def bind_find_events(self, win):
         """Bind events of the find and replace dialog
 
-        :param win: the main main_window
+        :param win: the main frame
         :type win: MainWindow class
         """
         win.Bind(wx.EVT_FIND, self.OnFind)
@@ -394,7 +280,8 @@ class MyEditor(pysh.editwindow.EditWindow):
         :param evt: , defaults to None
         :type evt: wx.Event, optional
         """
-        dlg = wx.FindReplaceDialog(self, self.findData, "Find & Replace", wx.FR_REPLACEDIALOG)
+        dlg = wx.FindReplaceDialog(
+            self, self.findData, "Find & Replace", wx.FR_REPLACEDIALOG)
 
         self.bind_find_events(dlg)
         dlg.Show(True)
@@ -406,26 +293,15 @@ class MyEditor(pysh.editwindow.EditWindow):
         :type evt: wx.Event
         """
         self.txt = self.GetValue()
-        map = {
-            wx.wxEVT_COMMAND_FIND : "FIND",
-            wx.wxEVT_COMMAND_FIND_NEXT : "FIND_NEXT",
-            wx.wxEVT_COMMAND_FIND_REPLACE : "REPLACE",
-            wx.wxEVT_COMMAND_FIND_REPLACE_ALL : "REPLACE_ALL",
-            }
-
         et = evt.GetEventType()
 
-        if et in map:
-            evtType = map[et]
         if et in [wx.wxEVT_COMMAND_FIND_NEXT]:
             find_next(self, evt)
         if et in [wx.wxEVT_COMMAND_FIND_REPLACE]:
             replace(self, evt)
         if et in [wx.wxEVT_COMMAND_FIND_REPLACE_ALL]:
-            while find_next(self, evt) == True:
+            while find_next(self, evt) is True:
                 replace(self, evt)
-        else:
-            replaceTxt = ""
 
     def OnFindClose(self, evt):
         """Close the find and replace dialog
@@ -433,5 +309,5 @@ class MyEditor(pysh.editwindow.EditWindow):
         :param evt: Event to close the dialog
         :type evt: wx.Event
         """
-        #print("FindReplaceDialog closing...\n")
+        # print("FindReplaceDialog closing...\n")
         evt.GetDialog().Destroy()

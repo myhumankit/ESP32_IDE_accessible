@@ -49,9 +49,6 @@ DETECTED_FLASH_SIZES = {0x12: '256KB', 0x13: '512KB', 0x14: '1MB',
 
 def print_wx_info(console, msg):
     print(msg)
-    #console.write(msg)
-    #console.write('\n')
-    #console.flush()
 
 def check_supported_function(func, check_func):
     """
@@ -1291,7 +1288,7 @@ class ESP32FirmwareImage(BaseFirmwareImage):
         return "%s.bin" % (os.path.splitext(input_file)[0])
 
     def warn_if_unusual_segment(self, offset, size, is_irom_segment):
-        pass  # TODO: add warnings for ESP32 segment offset/size combinations that are wrong
+        pass
 
     def save(self, filename):
         padding_segments = 0
@@ -1908,7 +1905,7 @@ def downOkReset():
     #updateOkReset._port.close()
     updateOkReset.hard_reset()
     updateOkReset._port.close()
-    
+
 def espCloseReset(port,board):
     if board=="TPYBoardV202":
       board="esp8266"
@@ -2013,9 +2010,9 @@ def Burn(console, board,filename,port,is_erase,writeFlashAddr):
             sys.stdout.flush()
             if esp.IS_STUB:
                 esp.soft_reset(True)  # exit stub back to ROM loader
-                
+
         esp._port.close()
-        
+
         global updateOkReset
         updateOkReset=esp
         if is_erase == "no":
@@ -2245,5 +2242,3 @@ B1xg4xStcrsOSGL4ilWuK3BmLjMl0WLK1RrKYnB87YLxCFSgp6TtYXDF9WU9xwo4XPyaknnQ1BnAyq/3
 ys0acLMhm6h9txBl4FsMH3iKlSwHBFH9GzPZC0lj3xJUYza0gfbwIVCWTn6jbJS+6ktfTFo93wb+P+Hyn5log9eSTdhe5TQNqP4TlYWG/IpQAo7d1MEY1t+VNBISfOq7zeDJboi5gs2D2DFQV7G8sEP2nQIW7bLJ\
 sX2ymfJTFVqyowu+bOee7AVkbMrtNgkzIaRajLVN/NdHOHefRuLj+R267ywLOYwZLU0DI2E5LxmLa2svwb8O+/lfi/Ya/kZMZXVZFKoqtfvSXy2uv/nBIstLN9i1i5b/mCxq/m7xl5hQMZlUhda//gfTQr5T\
 """)))
-
-

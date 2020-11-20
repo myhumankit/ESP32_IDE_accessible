@@ -1,4 +1,6 @@
-import wx, json
+import wx
+import json
+
 
 def create_Menu_item(parentMenu, id_id, text, submenu, theme_name):
 
@@ -12,5 +14,5 @@ def create_Menu_item(parentMenu, id_id, text, submenu, theme_name):
         return item
     except Exception as e:
         print(e)
-        #print("Can't customize ItemMenu")
+        # print("Can't customize ItemMenu")
         return item
