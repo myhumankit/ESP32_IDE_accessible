@@ -19,7 +19,7 @@ def GetCmdReturn(shell_text, cmd):
         return_cmd = return_cmd[len(return_cmd) - 1]
         return_cmd = return_cmd[:-4]
     except Exception:
-        print("ERROR: |" + shell_text + "|")
+        print("Error command back: |" + shell_text + "|")
         return "err"
     return return_cmd
 
@@ -34,9 +34,7 @@ def serial_read_data(frame, data):
     msg = frame.keypressmsg
     if data == b'':
         return
-    check = str(data)
     txt = data.decode('UTF-8', 'ignore')
-    print("DEDCODE = |", check, "|")
     if msg == "\x08":
         frame.keypressmsg = "debug"
         return remove_char(frame.shell, frame)
@@ -70,7 +68,6 @@ def print_device_data(frame, txt):
     if frame.last_enter:
         frame.cmd_return += txt
     if txt.find(">>>") >= 0:
-        # my_speak(frame, frame.cmd_return)
         frame.cmd_return = ""
         frame.last_enter = False
     if not frame.on_key:

@@ -28,7 +28,7 @@ class ToolsMenu(wx.Menu):
         self.Append(wx.ID_CANCEL, "Close Connection\tF3")
         self.Append(wx.ID_DOWNLOAD, "Upload\tF4")
         self.Append(wx.ID_EXECUTE, "UploadandRun\tF5")
-        self.Append(wx.ID_STOP, "Stop\tF6")
+        self.Append(wx.ID_STOP, "&Stop\tCTRL+C")
         self.Append(wx.ID_BURN_FIRMWARE, "BurnFirmware\tF7")
         self.Append(wx.ID_BOARD, "Themes", self.themes_submenu)
 
@@ -203,7 +203,7 @@ class ToolsMenu(wx.Menu):
         :type evt: wx.Event
         """
         if self.frame.serial.isOpen():
-            self.put_cmd(self.frame, '\x03')
+            put_cmd(self.frame, '\x03')
         else:
             self.frame.shell.AppendText("serial not open")
 

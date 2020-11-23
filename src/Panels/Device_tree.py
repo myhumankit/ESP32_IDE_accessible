@@ -170,23 +170,20 @@ class DeviceTree(wx.TreeCtrl):
         :type name: str
         """
         parent_it = self.GetItemParent(item)
-        list = []
-        print("device = ", self.GetItemText(self.device))
-        print("item = ", self.GetItemText(self.item))
-        print("parent = ", self.GetItemText(parent_it))
+        list_files = []
         if self.GetItemText(item) == "Device":
             self.path = "."
-            return
-        print("device = ", self.GetItemText(self.device))
+            return self.path
         while parent_it != self.device:
-            list.insert(0, self.GetItemText(parent_it))
+            list_files.insert(0, self.GetItemText(parent_it))
             parent_it = self.GetItemParent(parent_it)
-        list.insert(0, self.GetItemText(parent_it))
-        for i in list:
+        list_files.insert(0, self.GetItemText(parent_it))
+        for i in list_files:
             if i == "Device":
                 i = "."
             self.path += i + "/"
         self.path += name
+        return self.path
 
     def open_file(self):
         """
@@ -200,7 +197,7 @@ class DeviceTree(wx.TreeCtrl):
         put_cmd(self.frame, "print(impossible.read())\r\n")
         self.frame.open_file = True
         while self.frame.open_file_txt.find(">>>") < 0:
-            print("Wait...")
+            print("", end='')
         self.frame.open_file = False
         put_cmd(self.frame, "impossible.close()\r\n")
         res = self.frame.open_file_txt[len("print(impossible.read())\n"):]
@@ -276,9 +273,10 @@ class ClipboardMenuDevice(wx.Menu):
             self.Bind(wx.EVT_MENU, self.OnRun, id=wx.ID_RUN)
             self.Bind(wx.EVT_MENU, self.frame.device_tree.OnActivate,
                       id=wx.ID_OPEN)
-            self.Bind(wx.EVT_MENU, self.OnClose, id=wx.ID_CLOSE)
+            self.Bind(wx.EVT_MENU, self.OnStop, id=wx.ID_CLOSE)
             self.Bind(wx.EVT_MENU, self.OnDelete, id=wx.ID_DELETE)
             self.Bind(wx.EVT_MENU, self.OnDefaultRun, id=wx.ID_DEFAULT)
+            self.Bind(wx.EVT_MENU, self.OnRename, id=wx.ID_RENAME)
 
     def OnRun(self, evt):
         self.device_tree.path = ""
@@ -309,7 +307,7 @@ class ClipboardMenuDevice(wx.Menu):
                     ok = True
         self.frame.show_cmd = False
 
-    def OnClose(self, evt):
+    def OnStop(self, evt):
         # CHECK SI UNE PAGE AVEC LE NOM DU PATH EST OUVERTE DANS L'EDITEUR
         path = self.item.GetPath()
         print(path)
@@ -355,9 +353,33 @@ class ClipboardMenuDevice(wx.Menu):
                     ok = True
         self.frame.show_cmd = True
 
+    def OnRename(self, evt):
+        self.device_tree.path = ""
+        name = self.device_tree.GetItemText(self.item)
+        path_actual = self.device_tree.get_path_item(self.item, name)
+        ok = False
+        txt = "Rename the file"
+        message = "Rename"
+        self.frame.show_cmd = False
+        while not ok:
+            with wx.TextEntryDialog(self.frame, txt, message) as dlg:
+                dlg.CenterOnParent()
+                result = dlg.ShowModal()
+                if result == wx.ID_OK:
+                    new_name = dlg.GetValue()
+                    self.device_tree.SetItemText(self.item, new_name)
+                    self.device_tree.path = ""
+                    new_path = self.device_tree.get_path_item(self.item, new_name)
+                    self.frame.exec_cmd("os.rename('%s', '%s')\r\n" % (path_actual, new_path))
+                    ok = True
+                    time.sleep(10)
+                    treeModel(self.frame)
+                else:
+                    ok = True
+        self.frame.show_cmd = True
+
 
 def setDefaultProg(frame, filename):
-    print("setDefaultProg:%s" % filename)
     frame.show_cmd = False
     ProgMsg = ""
     cmd = "myfile=open(\'main.py\',\'w\')\r\n"
@@ -380,7 +402,6 @@ def setDefaultProg(frame, filename):
 
 
 def getFileTree(frame, dir):
-    print("GET FILE TREE : %s" % (dir))
     frame.cmd_return = ""
     frame.get_cmd = True
     # TODO: exec_cmd a la place de get_cmd_result
@@ -388,7 +409,6 @@ def getFileTree(frame, dir):
     if result == "err":
         return result
     filemsg = result[result.find("["):result.find("]")+1]
-    print("FILEMSG = " + filemsg)
 
     ret = json.loads("{}")
     ret[dir] = []
@@ -402,21 +422,18 @@ def getFileTree(frame, dir):
             pass
         else:
             filelist.append(i)
-    print("FILE LIST =", filelist)
     for i in filelist:
         res = frame.exec_cmd("os.stat(\'%s\')\r\n" % (dir + "/" + i))
         if res == "err":
             return res
         isdir = res.split("\n")[1]
         isdir = isdir.split(", ")
-        print("ISDIR = ", isdir)
         try:
             adir = isdir[0]
             if adir.find("(") >= 0:
                 adir = adir[1:]
             if adir.find(")") >= 0:
                 adir = adir[:-1]
-            print("ADIR = ", adir)
             if int(adir) == 0o040000:
                 if i == "System Volume Information":
                     pass
@@ -425,7 +442,7 @@ def getFileTree(frame, dir):
             else:
                 ret[dir].append(i)
         except Exception as e:
-            print("ERROr: " + e)
+            print("Error Build TreeView: ", e)
             return "err"
     return ret
 
@@ -441,22 +458,17 @@ def treeModel(frame):
     if res == "err":
         frame.cmd_return = ""
         return
-    print("RESSSSSSS")
-    print(res)
     try:
         ReflushTree(frame, frame.device_tree.device, res['.'])
     except Exception as e:
-        print(e)
+        print("Error Build TreeView", e)
     frame.cmd_return = ""
     frame.show_cmd = True
 
 
 def ReflushTree(frame, device, msg):
     if msg == "err":
-        print("soucii")
         return
-    print("reflushTree=====================%s" % msg)
-    print("MSG " + str(msg))
     tree = frame.device_tree
     if type(msg) is str:  # : fichier
         child = tree.AppendItem(device, msg)
@@ -482,17 +494,11 @@ def ReflushTree(frame, device, msg):
 
 
 def save_on_card(frame, page):
-    print(page.directory)
-    print(page.filename)
-
     # Check if save is required
     if (page.GetValue() != page.last_save):
         page.saved = False
         # Grab the content to be saved
         save_as_file_content = page.GetValue()
-
-        print("|+|", str(save_as_file_content), "|+|")
-        time.sleep(5)
         frame.show_cmd = False
         cmd = "f = os.remove('%s')\r\n" % (page.directory)
         frame.exec_cmd(cmd)

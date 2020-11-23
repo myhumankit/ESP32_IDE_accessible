@@ -19,7 +19,6 @@ def put_cmd(frame, msg_cmd):
 
 async def SendCmdAsync(frame, cmd):
     frame.cmd_return = ""
-    print("CMDsend = " + cmd)
     put_cmd(frame, cmd)
     await asyncio.sleep(frame.time_to_send)
 
@@ -41,9 +40,7 @@ class Exec_cmd(Thread):
 
 def convert_cmd(cmd, writemsg):
     if type(cmd) is bytes:
-        # print("BYTES")
         writemsg = cmd
     elif type(cmd) is str:
-        # print("STR")
         writemsg = cmd.encode('utf-8')
     return writemsg

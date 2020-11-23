@@ -40,7 +40,6 @@ def customize_editor(editor, theme_choice):
     :param theme: Theme to apply on the EditWindow
     :type theme: str
     """
-    print(theme_choice)
     try:
         file = open("./customize.json")
         theme = json.load(file)

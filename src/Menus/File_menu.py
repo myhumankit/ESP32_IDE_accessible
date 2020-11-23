@@ -143,13 +143,10 @@ class FileMenu(wx.Menu):
         :type evt: wx.Event
         """
         notebookP = self.frame.notebook
-        print("YO PAS POSSIBLE", notebookP.theme_choice)
-        # RAJOUTER une variable on_card and Value
         new_tab = Styled_Editor(notebookP, self.frame, "", False)
         notebookP.AddPage(new_tab, "Tab %s" % new_tab.id, select=True)
         notebookP.tab_num = notebookP.GetPageCount()
         new_tab.SetFocus()
-        # print(new_tab.id)
 
     def OnClosePage(self, evt):
         """Close the current page and update id order
@@ -161,6 +158,20 @@ class FileMenu(wx.Menu):
 
         notebook = self.frame.notebook
         page = notebook.GetCurrentPage()
+        if page and not page.saved:
+            ok = False
+            while not ok:
+                with wx.MessageDialog(self.frame,
+                                      "File_not_saved ! Save ?",
+                                      "File_not_saved ! Save ?",
+                                      style=wx.YES_NO) as dlg:
+                    result = dlg.ShowModal()
+                    dlg.CenterOnParent()
+                if result == wx.ID_YES:
+                    self.OnSave(None)
+                    ok = True
+                else:
+                    ok = True
         if page:
             notebook.DeletePage(page.id - 1)
             notebook.tab_num = notebook.GetPageCount()

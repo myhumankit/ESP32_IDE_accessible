@@ -1,5 +1,5 @@
 ('C:\\Users\\evans\\Desktop\\IDE_MicroPython_Accessible\\build\\IDE_accessible_MHK\\IDE_accessible_MHK.exe',
- False,
+ True,
  False,
  True,
  None,
@@ -45,7 +45,7 @@
  [],
  False,
  False,
- 1605894239,
- [('runw.exe',
-   'c:\\users\\evans\\appdata\\local\\programs\\python\\python37\\lib\\site-packages\\PyInstaller\\bootloader\\Windows-64bit\\runw.exe',
+ 1606148358,
+ [('run.exe',
+   'c:\\users\\evans\\appdata\\local\\programs\\python\\python37\\lib\\site-packages\\PyInstaller\\bootloader\\Windows-64bit\\run.exe',
    'EXECUTABLE')])

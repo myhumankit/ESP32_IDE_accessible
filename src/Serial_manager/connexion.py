@@ -48,7 +48,6 @@ class ManageConnection():
         :type msg_cmd: string
         """
         try:
-            print("GET[%s]" % msg_cmd)
             count = 0
             msg_cmd = msg_cmd.split('(')[1]
             msg_cmd = msg_cmd.split(')')[0]
@@ -67,7 +66,7 @@ class ManageConnection():
             self.version = list_res[3]
             self.machine = list_res[4]
         except Exception as e:
-            print(e)
+            print("Error get infos device:", e)
 
     def download_and_run(self, filename):
         """Execute the file gived in params on the MicroPython card

@@ -11,7 +11,6 @@ from api.install_fonts import Install_fonts
 from Serial_manager.connexion import TerminalSetup, ManageConnection
 from menus import init_top_menu, init_toolbar
 from all_panels import create_panels, create_status_bar
-from Utils.voice_synthese import my_speak
 from Serial_manager.receive_infos import serial_read_data, read_cmd
 from constantes import NEWLINE_CR, NEWLINE_LF, NEWLINE_CRLF
 from Serial_manager.send_infos import Exec_cmd
@@ -75,19 +74,20 @@ class MainWindow(wx.Frame):
         create_panels(self)
         init_toolbar(self)
         InitShortcuts(self)
-
         self.__attach_events()
+        print("Initialisation OK")
 
     def __attach_events(self):
         self.shell.Bind(wx.EVT_CHAR, self.OnKey)
         self.Bind(wx.EVT_CLOSE, self.top_menu.MenuFile.OnExit)
 
     def exec_cmd(self, cmd):
+        print("Commande sent ==>", cmd)
         self.read_thread = Exec_cmd(cmd, self)
         self.read_thread.start()
         self.read_thread.join()
         read_cmd(self, cmd[:-2])
-        print("RES==", self.result)
+        print("Result Commande ==>", self.result)
         return self.result
 
     def start_thread_serial(self):
@@ -114,7 +114,6 @@ class MainWindow(wx.Frame):
         code = evt.GetUnicodeKey()
         if code < 256:
             code = evt.GetKeyCode()
-        print("keypress", code)
         if code == 13:  # is it a newline?
             self.serial.write(b'\n')
             self.on_key = False   # send LF
@@ -179,16 +178,12 @@ class MainWindow(wx.Frame):
         :param evt: Event binded to trigger the function
         :type evt: wx.Event https://wxpython.org/Phoenix/docs/html/wx.Event.html
         """
-        print("UP")
         widgets = [self.device_tree, self.shell, self.notebook.GetCurrentPage()]
-        names = ["Device File Tree", "Shell Panel", "Curent Editor"]
         if self.who_is_focus == 2 and not widgets[self.who_is_focus]:
             self.who_is_focus = 0
             widgets[self.who_is_focus].SetFocus()
-            #my_speak(self, names[self.who_is_focus])
             return
         widgets[self.who_is_focus].SetFocus()
-        #my_speak(self, names[self.who_is_focus])
         if self.who_is_focus == 2:
             self.who_is_focus = 0
         else:
@@ -200,44 +195,16 @@ class MainWindow(wx.Frame):
         :param evt: Event binded to trigger the function
         :type evt: wx.Event https://wxpython.org/Phoenix/docs/html/wx.Event.html
         """
-        print("DOWN")
         widgets = [self.device_tree, self.shell, self.notebook.GetCurrentPage()]
-        names = ["Device File Tree", "Shell Panel", "Curent Editor"]
         if self.who_is_focus == 2 and not widgets[self.who_is_focus]:
             self.who_is_focus -= 1
             widgets[self.who_is_focus].SetFocus()
-            #my_speak(self, names[self.who_is_focus])
             return
         widgets[self.who_is_focus].SetFocus()
-        #my_speak(self, names[self.who_is_focus])
         if self.who_is_focus == 0:
             self.who_is_focus = 2
         else:
             self.who_is_focus -= 1
-
-    def OnZoomIn(self, evt):
-        """Zoom On which affects the EditWindow panel
-
-        :param evt: Event binded to trigger the function
-        :type evt: wx.Event https://wxpython.org/Phoenix/docs/html/wx.Event.html
-        """
-        page = self.notebook.GetCurrentPage()
-        if not page:
-            page.ZoomIn()
-        if self.shell.HasFocus():
-            self.shell.ZoomIn()
-
-    def OnZoomOut(self, evt):
-        """Zoom Out which affects the EditWindow panel
-
-        :param evt: Event binded to trigger the function
-        :type evt: wx.Event https://wxpython.org/Phoenix/docs/html/wx.Event.html
-        """
-        page = self.notebook.GetCurrentPage()
-        if page is None:
-            page.ZoomOut()
-        if self.shell.HasFocus() is True:
-            self.shell.ZoomOut()
 
     def OnStatus(self, evt):
         """Set the Focus on the Status Bar
@@ -300,8 +267,7 @@ if __name__ == "__main__":
                      "./FiraCode-Retina.ttf", "./FiraCode-Light.ttf"]
             Install_fonts(fonts)
         except Exception as e:
-            print(e)
-            # print("install ttf false.")
+            print("Error during Install Fonts:", e)
     app = MyApp()
     app.MainLoop()
-    print("FIN")
+    print("Exit")

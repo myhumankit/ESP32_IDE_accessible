@@ -16,7 +16,6 @@ def find_next(editor, evt):
     findTxt = evt.GetFindString()
     editor.pos = editor.txt.find(findTxt, editor.pos)
     if editor.pos == -1:
-        # print("String not found")
         editor.pos = 0
         editor.ClearSelections()
         return False

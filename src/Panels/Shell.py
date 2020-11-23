@@ -14,6 +14,19 @@ class ShellPanel(wx.TextCtrl):
                              wx.TE_READONLY | wx.TE_RICH)
         self.__set_properties__(frame)
 
+    def InitShortcuts(self):
+        """Initiate shortcuts of the Application with wx.Accelerator Table
+            :param frame: parent class to bind events)
+            :Type frame: wx.frame
+         """
+        accel_tbl = wx.AcceleratorTable([Init_paste(self),
+                                        ])
+        self.SetAcceleratorTable(accel_tbl)
+
+    def Init_paste(self):
+        frame.Bind(wx.EVT_MENU, frame.OnStatus, id=wx.ID_STATIC)
+        return (wx.ACCEL_CTRL,  wx.WXK_END, wx.ID_STATIC)
+
     def __set_properties__(self, frame):
         self.frame = frame
         self.SetName("Python Shell")
@@ -22,7 +35,6 @@ class ShellPanel(wx.TextCtrl):
 
     def custom_shell(self, theme_choice):
         try:
-            print("HELLO")
             file = open("./customize.json")
             theme = json.load(file)
             file.close()
@@ -45,3 +57,12 @@ class ShellPanel(wx.TextCtrl):
 
     def set_focus_shell(self, evt):
         self.SetFocus()
+
+
+class Mycommands():
+    def __init__(self, shell):
+        self.list_cmd = []
+        self.cursor = 0
+
+    def down(self):
+        print("")

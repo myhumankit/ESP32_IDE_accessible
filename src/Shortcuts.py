@@ -6,25 +6,6 @@ wx.ID_SHELL_FOCUS = wx.NewId()
 wx.ID_TREE_FOCUS = wx.NewId()
 
 
-def stopvocal(frame):
-    print("GROSSSSS")
-    if not frame.speak_on:
-        frame.speak_on = True
-    else:
-        frame.speak_on = False
-
-
-def InitCTRL(frame):
-    """F6 to navigate between regions
-    :param frame: see InitShorcuts->param
-    :type frame: idem
-    :return: entrie(here tuple) for AcceleratorTable
-    :rtype: tuple(int, int, int)
-    """
-    frame.Bind(wx.EVT_MENU, lambda x: stopvocal(frame), id=wx.ID_VOCAL)
-    return (wx.ACCEL_CTRL,  ord('m'), wx.ID_VOCAL)
-
-
 def InitF6(frame):
     """F6 to navigate between regions
     :param frame: see InitShorcuts->param
@@ -92,28 +73,6 @@ def InitMajF10(frame):
     return (wx.ACCEL_SHIFT,  wx.WXK_F10, wx.ID_JUSTIFY_RIGHT)
 
 
-def InitCTRL_plus(frame):
-    """Ctrl + = to zoom on the editor
-    :param frame: see InitShorcuts->param
-    :type frame: idem
-    :return: entrie(here tuple) for AcceleratorTable
-    :rtype: tuple(int, int, int)
-    """
-    frame.Bind(wx.EVT_MENU, frame.OnZoomIn, id=wx.ID_ZOOM_IN)
-    return (wx.ACCEL_CTRL,  ord('='), wx.ID_ZOOM_IN)
-
-
-def InitCTRL_moins(frame):
-    """Ctrl + - to zoom on the editor
-    :param frame: see InitShorcuts->param
-    :type frame: idem
-    :return: entrie(here tuple) for AcceleratorTable
-    :rtype: tuple(int, int, int)
-    """
-    frame.Bind(wx.EVT_MENU, frame.OnZoomOut, id=wx.ID_ZOOM_OUT)
-    return (wx.ACCEL_CTRL,  ord('-'), wx.ID_ZOOM_OUT)
-
-
 def InitCTRL_fin(frame):
     """Ctrl + fin to set focus on the status
     :param frame: see InitShorcuts->param
@@ -135,9 +94,6 @@ def InitShortcuts(frame):
                                     InitF9(frame),
                                     InitF10(frame),
                                     InitF11(frame),
-                                    InitCTRL(frame),
-                                    InitCTRL_plus(frame),
-                                    InitCTRL_moins(frame),
                                     InitCTRL_fin(frame),
                                     InitMajF6(frame),
                                     InitMajF10(frame)

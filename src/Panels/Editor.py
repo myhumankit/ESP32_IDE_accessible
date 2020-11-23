@@ -253,6 +253,8 @@ class Styled_Editor(pysh.editwindow.EditWindow):
         :type parent: Notebook class
         """
         self.setDisplayLineNumbers(True)
+        self.CmdKeyAssign(ord('='), stc.STC_KEYMOD_CTRL, stc.STC_CMD_ZOOMIN)
+        self.CmdKeyAssign(ord('6'), stc.STC_KEYMOD_CTRL, stc.STC_CMD_ZOOMOUT)
         init_editor_style(self)
         customize_editor(self, self.theme_choice)
 
