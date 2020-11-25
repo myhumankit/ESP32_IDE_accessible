@@ -21,7 +21,7 @@ def init_editor_style(editor):
     :param editor: editorWindow
     :type editor: wx.py.editwindow.EditWindow
     """
-    font = wx.Font(12, wx.MODERN, wx.NORMAL, wx.NORMAL, 0, "Fira Code IScript")
+    font = wx.Font(12, wx.MODERN, wx.NORMAL, wx.NORMAL, 0, "Arial")
     editor.SetIndentationGuides(stc.STC_IV_LOOKFORWARD)
     if editor.parent.colorized:
         editor.SetLexer(wx.stc.STC_LEX_PYTHON)
@@ -51,7 +51,7 @@ def customize_editor(editor, theme_choice):
                        style=wx.FONTSTYLE_NORMAL,
                        weight=wx.FONTWEIGHT_NORMAL,
                        underline=False,
-                       faceName="Fira Code",
+                       faceName="Arial",
                        encoding=0)
         customize_lexer_stcstyle(editor, theme['Panels Colors'], font)
         customize_lexer_pystyle(editor, theme, font)
@@ -106,13 +106,16 @@ def customize_lexer_pystyle(editor, theme, font):
             x += 1
 
 
-def activate_highlighted_syntax(notebook):
+def activate_highlighted_syntax(notebook, theme_menu):
     page = notebook.GetCurrentPage()
     if notebook.colorized:
         notebook.colorized = False
         if page:
             customize_editor(page, notebook.theme_choice)
+            theme_menu.syntax_on_item.SetItemLabel("Syntax Highlight Disabled")
+            
     else:
         notebook.colorized = True
         if page:
             customize_editor(page, notebook.theme_choice)
+            theme_menu.syntax_on_item.SetItemLabel("Syntax Highlight Enabled")

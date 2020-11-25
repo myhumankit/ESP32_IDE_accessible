@@ -210,6 +210,23 @@ class ToolsMenu(wx.Menu):
     def OnBurnFirmware(self, event):
         burn_firmware(self.frame, event)
 
+
+class ThemesMenu(wx.Menu):
+    """Inits a instance of a wx.Menu to create a Theme menu and his buttons (Copy, Paste, Find,...)
+
+    :return: the Theme menu filled by buttons
+    :rtype: wx.Menu see https://wxpython.org/Phoenix/docs/html/wx.Menu.html
+    """
+
+    def __init__(self, frame):
+        wx.Menu.__init__(self, "")
+
+        self.frame = frame
+        self.Append(wx.ID_DARK_THEME, "&Dark")
+        self.Append(wx.ID_LIGHT_THEME, "&Light")
+        self.syntax_on_item = self.Append(wx.ID_NVDA_THEME,
+                                          "&Syntax Highlight Enabled")
+
     def OnChangeTheme(self, evt):
         """Change the theme of the frame and the lexer style
 
@@ -222,7 +239,9 @@ class ToolsMenu(wx.Menu):
         elif evt.Id == wx.ID_LIGHT_THEME:
             theme_name = 'Light Theme'
         else:
-            return activate_highlighted_syntax(self.frame.notebook)
+            return activate_highlighted_syntax(
+                self.frame.notebook,
+                self)
         try:
             change_theme_choice(self.frame, theme_name)
             page = self.frame.notebook.GetCurrentPage()
@@ -235,24 +254,11 @@ class ToolsMenu(wx.Menu):
             print(e)
 
 
-class ThemesMenu(wx.Menu):
-    """Inits a instance of a wx.Menu to create a Theme menu and his buttons (Copy, Paste, Find,...)
-
-    :return: the Theme menu filled by buttons
-    :rtype: wx.Menu see https://wxpython.org/Phoenix/docs/html/wx.Menu.html
-    """
-
-    def __init__(self, frame):
-        wx.Menu.__init__(self, "")
-
-        self.Append(wx.ID_DARK_THEME, "&Dark")
-        self.Append(wx.ID_LIGHT_THEME, "&Light")
-        self.Append(wx.ID_NVDA_THEME, "&NVDA Compatible")
-
 
 def create_new_file(frame):
     ok = False
     txt = "Select the name of the new file"
+    frame.exec_cmd("\r\n")
     frame.show_cmd = False
     while not ok:
         with wx.TextEntryDialog(frame, txt) as dlg:

@@ -86,7 +86,7 @@ class UpdateFirmwareDialog(wx.Dialog):
                        style=wx.FONTSTYLE_ITALIC,
                        weight=wx.FONTWEIGHT_NORMAL,
                        underline=False,
-                       faceName='Fira Code',  # Microsoft sans Serif
+                       faceName='Arial',  # Microsoft sans Serif
                        encoding=0)
         self.label_port.SetFont(font)
         self.label_erase_flash.SetFont(font)
@@ -231,7 +231,7 @@ class BurnFrame(wx.Dialog):
                                wx.TE_READONLY | wx.TE_RICH2)
         font = wx.Font(pointSize=12, family=wx.FONTFAMILY_SWISS,
                        style=wx.FONTSTYLE_SLANT, weight=wx.FONTWEIGHT_NORMAL,
-                       underline=False, faceName="Fira Code", encoding=0)
+                       underline=False, faceName="Arial", encoding=0)
         self.txt.SetFont(font)
         self.txt.SetMaxClientSize(self.txt.GetMaxSize())
         sizer.Add(self.txt, 1, wx.EXPAND | wx.ALL, 0)

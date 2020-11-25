@@ -27,7 +27,7 @@ class DeviceTree(wx.TreeCtrl):
                             style=wx.FONTSTYLE_SLANT,
                             weight=wx.FONTWEIGHT_NORMAL,
                             underline=False,
-                            faceName="Fira Code", encoding=0)
+                            faceName="Arial", encoding=0)
         self.theme_choice = frame.notebook.theme_choice
         self.main_root = self.AddRoot("")
         self.device = self.AppendItem(self.main_root, "Device")
@@ -191,19 +191,32 @@ class DeviceTree(wx.TreeCtrl):
         """
         name = self.GetItemText(self.item)
         self.get_path_item(self.item, name)
+        self.frame.exec_cmd("\r\n")
         self.frame.show_cmd = False
-        put_cmd(self.frame, "impossible = open('%s','r')\r\n" % self.path)
-        time.sleep(0.1)
+        #self.frame.exec_cmd("os.getsize('%s')\r\n" % self.path)
+        self.frame.exec_cmd("info = os.stat('%s')\r\n" % self.path)
+        size = int(self.frame.exec_cmd("info[6]\r\n"))
+        self.frame.exec_cmd("del info\r\n")
+        print("SIZE", size)
+        self.frame.exec_cmd("impossible = open('%s','r')\r\n" % self.path)
         put_cmd(self.frame, "print(impossible.read())\r\n")
         self.frame.open_file = True
-        while self.frame.open_file_txt.find(">>>") < 0:
-            print("", end='')
+        start_time = time.time()
+        end_time = 0
+        while len(self.frame.open_file_txt) < size and end_time < 10:
+            end_time = time.time() - start_time
+            #print(len(self.frame.open_file_txt))
+        if end_time >= 10:
+            self.frame.shell.AppendText("Can't Open file")
+            put_cmd(self.frame, "impossible.close()\r\n")
+            return
         self.frame.open_file = False
         put_cmd(self.frame, "impossible.close()\r\n")
         res = self.frame.open_file_txt[len("print(impossible.read())\n"):]
         res = res.split(">>>")[0]
+        print(bytes(res.encode('Utf-8')))
         notebookP = self.frame.notebook
-        notebookP.new_page(name, self.path, str(res), True)
+        notebookP.new_page(name, self.path, res, True)
         self.frame.open_file_txt = ""
         self.frame.show_cmd = True
 
@@ -283,6 +296,8 @@ class ClipboardMenuDevice(wx.Menu):
         self.device_tree.root_it = self.device_tree.GetRootItem()
         name = self.device_tree.GetItemText(self.item)
         self.device_tree.get_path_item(self.item, name)
+        put_cmd(self.device_tree.frame, "\r\n")
+        time.sleep(0.1)
         self.frame.exec_cmd("exec(open('%s').read())\r\n" %
                             self.device_tree.path)
 
@@ -293,6 +308,7 @@ class ClipboardMenuDevice(wx.Menu):
         self.device_tree.get_path_item(self.item, name)
         ok = False
         txt = "Select the name of the new directory"
+        self.frame.exec_cmd("\r\n")
         self.frame.show_cmd = False
         while not ok:
             with wx.TextEntryDialog(self.frame, txt) as dlg:
@@ -305,12 +321,11 @@ class ClipboardMenuDevice(wx.Menu):
                     ok = True
                 else:
                     ok = True
-        self.frame.show_cmd = False
+        self.frame.show_cmd = True
 
     def OnStop(self, evt):
         # CHECK SI UNE PAGE AVEC LE NOM DU PATH EST OUVERTE DANS L'EDITEUR
-        path = self.item.GetPath()
-        print(path)
+        self.frame.top_menu.MenuFile.OnStop(evt)
 
     def OnDelete(self, evt):
         self.device_tree.path = ""
@@ -338,6 +353,7 @@ class ClipboardMenuDevice(wx.Menu):
         self.device_tree.get_path_item(self.item, name)
         ok = False
         txt = "Select the name of the new file"
+        self.frame.exec_cmd("\r\n")
         self.frame.show_cmd = False
         while not ok:
             with wx.TextEntryDialog(self.frame, txt) as dlg:
@@ -360,6 +376,7 @@ class ClipboardMenuDevice(wx.Menu):
         ok = False
         txt = "Rename the file"
         message = "Rename"
+        self.frame.exec_cmd("\r\n")
         self.frame.show_cmd = False
         while not ok:
             with wx.TextEntryDialog(self.frame, txt, message) as dlg:
@@ -380,6 +397,7 @@ class ClipboardMenuDevice(wx.Menu):
 
 
 def setDefaultProg(frame, filename):
+    frame.exec_cmd("\r\n")
     frame.show_cmd = False
     ProgMsg = ""
     cmd = "myfile=open(\'main.py\',\'w\')\r\n"
@@ -404,7 +422,7 @@ def setDefaultProg(frame, filename):
 def getFileTree(frame, dir):
     frame.cmd_return = ""
     frame.get_cmd = True
-    # TODO: exec_cmd a la place de get_cmd_result
+    frame.exec_cmd("\r\n")
     result = frame.exec_cmd("os.listdir(\'%s\')\r\n" % dir)
     if result == "err":
         return result
@@ -499,6 +517,7 @@ def save_on_card(frame, page):
         page.saved = False
         # Grab the content to be saved
         save_as_file_content = page.GetValue()
+        frame.exec_cmd("\r\n")
         frame.show_cmd = False
         cmd = "f = os.remove('%s')\r\n" % (page.directory)
         frame.exec_cmd(cmd)

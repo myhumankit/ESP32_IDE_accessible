@@ -74,6 +74,7 @@ class TopMenu(wx.MenuBar):
         MenuFile = self.MenuFile
         MenuEdit = self.MenuEdit
         MenuTools = self.MenuTools
+        MenuTheme = self.MenuTools.themes_submenu
 
         self.Bind(wx.EVT_MENU, MenuFile.OnExit, id=wx.ID_EXIT)
         self.Bind(wx.EVT_MENU, MenuFile.OnOpen, id=wx.ID_OPEN)
@@ -91,11 +92,11 @@ class TopMenu(wx.MenuBar):
         self.Bind(wx.EVT_MENU, MenuTools.OnRun, id=wx.ID_EXECUTE)
         self.Bind(wx.EVT_MENU, MenuTools.OnStop, id=wx.ID_STOP)
         self.Bind(wx.EVT_MENU, MenuTools.OnBurnFirmware, id=wx.ID_BURN_FIRMWARE)
-        self.Bind(wx.EVT_MENU,  self.MenuTools.OnChangeTheme,
+        self.Bind(wx.EVT_MENU,  MenuTheme.OnChangeTheme,
                   id=wx.ID_LIGHT_THEME)
-        self.Bind(wx.EVT_MENU,  self.MenuTools.OnChangeTheme,
+        self.Bind(wx.EVT_MENU,  MenuTheme.OnChangeTheme,
                   id=wx.ID_DARK_THEME)
-        self.Bind(wx.EVT_MENU,  self.MenuTools.OnChangeTheme,
+        self.Bind(wx.EVT_MENU,  MenuTheme.OnChangeTheme,
                   id=wx.ID_NVDA_THEME)
         self.Bind(wx.EVT_MENU, self.MenuTools.OnDisconnect, id=wx.ID_CANCEL)
 

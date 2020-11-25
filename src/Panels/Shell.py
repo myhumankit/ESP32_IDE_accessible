@@ -40,7 +40,7 @@ class ShellPanel(wx.TextCtrl):
             file.close()
             theme = theme[theme_choice]
             self.font = wx.Font(12, wx.MODERN, wx.NORMAL,
-                                wx.NORMAL, 0, "Fira code")
+                                wx.NORMAL, 0, "Arial")
             self.SetBackgroundColour(theme['Panels Colors']['Shell background'])
             self.SetFont(self.font)
             self.SetDefaultStyle(wx.TextAttr(

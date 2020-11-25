@@ -145,17 +145,11 @@ class MainWindow(wx.Frame):
             self.is_data = False
             if b:  # and b != b'\x00':
                 self.is_data = True
-                # newline transformation
-                if self.settings.newline == NEWLINE_CR:
-                    b = b.replace(b'\r', b'\n')
-                elif self.settings.newline == NEWLINE_LF:
-                    pass
-                elif self.settings.newline == NEWLINE_CRLF:
-                    b = b.replace(b'\r\n', b'\n')
+                b = b.replace(b'\r\n', b'\n')
                 if not self.open_file:
                     serial_read_data(self, b)
                 else:
-                    self.open_file_txt += b.decode('UTF-8', 'ignore')
+                    self.open_file_txt += b.decode('utf-8', "ignore")
 
     def actualize_status_bar(self):
         """Actualize the Status Bar

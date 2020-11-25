@@ -87,12 +87,6 @@ def read_cmd(frame, data):
     frame.is_data = False
     if b:
         frame.is_data = True
-        # newline transformation
-        if frame.settings.newline == NEWLINE_CR:
-            b = b.replace(b'\r', b'\n')
-        elif frame.settings.newline == NEWLINE_LF:
-            pass
-        elif frame.settings.newline == NEWLINE_CRLF:
-            b = b.replace(b'\r\n', b'\n')
+        b = b.replace(b'\r\n', b'\n')
         serial_read_data(frame, b)
     frame.result = GetCmdReturn(frame.last_cmd_red, data)

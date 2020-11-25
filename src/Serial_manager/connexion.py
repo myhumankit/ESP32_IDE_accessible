@@ -4,8 +4,9 @@ and communication with the card
 """
 
 import time
+import wx
 from Serial_manager.send_infos import put_cmd
-from constantes import NEWLINE_CRLF
+from constantes import NEWLINE_CRLF, NEWLINE_LF
 from Panels.Device_tree import treeModel
 
 
@@ -99,49 +100,47 @@ class ManageConnection():
         self.frame.shell.Clear()
         self.frame.shell.WriteText("Ready to download this file...!\n")
         self.write_in_file(fileHandle, file_to_open)
-        treeModel(self.frame)
+
+    # def write_in_file(self, fileHandle, file_to_open):
+    #     cmd = "myfile=open(\'%s\',\'w\')\r\n" % str(file_to_open)
+    #     done = 0
+
+    #     put_cmd(self.frame, cmd)
+    #     while not done:
+    #         aline = fileHandle.read(128)
+    #         if(str(aline) != "b''"):
+    #             try:
+    #                 aline = aline.decode()
+    #                 # aline=aline.replace("\r\n","\r")
+    #                 # aline=aline.replace("\n","\r")
+    #                 aline = "myfile.write(%s)\r" % repr(aline)
+    #             except Exception as e:
+    #                 print(e)
+    #                 break
+    #             for i in aline:
+    #                 put_cmd(self.frame, i)
+    #         else:
+    #             done = 1
+    #     fileHandle.close()
+    #     put_cmd(self.frame, "myfile.close()\r\n")
 
     def write_in_file(self, fileHandle, file_to_open):
         cmd = "myfile=open(\'%s\',\'w\')\r\n" % str(file_to_open)
-        done = 0
 
         put_cmd(self.frame, cmd)
-        while not done:
-            aline = fileHandle.read(128)
-            if(str(aline) != "b''"):
-                try:
-                    aline = aline.decode()
-                    # aline=aline.replace("\r\n","\r")
-                    # aline=aline.replace("\n","\r")
-                    aline = "myfile.write(%s)\r" % repr(aline)
-                except Exception as e:
-                    print(e)
-                    break
-                for i in aline:
-                    put_cmd(self.frame, i)
-            else:
-                done = 1
-        fileHandle.close()
-        put_cmd(self.frame, "myfile.close()\r\n")
-
-# def ConnectSerial(frame):
-#     frame.shell.Clear()
-#     frame.serial.write('\x03'.encode())
-    
-#     if try_send_data(frame) is False:
-#         return False
-#     senddata = "import sys\r\n"
-#     put_cmd(frame, "import sys\r\n")
-#     for i in senddata:
-#         frame.serial.write(i.encode())
-#     if try_send_data(frame) is False:
-#         return False
-#     senddata = "sys.platform\r"
-#     for i in senddata:
-#         frame.serial.write(i.encode())
-#     if try_send_data(frame) is False:
-#         return False
-#     return True
+        aline = fileHandle.read()
+        try:
+            aline = aline.decode()
+            aline = "myfile.write(%s)\r" % repr(aline)
+            put_cmd(self.frame, aline)
+        except Exception as e:
+            print(e)
+        finally:
+            fileHandle.close()
+            put_cmd(self.frame, "myfile.close()\r\n")
+            put_cmd(self.frame, "\r\n")
+            self.frame.shell_text = ""
+            treeModel(self.frame)
 
 
 def ConnectSerial(self):
@@ -187,7 +186,7 @@ def ConnectSerial(self):
                 self.shell.AppendText("connect serial timeout")
                 return False
 
-        senddata="sys.platform\r"
+        senddata="sys.platform\r\n"
         for i in senddata:
             self.serial.write(i.encode())
         startdata=""
