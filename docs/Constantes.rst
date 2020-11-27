@@ -1,7 +1,7 @@
-Constantes module
+constantes module
 =================
 
-.. automodule:: Constantes
+.. automodule:: constantes
    :members:
    :undoc-members:
    :show-inheritance:

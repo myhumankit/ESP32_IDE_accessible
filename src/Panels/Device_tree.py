@@ -1,19 +1,31 @@
+""" Module which contains the classes related to the TreeView
+"""
+
 import wx
 import json
 import os
 import sys
-import string
 from Utils.voice_synthese import my_speak
 from Serial_manager.send_infos import put_cmd
 import time
 
 
 class DeviceTree(wx.TreeCtrl):
-    def __init__(self, parent, frame, paths, name):
-        # Use the WANTS_CHARS style so the panel doesn't eat the Return key.
+    """[summary]
+
+    :param wx.TreeCtrl: Class to derivate 
+    :type wx.TreeCtrl: :class:wx.TreeCtrl
+    """
+    def __init__(self, parent, frame):
+        """Constructor method
+
+        :param parent: parent of the instance
+        :type parent: :class:
+        :param frame: main window if the application
+        :type frame: :class:MainWindow
+        """
         wx.TreeCtrl.__init__(self, parent)
         self.frame = frame
-        paths = paths
         isz = (16, 16)
         self.il = wx.ImageList(isz[0], isz[1])
         self.fldridx = self.il.Add(wx.ArtProvider.GetBitmap(
@@ -43,35 +55,39 @@ class DeviceTree(wx.TreeCtrl):
         self.custom_tree_ctrl()
         self.__attach_events()
 
-    def fill_workspace(self, device, path):
+    def fill_workspace(self, item, path):
+        """Manage the creation of the treeview item selected (recursive)
+
+        :param section: section to build
+        :type section: wx.TreeItem
+        :param path: path to analyse
+        :type path: str
+        """
         for a, directories, files in os.walk(path):
             for dire in directories:
-                child = self.AppendItem(device, dire)
+                child = self.AppendItem(item, dire)
                 self.SetItemImage(child, self.fldridx, wx.TreeItemIcon_Normal)
                 self.SetItemImage(child, self.fldropenidx,
                                   wx.TreeItemIcon_Expanded)
                 self.fill_workspace(child, path + "/" + dire)
             for file in files:
-                child = self.AppendItem(device, file)
+                child = self.AppendItem(item, file)
                 self.SetItemImage(child, self.fileidx, wx.TreeItemIcon_Normal)
                 self.SetItemImage(child, self.fileidx, wx.TreeItemIcon_Expanded)
 
     def __attach_events(self):
-        self.Bind(wx.EVT_TREE_SEL_CHANGED, self.OnSelChanged, self)
-        self.Bind(wx.EVT_TREE_BEGIN_LABEL_EDIT, self.OnBeginEdit, self)
-        self.Bind(wx.EVT_TREE_END_LABEL_EDIT, self.OnEndEdit, self)
+        """ Bind events with methods
+         """
         self.Bind(wx.EVT_TREE_ITEM_ACTIVATED, self.OnActivate, self)
         self.Bind(wx.EVT_RIGHT_DCLICK, self.OnClipboardMenu)
-        self.Bind(wx.EVT_LEFT_DCLICK, self.OnLeftDClick)
+        self.Bind(wx.EVT_RIGHT_UP, self.OnClipboardMenu)
+        self.Bind(wx.EVT_TREE_SEL_CHANGED, self.OnSelChanged, self)
         self.Bind(wx.EVT_RIGHT_DOWN, self.OnRightDown)
         self.Bind(wx.EVT_RIGHT_UP, self.OnClipboardMenu)
 
     def custom_tree_ctrl(self):
-        """Custom the tree controller
-
-        :param theme: theme to apply on the tree
-        :type theme: list
-        """
+        """Custom the treeView with the theme selected
+         """
         try:
             file = open("./customize.json")
             theme = json.load(file)
@@ -103,56 +119,16 @@ class DeviceTree(wx.TreeCtrl):
                              % self.GetItemText(item))
             self.EditLabel(item)
 
-    def OnBeginEdit(self, event):
-        sys.stdout.write("OnBeginEdit\n")
-        # show how to prevent edit...
-        item = event.GetItem()
-        if item and self.GetItemText(item) == "The Root Item":
-            wx.Bell()
-            sys.stdout.write("You can't edit this one...\n")
-
-            # Lets just see what's visible of its children
-            cookie = 0
-            device = event.GetItem()
-            (child, cookie) = self.GetFirstChild(device)
-
-            while child.IsOk():
-                sys.stdout.write("Child [%s] visible = %d" %
-                                 (self.GetItemText(child),
-                                  self.IsVisible(child)))
-                (child, cookie) = self.GetNextChild(device, cookie)
-
-            event.Veto()
-
-    def OnEndEdit(self, event):
-        sys.stdout.write("OnEndEdit: %s %s\n" %
-                         (event.IsEditCancelled(), event.GetLabel()))
-        # show how to reject edit, we'll not allow any digits
-        for x in event.GetLabel():
-            if x in string.digits:
-                sys.stdout.write("You can't enter digits...\n")
-                event.Veto()
-                return
-
-    def OnLeftDClick(self, event):
-        pt = event.GetPosition()
-        item, flags = self.HitTest(pt)
-        if item:
-            sys.stdout.write("OnLeftDClick: %s\n" % self.GetItemText(item))
-            parent = self.GetItemParent(item)
-            if parent.IsOk():
-                self.SortChildren(parent)
-        event.Skip()
-
     def OnSelChanged(self, event):
         self.item = event.GetItem()
         if self.item:
             sys.stdout.write("OnSelChanged: %s\n" % self.GetItemText(self.item))
             # items = self.GetSelections()
             # print(map(self.GetItemText, items))
-        event.Skip()
 
     def OnActivate(self, event):
+        """ Execute the function related to click or a Enter press on the item selected
+         """
         self.path = ""
         if self.item:
             if self.item == self.workspace:
@@ -187,40 +163,43 @@ class DeviceTree(wx.TreeCtrl):
 
     def open_file(self):
         """
-        docstring
-        """
+        Open the file given
+         """
         name = self.GetItemText(self.item)
         self.get_path_item(self.item, name)
         self.frame.exec_cmd("\r\n")
         self.frame.show_cmd = False
-        #self.frame.exec_cmd("os.getsize('%s')\r\n" % self.path)
         self.frame.exec_cmd("info = os.stat('%s')\r\n" % self.path)
-        size = int(self.frame.exec_cmd("info[6]\r\n"))
+        size = self.frame.exec_cmd("info[6]\r\n")
         self.frame.exec_cmd("del info\r\n")
-        print("SIZE", size)
         self.frame.exec_cmd("impossible = open('%s','r')\r\n" % self.path)
-        put_cmd(self.frame, "print(impossible.read())\r\n")
+        print("SIZE", size)
+        cmd = "print(impossible.read())\r\n"
+        put_cmd(self.frame, cmd)
         self.frame.open_file = True
         start_time = time.time()
         end_time = 0
-        while len(self.frame.open_file_txt) < size and end_time < 10:
+        while (len(self.frame.open_file_txt) - len(cmd) - 1) < int(size) and end_time < 10:
             end_time = time.time() - start_time
-            #print(len(self.frame.open_file_txt))
+        print("Size_opened:", len(self.frame.open_file_txt))
         if end_time >= 10:
             self.frame.shell.AppendText("Can't Open file")
             put_cmd(self.frame, "impossible.close()\r\n")
             return
         self.frame.open_file = False
         put_cmd(self.frame, "impossible.close()\r\n")
-        res = self.frame.open_file_txt[len("print(impossible.read())\n"):]
-        res = res.split(">>>")[0]
-        print(bytes(res.encode('Utf-8')))
+        res = self.frame.open_file_txt[len(cmd) - 1:]
+        res = res.split('\n>>> ')[0]
+        res = res.replace('\r', '')
         notebookP = self.frame.notebook
         notebookP.new_page(name, self.path, res, True)
         self.frame.open_file_txt = ""
         self.frame.show_cmd = True
 
     def define_workspace(self):
+        """
+        Define the workspace treeview and call :function:fill_workspace()
+         """
         dialog = wx.DirDialog(self.frame,
                               "Choose a Worspace",
                               "",
@@ -231,6 +210,9 @@ class DeviceTree(wx.TreeCtrl):
             self.fill_workspace(self.workspace, path)
 
     def OnClipboardMenu(self, evt):
+        """
+        Create an instance of the :class:ClipboardMenuDevice and display it
+         """
         img = self.GetItemImage(self.item)
         if img == self.fldridx or img == self.fldropenidx:
             print("DIR")
@@ -243,18 +225,22 @@ class DeviceTree(wx.TreeCtrl):
             self.frame.PopupMenu(menu)
             menu.Destroy()
 
-    def set_focus_tree(self, evt):
-        self.SetFocus()
-
 
 class ClipboardMenuDevice(wx.Menu):
-    """[summary]
-
-    :param wx: [description]
-    :type wx: [type]
     """
+    Create an instance of the :class:ClipboardMenuDevice and display it
+     """
 
     def __init__(self, is_dir, frame, item):
+        """Constructor method
+
+        :param is_dir: flag is directory or file ?
+        :type is_dir: bool
+        :param frame: main window
+        :type frame: :class:MainWindow
+        :param item: item right-click pressed
+        :type item: wx.TreeItemId
+        """
         wx.Menu.__init__(self)
         self.is_dir_menu = is_dir
         self.frame = frame
@@ -264,6 +250,9 @@ class ClipboardMenuDevice(wx.Menu):
         self.__attach_events()
 
     def __set_properties(self, frame):
+        """
+        Set attributs of the instance
+         """
         if self.is_dir_menu:
             self.Append(wx.ID_NEW, "&New file")
             self.Append(wx.ID_DIRECTORY, "&New Directory")
@@ -277,6 +266,9 @@ class ClipboardMenuDevice(wx.Menu):
             self.Append(wx.ID_RENAME, "&Rename")
 
     def __attach_events(self):
+        """
+        Link events related of the menu with methods
+         """
         if self.is_dir_menu:
             self.Bind(wx.EVT_MENU, self.OnNewFile, id=wx.ID_NEW)
             self.Bind(wx.EVT_MENU, self.OnNewdir, id=wx.ID_DIRECTORY)
@@ -286,12 +278,14 @@ class ClipboardMenuDevice(wx.Menu):
             self.Bind(wx.EVT_MENU, self.OnRun, id=wx.ID_RUN)
             self.Bind(wx.EVT_MENU, self.frame.device_tree.OnActivate,
                       id=wx.ID_OPEN)
-            self.Bind(wx.EVT_MENU, self.OnStop, id=wx.ID_CLOSE)
             self.Bind(wx.EVT_MENU, self.OnDelete, id=wx.ID_DELETE)
             self.Bind(wx.EVT_MENU, self.OnDefaultRun, id=wx.ID_DEFAULT)
             self.Bind(wx.EVT_MENU, self.OnRename, id=wx.ID_RENAME)
 
     def OnRun(self, evt):
+        """
+        Execute the device item selected (file)
+         """
         self.device_tree.path = ""
         self.device_tree.root_it = self.device_tree.GetRootItem()
         name = self.device_tree.GetItemText(self.item)
@@ -302,6 +296,9 @@ class ClipboardMenuDevice(wx.Menu):
                             self.device_tree.path)
 
     def OnNewdir(self, evt):
+        """
+        Create a new directory in the device item selected (directory)
+         """
         self.device_tree.path = ""
         self.device_tree.root_it = self.device_tree.GetRootItem()
         name = self.device_tree.GetItemText(self.item)
@@ -323,11 +320,10 @@ class ClipboardMenuDevice(wx.Menu):
                     ok = True
         self.frame.show_cmd = True
 
-    def OnStop(self, evt):
-        # CHECK SI UNE PAGE AVEC LE NOM DU PATH EST OUVERTE DANS L'EDITEUR
-        self.frame.top_menu.MenuFile.OnStop(evt)
-
     def OnDelete(self, evt):
+        """
+        Delete the device item selected
+         """
         self.device_tree.path = ""
         self.device_tree.root_it = self.device_tree.GetRootItem()
         name = self.device_tree.GetItemText(self.item)
@@ -340,6 +336,9 @@ class ClipboardMenuDevice(wx.Menu):
         self.device_tree.Delete(self.item)
 
     def OnDefaultRun(self, evt):
+        """
+        Create a main.py or fill it with a python line to execute the device item selected
+         """
         self.device_tree.path = ""
         self.device_tree.root_it = self.device_tree.GetRootItem()
         name = self.device_tree.GetItemText(self.item)
@@ -348,6 +347,9 @@ class ClipboardMenuDevice(wx.Menu):
         treeModel(self.frame)
 
     def OnNewFile(self, evt):
+        """
+        Execute the device item selected
+         """
         self.device_tree.path = ""
         name = self.device_tree.GetItemText(self.item)
         self.device_tree.get_path_item(self.item, name)
@@ -370,6 +372,9 @@ class ClipboardMenuDevice(wx.Menu):
         self.frame.show_cmd = True
 
     def OnRename(self, evt):
+        """
+        Rename the device item selected(file and dir)
+         """
         self.device_tree.path = ""
         name = self.device_tree.GetItemText(self.item)
         path_actual = self.device_tree.get_path_item(self.item, name)
@@ -397,6 +402,13 @@ class ClipboardMenuDevice(wx.Menu):
 
 
 def setDefaultProg(frame, filename):
+    """Extension of the method OnDefaultRun
+
+    :param frame: Main window
+    :type frame: :class: MainWindow
+    :param filename: path of the file to run by default
+    :type filename: str
+    """
     frame.exec_cmd("\r\n")
     frame.show_cmd = False
     ProgMsg = ""
@@ -420,6 +432,9 @@ def setDefaultProg(frame, filename):
 
 
 def getFileTree(frame, dir):
+    """
+        Get the TreeView structure (recursive way)
+    """
     frame.cmd_return = ""
     frame.get_cmd = True
     frame.exec_cmd("\r\n")
@@ -466,6 +481,9 @@ def getFileTree(frame, dir):
 
 
 def treeModel(frame):
+    """
+    Build the TreeView
+    """
     frame.show_cmd = False
     frame.reflushTreeBool = True
     frame.cmd_return = ""
@@ -485,6 +503,15 @@ def treeModel(frame):
 
 
 def ReflushTree(frame, device, msg):
+    """Create the branches of the treeview(recursive)
+
+    :param frame: main window
+    :type frame: MainWindow
+    :param device: item to add
+    :type device: wx.TreeItemId 
+    :param msg: back of infos of the file or directory analysed
+    :type msg: str or list or dict
+    """
     if msg == "err":
         return
     tree = frame.device_tree
@@ -510,8 +537,17 @@ def ReflushTree(frame, device, msg):
             else:
                 pass
 
+# TODO: move this function on Editor
+
 
 def save_on_card(frame, page):
+    """ Save the tab on the device connected
+
+    :param frame: main window
+    :type frame: :class:MainWindow
+    :param page: tab to save
+    :type page: :class:StyledEditor
+    """
     # Check if save is required
     if (page.GetValue() != page.last_save):
         page.saved = False

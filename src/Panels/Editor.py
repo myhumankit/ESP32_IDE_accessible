@@ -1,3 +1,6 @@
+""" Module wich contains the classes and functions related to the editor tab panel
+"""
+
 import keyword
 import wx
 import wx.stc as stc
@@ -32,6 +35,8 @@ class Styled_Editor(pysh.editwindow.EditWindow):
         self.SetValue(text)
 
     def custom_stc(self):
+        """Custom the editwindow instance based on the model of the wxDemo StyledCtrl2.py
+         """
         self.CmdKeyAssign(ord('+'), stc.STC_SCMOD_CTRL, stc.STC_CMD_ZOOMIN)
         self.CmdKeyAssign(ord('-'), stc.STC_SCMOD_CTRL, stc.STC_CMD_ZOOMOUT)
 
@@ -68,6 +73,8 @@ class Styled_Editor(pysh.editwindow.EditWindow):
         self.Bind(wx.EVT_KEY_DOWN, self.OnKeyPressed)
 
     def OnKeyPressed(self, event):
+        """Manage the keyboard events related to the tab
+         """
         if self.CallTipActive():
             self.CallTipCancel()
         key = event.GetKeyCode()
@@ -106,6 +113,8 @@ class Styled_Editor(pysh.editwindow.EditWindow):
             event.Skip()
 
     def OnUpdateUI(self, evt):
+        """ Manage the syntax highlight on the braces
+         """
         # check for matching braces
         braceAtCaret = -1
         braceOpposite = -1
@@ -137,7 +146,8 @@ class Styled_Editor(pysh.editwindow.EditWindow):
             self.BraceHighlight(braceAtCaret, braceOpposite)
 
     def OnMarginClick(self, evt):
-        # fold and unfold as needed
+        """ Fold the tab content if an event is happened
+         """
         if evt.GetMargin() == 2:
             if evt.GetShift() and evt.GetControl():
                 self.FoldAll()
@@ -159,6 +169,8 @@ class Styled_Editor(pysh.editwindow.EditWindow):
                         self.ToggleFold(lineClicked)
 
     def FoldAll(self):
+        """ Fold all the tab content
+         """
         lineCount = self.GetLineCount()
         expanding = True
 
@@ -189,6 +201,8 @@ class Styled_Editor(pysh.editwindow.EditWindow):
             lineNum = lineNum + 1
 
     def Expand(self, line, doExpand, force=False, visLevels=0, level=-1):
+        """ Expand the tab content
+         """
         lastChild = self.GetLastChild(line, level)
         line = line + 1
 
@@ -260,16 +274,16 @@ class Styled_Editor(pysh.editwindow.EditWindow):
 
     def __attach_events(self):
         """
-        Bind events related to this class
-        """
+         Bind events related to this class
+         """
         self.Bind(wx.EVT_TEXT, self.topwindow.actualize_status_bar)
 
     def bind_find_events(self, win):
         """Bind events of the find and replace dialog
 
-        :param win: the main frame
-        :type win: MainWindow class
-        """
+         :param win: the main frame
+         :type win: MainWindow class
+         """
         win.Bind(wx.EVT_FIND, self.OnFind)
         win.Bind(wx.EVT_FIND_NEXT, self.OnFind)
         win.Bind(wx.EVT_FIND_REPLACE, self.OnFind)
@@ -279,9 +293,9 @@ class Styled_Editor(pysh.editwindow.EditWindow):
     def OnShowFindReplace(self, evt=None):
         """Show the Find and Replace dialog and call the bind_find_events method
 
-        :param evt: , defaults to None
-        :type evt: wx.Event, optional
-        """
+         :param evt: , defaults to None
+         :type evt: wx.Event, optional
+         """
         dlg = wx.FindReplaceDialog(
             self, self.findData, "Find & Replace", wx.FR_REPLACEDIALOG)
 
@@ -291,9 +305,9 @@ class Styled_Editor(pysh.editwindow.EditWindow):
     def OnFind(self, evt):
         """Method to find a string on the current tab editor
 
-        :param evt: Event which decide to what execute
-        :type evt: wx.Event
-        """
+         :param evt: Event which decide to what execute
+         :type evt: wx.Event
+         """
         self.txt = self.GetValue()
         et = evt.GetEventType()
 
@@ -308,8 +322,9 @@ class Styled_Editor(pysh.editwindow.EditWindow):
     def OnFindClose(self, evt):
         """Close the find and replace dialog
 
-        :param evt: Event to close the dialog
-        :type evt: wx.Event
-        """
+         :param evt: Event to close the dialog
+         :type evt: wx.Event
+         """
         # print("FindReplaceDialog closing...\n")
         evt.GetDialog().Destroy()
+

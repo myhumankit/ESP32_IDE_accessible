@@ -1,7 +1,8 @@
-api module
-==========
+API
+===
 
-.. automodule:: api
-   :members:
-   :undoc-members:
-   :show-inheritance:
+.. toctree::
+
+    api_pyflakes
+    api_esptool
+    install_fonts

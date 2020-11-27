@@ -68,6 +68,11 @@ gdi32.GetFontResourceInfoW.argtypes = (
 
 
 def install_font(src_path):
+    """Install the font of the path given
+
+    :param argv: fonts path
+    :type argv: str
+    """
     # copy the font to the Windows Fonts folder
     dst_path = os.path.join(
         os.environ['SystemRoot'], 'Fonts', os.path.basename(src_path)
@@ -115,6 +120,11 @@ def install_font(src_path):
 
 
 def Install_fonts(argv):
+    """Install the fonts given
+
+    :param argv: fonts to install
+    :type argv: str
+    """
     for arg in argv:
         try:
             if arg.endswith('.otf') or arg.endswith('.ttf'):

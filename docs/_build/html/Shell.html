@@ -1,0 +1,313 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Shell module &mdash; IDE_MicroPython_accessible  documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+
+  
+  
+  
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Device_tree module" href="Device_tree.html" />
+    <link rel="prev" title="Notebook module" href="Notebook.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="index.html" class="icon icon-home" alt="Documentation Home"> IDE_MicroPython_accessible
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="Edit_menu.html">Edit_menu module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="File_menu.html">File_menu module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Help_menu.html">Help_menu module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Tools_menu.html">Tools_menu module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Editor.html">Editor module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Notebook.html">Notebook module</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Shell module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Device_tree.html">Device_tree module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="wxSerialConfigDialog.html">wxSerialConfigDialog module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="wx_burn_firmware.html">wx_burn_firmware module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="connexion.html">connexion module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="firmware.html">firmware module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="receive_infos.html">receive_infos module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="send_infos.html">send_infos module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="shortcuts.html">shortcuts module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="IDE_accessible_MHK.html">IDE_accessible_MHK module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="all_panels.html">all_panels module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="constantes.html">constantes module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="editor_style.html">editor_style module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="shortcuts.html">shortcuts module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api.html">API</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">IDE_MicroPython_accessible</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="Panels.html">&lt;no title&gt;</a> &raquo;</li>
+        
+      <li>Shell module</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/Shell.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="module-Shell">
+<span id="shell-module"></span><h1>Shell module<a class="headerlink" href="#module-Shell" title="Permalink to this headline">¶</a></h1>
+<p>Module wich contain classes related to the Shell Panel</p>
+<p><strong>Classes:</strong></p>
+<table class="longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#Shell.ShellPanel" title="Shell.ShellPanel"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ShellPanel</span></code></a>(parent, frame)</p></td>
+<td><p>Constructor method</p></td>
+</tr>
+</tbody>
+</table>
+<dl class="py class">
+<dt id="Shell.ShellPanel">
+<em class="property">class </em><code class="sig-prename descclassname">Shell.</code><code class="sig-name descname">ShellPanel</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">parent</span></em>, <em class="sig-param"><span class="n">frame</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Shell.ShellPanel" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">wx._core.TextCtrl</span></code></p>
+<p>Constructor method</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>parent</strong> – in this case :class:wx.SplittedWindow</p></li>
+<li><p><strong>frame</strong> – Main of the app :class:MainWindow</p></li>
+</ul>
+</dd>
+</dl>
+<p><strong>Methods:</strong></p>
+<table class="longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#Shell.ShellPanel.custom_shell" title="Shell.ShellPanel.custom_shell"><code class="xref py py-obj docutils literal notranslate"><span class="pre">custom_shell</span></code></a>(theme_choice)</p></td>
+<td><p>Custom the Shell panel with the given theme_choice</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#Shell.ShellPanel.move_key_left" title="Shell.ShellPanel.move_key_left"><code class="xref py py-obj docutils literal notranslate"><span class="pre">move_key_left</span></code></a>()</p></td>
+<td><p>Move the cursor on the previous character</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#Shell.ShellPanel.move_key_right" title="Shell.ShellPanel.move_key_right"><code class="xref py py-obj docutils literal notranslate"><span class="pre">move_key_right</span></code></a>()</p></td>
+<td><p>Move the cursor on the next character</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#Shell.ShellPanel.remove_char" title="Shell.ShellPanel.remove_char"><code class="xref py py-obj docutils literal notranslate"><span class="pre">remove_char</span></code></a>()</p></td>
+<td><p>Remove the previous character</p></td>
+</tr>
+</tbody>
+</table>
+<dl class="py method">
+<dt id="Shell.ShellPanel.custom_shell">
+<code class="sig-name descname">custom_shell</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">theme_choice</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Shell.ShellPanel.custom_shell" title="Permalink to this definition">¶</a></dt>
+<dd><p>Custom the Shell panel with the given theme_choice</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>theme_choice</strong> (<em>str</em>) – The theme selected</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="Shell.ShellPanel.move_key_left">
+<code class="sig-name descname">move_key_left</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#Shell.ShellPanel.move_key_left" title="Permalink to this definition">¶</a></dt>
+<dd><p>Move the cursor on the previous character</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="Shell.ShellPanel.move_key_right">
+<code class="sig-name descname">move_key_right</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#Shell.ShellPanel.move_key_right" title="Permalink to this definition">¶</a></dt>
+<dd><p>Move the cursor on the next character</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="Shell.ShellPanel.remove_char">
+<code class="sig-name descname">remove_char</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#Shell.ShellPanel.remove_char" title="Permalink to this definition">¶</a></dt>
+<dd><p>Remove the previous character</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="Device_tree.html" class="btn btn-neutral float-right" title="Device_tree module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="Notebook.html" class="btn btn-neutral float-left" title="Notebook module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        
+        &copy; Copyright 2020, @MyHumanKit
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

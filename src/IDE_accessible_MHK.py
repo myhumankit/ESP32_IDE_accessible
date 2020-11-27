@@ -1,3 +1,6 @@
+"""
+    Main of the application wich contains the classes to init the app
+"""
 import wx
 import serial
 import threading
@@ -10,9 +13,8 @@ from Serial_manager.firmware import FirmwareManager
 from api.install_fonts import Install_fonts
 from Serial_manager.connexion import TerminalSetup, ManageConnection
 from menus import init_top_menu, init_toolbar
-from all_panels import create_panels, create_status_bar
+from all_panels import create_panels
 from Serial_manager.receive_infos import serial_read_data, read_cmd
-from constantes import NEWLINE_CR, NEWLINE_LF, NEWLINE_CRLF
 from Serial_manager.send_infos import Exec_cmd
 
 
@@ -40,6 +42,8 @@ class MainWindow(wx.Frame):
         self.result = ""
 
     def __set_properties__(self):
+        """ Set attributs of the class instancied
+        """
         self.serial = serial.Serial()
         self.serial.timeout = 0.5
         # make sure that the alive event can be checked from time to time
@@ -62,7 +66,6 @@ class MainWindow(wx.Frame):
         self.who_is_focus = 0
         self.theme = 'Dark Theme'
         self.top_menu = init_top_menu(self)
-        self.statusbar = create_status_bar(self)
         self.serial_manager = ManageConnection(self)
         self.voice_on = pyttsx3.init()
         self.speak_on = True
@@ -78,10 +81,19 @@ class MainWindow(wx.Frame):
         print("Initialisation OK")
 
     def __attach_events(self):
+        """ Link events to methods
+        """
         self.shell.Bind(wx.EVT_CHAR, self.OnKey)
         self.Bind(wx.EVT_CLOSE, self.top_menu.MenuFile.OnExit)
 
     def exec_cmd(self, cmd):
+        """Execute a command on the device and get the command back
+
+        :param cmd: command to execute
+        :type cmd: str
+        :return: command back
+        :rtype: str
+        """
         print("Commande sent ==>", cmd)
         self.read_thread = Exec_cmd(cmd, self)
         self.read_thread.start()
@@ -214,14 +226,10 @@ class MainWindow(wx.Frame):
         self.speak_on = self.statusbar.GetStatusText(1)
 
     def right_click_shortcut(self, evt):
+        """ Link right click evt with a shortcut
+        """
         if self.device_tree.HasFocus():
             self.device_tree.OnClipboardMenu(None)
-
-    def set_focus_editor(self, evt):
-        page = self.notebook.GetCurrentPage()
-
-        if page:
-            page.SetFocus()
 
 
 class MyApp(wx.App):
@@ -239,7 +247,7 @@ class MyApp(wx.App):
             --if True the app works
         """
         wx.InitAllImageHandlers()
-        window = MainWindow("IDE Accessible MHK V1.3.8", (800, 600))
+        window = MainWindow("IDE Accessible MHK V1.3.9", (800, 600))
         self.SetTopWindow(window)
         window.Show()
         return True

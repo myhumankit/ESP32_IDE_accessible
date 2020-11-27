@@ -1,3 +1,8 @@
+"""
+    Module which contains classes and functions related
+     to the firmware installation/update
+"""
+
 from threading import Thread
 from Utils.voice_synthese import my_speak
 from Panels.wx_burn_firmware import BurnFrame, UpdateFirmwareDialog
@@ -47,6 +52,9 @@ class FirmwareThread(Thread):
             self.burnaddr = 0x1000
 
     def __set_properties(self, frame, console, firmware_manager):
+        """
+        Set attributs of the instance
+        """
         self.frame = frame
         self.burn_frame = console
         self.burn_console = console.txt
@@ -59,6 +67,9 @@ class FirmwareThread(Thread):
         self.stop_thread = False
 
     def run(self):
+        """
+        Run method of a Thread
+         """
         while True:
             if self.stop_thread:
                 break
@@ -95,6 +106,13 @@ class FirmwareThread(Thread):
 
 
 def burn_firmware(frame, event):
+    """Display the Update Firmware Menu and do actions related
+
+    :param frame: main window
+    :type frame: :class: MainWindow
+    :type event: wx.Event
+    :raises Exception: Incorrect Path or Port
+    """
     firmware_manager = frame.firmware_manager
     ok = False
     while not ok:

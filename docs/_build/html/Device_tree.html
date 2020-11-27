@@ -1,0 +1,506 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Device_tree module &mdash; IDE_MicroPython_accessible  documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+
+  
+  
+  
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="wxSerialConfigDialog module" href="wxSerialConfigDialog.html" />
+    <link rel="prev" title="Shell module" href="Shell.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="index.html" class="icon icon-home" alt="Documentation Home"> IDE_MicroPython_accessible
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="Edit_menu.html">Edit_menu module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="File_menu.html">File_menu module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Help_menu.html">Help_menu module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Tools_menu.html">Tools_menu module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Editor.html">Editor module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Notebook.html">Notebook module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Shell.html">Shell module</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Device_tree module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="wxSerialConfigDialog.html">wxSerialConfigDialog module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="wx_burn_firmware.html">wx_burn_firmware module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="connexion.html">connexion module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="firmware.html">firmware module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="receive_infos.html">receive_infos module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="send_infos.html">send_infos module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="shortcuts.html">shortcuts module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="IDE_accessible_MHK.html">IDE_accessible_MHK module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="all_panels.html">all_panels module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="constantes.html">constantes module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="editor_style.html">editor_style module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="shortcuts.html">shortcuts module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api.html">API</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">IDE_MicroPython_accessible</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="Panels.html">&lt;no title&gt;</a> &raquo;</li>
+        
+      <li>Device_tree module</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/Device_tree.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="module-Device_tree">
+<span id="device-tree-module"></span><h1>Device_tree module<a class="headerlink" href="#module-Device_tree" title="Permalink to this headline">¶</a></h1>
+<p>Module which contains the classes related to the TreeView</p>
+<p><strong>Classes:</strong></p>
+<table class="longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#Device_tree.ClipboardMenuDevice" title="Device_tree.ClipboardMenuDevice"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ClipboardMenuDevice</span></code></a>(is_dir, frame, item)</p></td>
+<td><p>Create an instance of the :class:ClipboardMenuDevice and display it</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#Device_tree.DeviceTree" title="Device_tree.DeviceTree"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DeviceTree</span></code></a>(parent, frame)</p></td>
+<td><p>[summary]</p></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Functions:</strong></p>
+<table class="longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#Device_tree.ReflushTree" title="Device_tree.ReflushTree"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ReflushTree</span></code></a>(frame, device, msg)</p></td>
+<td><p>Create the branches of the treeview(recursive)</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#Device_tree.getFileTree" title="Device_tree.getFileTree"><code class="xref py py-obj docutils literal notranslate"><span class="pre">getFileTree</span></code></a>(frame, dir)</p></td>
+<td><p>Get the TreeView structure (recursive way)</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">my_speak</span></code>(frame, txt)</p></td>
+<td><p>Speak the texte given in params by creating a thread dedicated</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">put_cmd</span></code>(frame, msg_cmd)</p></td>
+<td><p>Send a Python command to the connected card</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#Device_tree.save_on_card" title="Device_tree.save_on_card"><code class="xref py py-obj docutils literal notranslate"><span class="pre">save_on_card</span></code></a>(frame, page)</p></td>
+<td><p>Save the tab on the device connected</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#Device_tree.setDefaultProg" title="Device_tree.setDefaultProg"><code class="xref py py-obj docutils literal notranslate"><span class="pre">setDefaultProg</span></code></a>(frame, filename)</p></td>
+<td><p>Extension of the method OnDefaultRun</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#Device_tree.treeModel" title="Device_tree.treeModel"><code class="xref py py-obj docutils literal notranslate"><span class="pre">treeModel</span></code></a>(frame)</p></td>
+<td><p>Build the TreeView</p></td>
+</tr>
+</tbody>
+</table>
+<dl class="py class">
+<dt id="Device_tree.ClipboardMenuDevice">
+<em class="property">class </em><code class="sig-prename descclassname">Device_tree.</code><code class="sig-name descname">ClipboardMenuDevice</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">is_dir</span></em>, <em class="sig-param"><span class="n">frame</span></em>, <em class="sig-param"><span class="n">item</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Device_tree.ClipboardMenuDevice" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">wx._core.Menu</span></code></p>
+<p>Create an instance of the :class:ClipboardMenuDevice and display it</p>
+<p><strong>Methods:</strong></p>
+<table class="longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#Device_tree.ClipboardMenuDevice.OnDefaultRun" title="Device_tree.ClipboardMenuDevice.OnDefaultRun"><code class="xref py py-obj docutils literal notranslate"><span class="pre">OnDefaultRun</span></code></a>(evt)</p></td>
+<td><p>Create a main.py or fill it with a python line to execute the device item selected</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#Device_tree.ClipboardMenuDevice.OnDelete" title="Device_tree.ClipboardMenuDevice.OnDelete"><code class="xref py py-obj docutils literal notranslate"><span class="pre">OnDelete</span></code></a>(evt)</p></td>
+<td><p>Delete the device item selected</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#Device_tree.ClipboardMenuDevice.OnNewFile" title="Device_tree.ClipboardMenuDevice.OnNewFile"><code class="xref py py-obj docutils literal notranslate"><span class="pre">OnNewFile</span></code></a>(evt)</p></td>
+<td><p>Execute the device item selected</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#Device_tree.ClipboardMenuDevice.OnNewdir" title="Device_tree.ClipboardMenuDevice.OnNewdir"><code class="xref py py-obj docutils literal notranslate"><span class="pre">OnNewdir</span></code></a>(evt)</p></td>
+<td><p>Create a new directory in the device item selected (directory)</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#Device_tree.ClipboardMenuDevice.OnRename" title="Device_tree.ClipboardMenuDevice.OnRename"><code class="xref py py-obj docutils literal notranslate"><span class="pre">OnRename</span></code></a>(evt)</p></td>
+<td><p>Rename the device item selected(file and dir)</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#Device_tree.ClipboardMenuDevice.OnRun" title="Device_tree.ClipboardMenuDevice.OnRun"><code class="xref py py-obj docutils literal notranslate"><span class="pre">OnRun</span></code></a>(evt)</p></td>
+<td><p>Execute the device item selected (file)</p></td>
+</tr>
+</tbody>
+</table>
+<dl class="py method">
+<dt id="Device_tree.ClipboardMenuDevice.OnDefaultRun">
+<code class="sig-name descname">OnDefaultRun</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">evt</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Device_tree.ClipboardMenuDevice.OnDefaultRun" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a main.py or fill it with a python line to execute the device item selected</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="Device_tree.ClipboardMenuDevice.OnDelete">
+<code class="sig-name descname">OnDelete</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">evt</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Device_tree.ClipboardMenuDevice.OnDelete" title="Permalink to this definition">¶</a></dt>
+<dd><p>Delete the device item selected</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="Device_tree.ClipboardMenuDevice.OnNewFile">
+<code class="sig-name descname">OnNewFile</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">evt</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Device_tree.ClipboardMenuDevice.OnNewFile" title="Permalink to this definition">¶</a></dt>
+<dd><p>Execute the device item selected</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="Device_tree.ClipboardMenuDevice.OnNewdir">
+<code class="sig-name descname">OnNewdir</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">evt</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Device_tree.ClipboardMenuDevice.OnNewdir" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a new directory in the device item selected (directory)</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="Device_tree.ClipboardMenuDevice.OnRename">
+<code class="sig-name descname">OnRename</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">evt</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Device_tree.ClipboardMenuDevice.OnRename" title="Permalink to this definition">¶</a></dt>
+<dd><p>Rename the device item selected(file and dir)</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="Device_tree.ClipboardMenuDevice.OnRun">
+<code class="sig-name descname">OnRun</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">evt</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Device_tree.ClipboardMenuDevice.OnRun" title="Permalink to this definition">¶</a></dt>
+<dd><p>Execute the device item selected (file)</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="Device_tree.DeviceTree">
+<em class="property">class </em><code class="sig-prename descclassname">Device_tree.</code><code class="sig-name descname">DeviceTree</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">parent</span></em>, <em class="sig-param"><span class="n">frame</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Device_tree.DeviceTree" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">wx._core.TreeCtrl</span></code></p>
+<p>[summary]</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>wx.TreeCtrl</strong> (<em>:class:wx.TreeCtrl</em>) – Class to derivate</p>
+</dd>
+</dl>
+<p><strong>Methods:</strong></p>
+<table class="longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#Device_tree.DeviceTree.OnActivate" title="Device_tree.DeviceTree.OnActivate"><code class="xref py py-obj docutils literal notranslate"><span class="pre">OnActivate</span></code></a>(event)</p></td>
+<td><p>Execute the function related to click or a Enter press on the item selected</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#Device_tree.DeviceTree.OnClipboardMenu" title="Device_tree.DeviceTree.OnClipboardMenu"><code class="xref py py-obj docutils literal notranslate"><span class="pre">OnClipboardMenu</span></code></a>(evt)</p></td>
+<td><p>Create an instance of the :class:ClipboardMenuDevice and display it</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#Device_tree.DeviceTree.custom_tree_ctrl" title="Device_tree.DeviceTree.custom_tree_ctrl"><code class="xref py py-obj docutils literal notranslate"><span class="pre">custom_tree_ctrl</span></code></a>()</p></td>
+<td><p>Custom the treeView with the theme selected</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#Device_tree.DeviceTree.define_workspace" title="Device_tree.DeviceTree.define_workspace"><code class="xref py py-obj docutils literal notranslate"><span class="pre">define_workspace</span></code></a>()</p></td>
+<td><p>Define the workspace treeview and call :function:fill_workspace()</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#Device_tree.DeviceTree.fill_workspace" title="Device_tree.DeviceTree.fill_workspace"><code class="xref py py-obj docutils literal notranslate"><span class="pre">fill_workspace</span></code></a>(item, path)</p></td>
+<td><p>Manage the creation of the treeview item selected (recursive)</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#Device_tree.DeviceTree.get_path_item" title="Device_tree.DeviceTree.get_path_item"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_path_item</span></code></a>(item, name)</p></td>
+<td><p>Catch the path name of an item in the tree</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#Device_tree.DeviceTree.open_file" title="Device_tree.DeviceTree.open_file"><code class="xref py py-obj docutils literal notranslate"><span class="pre">open_file</span></code></a>()</p></td>
+<td><p>Open the file given</p></td>
+</tr>
+</tbody>
+</table>
+<dl class="py method">
+<dt id="Device_tree.DeviceTree.OnActivate">
+<code class="sig-name descname">OnActivate</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">event</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Device_tree.DeviceTree.OnActivate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Execute the function related to click or a Enter press on the item selected</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="Device_tree.DeviceTree.OnClipboardMenu">
+<code class="sig-name descname">OnClipboardMenu</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">evt</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Device_tree.DeviceTree.OnClipboardMenu" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create an instance of the :class:ClipboardMenuDevice and display it</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="Device_tree.DeviceTree.custom_tree_ctrl">
+<code class="sig-name descname">custom_tree_ctrl</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#Device_tree.DeviceTree.custom_tree_ctrl" title="Permalink to this definition">¶</a></dt>
+<dd><p>Custom the treeView with the theme selected</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="Device_tree.DeviceTree.define_workspace">
+<code class="sig-name descname">define_workspace</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#Device_tree.DeviceTree.define_workspace" title="Permalink to this definition">¶</a></dt>
+<dd><p>Define the workspace treeview and call :function:fill_workspace()</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="Device_tree.DeviceTree.fill_workspace">
+<code class="sig-name descname">fill_workspace</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">item</span></em>, <em class="sig-param"><span class="n">path</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Device_tree.DeviceTree.fill_workspace" title="Permalink to this definition">¶</a></dt>
+<dd><p>Manage the creation of the treeview item selected (recursive)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>section</strong> (<em>wx.TreeItem</em>) – section to build</p></li>
+<li><p><strong>path</strong> (<em>str</em>) – path to analyse</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="Device_tree.DeviceTree.get_path_item">
+<code class="sig-name descname">get_path_item</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">item</span></em>, <em class="sig-param"><span class="n">name</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Device_tree.DeviceTree.get_path_item" title="Permalink to this definition">¶</a></dt>
+<dd><p>Catch the path name of an item in the tree</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>item</strong> (<em>wx.ItemId</em>) – Item to find path</p></li>
+<li><p><strong>name</strong> (<em>str</em>) – Name of the item</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="Device_tree.DeviceTree.open_file">
+<code class="sig-name descname">open_file</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#Device_tree.DeviceTree.open_file" title="Permalink to this definition">¶</a></dt>
+<dd><p>Open the file given</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt id="Device_tree.ReflushTree">
+<code class="sig-prename descclassname">Device_tree.</code><code class="sig-name descname">ReflushTree</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">frame</span></em>, <em class="sig-param"><span class="n">device</span></em>, <em class="sig-param"><span class="n">msg</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Device_tree.ReflushTree" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create the branches of the treeview(recursive)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>frame</strong> (<a class="reference internal" href="IDE_accessible_MHK.html#IDE_accessible_MHK.MainWindow" title="IDE_accessible_MHK.MainWindow"><em>MainWindow</em></a>) – main window</p></li>
+<li><p><strong>device</strong> (<em>wx.TreeItemId</em>) – item to add</p></li>
+<li><p><strong>msg</strong> (<em>str</em><em> or </em><em>list</em><em> or </em><em>dict</em>) – back of infos of the file or directory analysed</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="Device_tree.getFileTree">
+<code class="sig-prename descclassname">Device_tree.</code><code class="sig-name descname">getFileTree</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">frame</span></em>, <em class="sig-param"><span class="n">dir</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Device_tree.getFileTree" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the TreeView structure (recursive way)</p>
+</dd></dl>
+
+<dl class="py function">
+<dt id="Device_tree.save_on_card">
+<code class="sig-prename descclassname">Device_tree.</code><code class="sig-name descname">save_on_card</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">frame</span></em>, <em class="sig-param"><span class="n">page</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Device_tree.save_on_card" title="Permalink to this definition">¶</a></dt>
+<dd><p>Save the tab on the device connected</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>frame</strong> (<em>:class:MainWindow</em>) – main window</p></li>
+<li><p><strong>page</strong> (<em>:class:StyledEditor</em>) – tab to save</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="Device_tree.setDefaultProg">
+<code class="sig-prename descclassname">Device_tree.</code><code class="sig-name descname">setDefaultProg</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">frame</span></em>, <em class="sig-param"><span class="n">filename</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Device_tree.setDefaultProg" title="Permalink to this definition">¶</a></dt>
+<dd><p>Extension of the method OnDefaultRun</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>frame</strong> – Main window</p></li>
+<li><p><strong>filename</strong> (<em>str</em>) – path of the file to run by default</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="Device_tree.treeModel">
+<code class="sig-prename descclassname">Device_tree.</code><code class="sig-name descname">treeModel</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">frame</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Device_tree.treeModel" title="Permalink to this definition">¶</a></dt>
+<dd><p>Build the TreeView</p>
+</dd></dl>
+
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="wxSerialConfigDialog.html" class="btn btn-neutral float-right" title="wxSerialConfigDialog module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="Shell.html" class="btn btn-neutral float-left" title="Shell module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        
+        &copy; Copyright 2020, @MyHumanKit
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

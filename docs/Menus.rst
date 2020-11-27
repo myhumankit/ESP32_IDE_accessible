@@ -1,7 +1,9 @@
-menus module
-============
+menus
+===
 
-.. automodule:: menus
-   :members:
-   :undoc-members:
-   :show-inheritance:
+.. toctree::
+
+    Edit_menu
+    File_menu
+    Help_menu
+    Tools_menu

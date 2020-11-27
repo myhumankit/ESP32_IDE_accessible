@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>menus module &mdash; IDE_MicroPython_accessible  documentation</title>
+  <title>&lt;no title&gt; &mdash; IDE_MicroPython_accessible  documentation</title>
   
 
   
@@ -36,8 +36,8 @@
     
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="panels module" href="panels.html" />
-    <link rel="prev" title="main module" href="main.html" /> 
+    <link rel="next" title="Edit_menu module" href="Edit_menu.html" />
+    <link rel="prev" title="Welcome to IDE_MicroPython_accessible’s documentation!" href="index.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -83,23 +83,28 @@
             
             
               <p class="caption"><span class="caption-text">Contents:</span></p>
-<ul class="current">
-<li class="toctree-l1 current"><a class="reference internal" href="modules.html">IDE_MicroPython_Accessible</a><ul class="current">
-<li class="toctree-l2"><a class="reference internal" href="Constantes.html">Constantes module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="Editor_Style.html">Editor_Style module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="FileTree.html">FileTree module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="Find_Replace.html">Find_Replace module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="Packages.html">Packages module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="Serial.html">Serial module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="Shortcuts.html">Shortcuts module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="Utilitaries.html">Utilitaries module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="api.html">api module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="main.html">main module</a></li>
-<li class="toctree-l2 current"><a class="current reference internal" href="#">menus module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="panels.html">panels module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="wxSerialConfigDialog.html">wxSerialConfigDialog module</a></li>
-</ul>
-</li>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="Edit_menu.html">Edit_menu module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="File_menu.html">File_menu module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Help_menu.html">Help_menu module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Tools_menu.html">Tools_menu module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Editor.html">Editor module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Notebook.html">Notebook module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Shell.html">Shell module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Device_tree.html">Device_tree module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="wxSerialConfigDialog.html">wxSerialConfigDialog module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="wx_burn_firmware.html">wx_burn_firmware module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="connexion.html">connexion module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="firmware.html">firmware module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="receive_infos.html">receive_infos module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="send_infos.html">send_infos module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="shortcuts.html">shortcuts module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="IDE_accessible_MHK.html">IDE_accessible_MHK module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="all_panels.html">all_panels module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="constantes.html">constantes module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="editor_style.html">editor_style module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="shortcuts.html">shortcuts module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api.html">API</a></li>
 </ul>
 
             
@@ -146,15 +151,13 @@
     
       <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
         
-          <li><a href="modules.html">IDE_MicroPython_Accessible</a> &raquo;</li>
-        
-      <li>menus module</li>
+      <li>&lt;no title&gt;</li>
     
     
       <li class="wy-breadcrumbs-aside">
         
             
-            <a href="_sources/menus.rst.txt" rel="nofollow"> View page source</a>
+            <a href="_sources/Menus.rst.txt" rel="nofollow"> View page source</a>
           
         
       </li>
@@ -167,538 +170,15 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="module-menus">
-<span id="menus-module"></span><h1>menus module<a class="headerlink" href="#module-menus" title="Permalink to this headline">¶</a></h1>
-<p><strong>Functions:</strong></p>
-<table class="longtable docutils align-default">
-<colgroup>
-<col style="width: 10%" />
-<col style="width: 90%" />
-</colgroup>
-<tbody>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">Change_Theme</span></code>(editor, theme)</p></td>
-<td><p>Change theme of the window</p></td>
-</tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">CheckPySyntax</span></code>([prog, args])</p></td>
-<td><p>Entry point for the script “pyflakes”.</p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">ConnectSerial</span></code>(self)</p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">GetCmdReturn</span></code>(shell_text, cmd)</p></td>
-<td><p>Return the result of a command launched in MicroPython</p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">Init_Editor_base</span></code>(editor)</p></td>
-<td><p>Init some settings for Editor Window</p></td>
-</tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">Init_Panels</span></code>(frame)</p></td>
-<td><p>Inits the three differents regions(treeCtrl, Notebook, Shell) in the MainWindow</p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#menus.Init_ToolBar" title="menus.Init_ToolBar"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Init_ToolBar</span></code></a>(frame)</p></td>
-<td><p>Inits an instance of the customized ToolBar class and places it on the frame</p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#menus.Init_Top_Menu" title="menus.Init_Top_Menu"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Init_Top_Menu</span></code></a>(frame)</p></td>
-<td><p>Inits an instance of customized TopMenu class and places it on the frame</p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">MyStatusBar</span></code>(frame)</p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">SendCmdAsync</span></code>(parent, cmd)</p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">change_lexer_pystyle</span></code>(editor, theme, font)</p></td>
-<td><p>Change lexer python words by applying  the theme and the font gived in parameters</p></td>
-</tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">change_lexer_stcstyle</span></code>(editor, theme, font)</p></td>
-<td><p>Change lexer words stc style by applying  the theme and the font gived in parameters</p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">createReflushTree</span></code>(frame, root, msg)</p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#menus.create_Edit_Menu" title="menus.create_Edit_Menu"><code class="xref py py-obj docutils literal notranslate"><span class="pre">create_Edit_Menu</span></code></a>()</p></td>
-<td><p>Inits a instance of a wx.Menu to create an Edit menu and his buttons (Copy, Paste, Find,…)</p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#menus.create_File_Menu" title="menus.create_File_Menu"><code class="xref py py-obj docutils literal notranslate"><span class="pre">create_File_Menu</span></code></a>()</p></td>
-<td><p>Inits a Instance of wx.Menu to create a File menu and his buttons (Save, Open,…)</p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#menus.create_Themes_Menu" title="menus.create_Themes_Menu"><code class="xref py py-obj docutils literal notranslate"><span class="pre">create_Themes_Menu</span></code></a>()</p></td>
-<td><p>Inits a instance of a wx.Menu to create a Theme menu and his buttons (Copy, Paste, Find,…)</p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#menus.create_Tools_Menu" title="menus.create_Tools_Menu"><code class="xref py py-obj docutils literal notranslate"><span class="pre">create_Tools_Menu</span></code></a>()</p></td>
-<td><p>Inits a instance of a wx.Menu to create a Tools menu and his buttons (Copy, Paste, Find,…)</p></td>
-</tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">find_next</span></code>(editor, evt)</p></td>
-<td><p>Useful function to find the next occurence of a word on the EditWindow panel</p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">getFileTree</span></code>(frame, dir)</p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">load_img</span></code>(path)</p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">reflushTree</span></code>(frame, data)</p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">replace</span></code>(editor, evt)</p></td>
-<td><p>Useful function to replace a the selected text by an other word on the EditWindow panel</p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">speak</span></code>(frame, txt)</p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">treeModel</span></code>(frame)</p></td>
-<td><p></p></td>
-</tr>
-</tbody>
-</table>
-<p><strong>Classes:</strong></p>
-<table class="longtable docutils align-default">
-<colgroup>
-<col style="width: 10%" />
-<col style="width: 90%" />
-</colgroup>
-<tbody>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">ChooseWorkspace</span></code>(parent, frame)</p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">DeviceTree</span></code>(parent, frame, paths, name)</p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">FileTreePanel</span></code>(parent, frame)</p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">MyEditor</span></code>(parent, topwindow)</p></td>
-<td><p>Customizable Editor page</p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">NotebookPanel</span></code>(parent, topwindow)</p></td>
-<td><p>Customized Notebook class</p></td>
-</tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">ShellPanel</span></code>(parent, frame)</p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">TerminalSetup</span></code>()</p></td>
-<td><p>Placeholder for various terminal settings.</p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#menus.ToolBar" title="menus.ToolBar"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ToolBar</span></code></a>(parent)</p></td>
-<td><p>A custom class derivated from wx.ToolBar to access quickly on some commands</p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#menus.TopMenu" title="menus.TopMenu"><code class="xref py py-obj docutils literal notranslate"><span class="pre">TopMenu</span></code></a>(parent)</p></td>
-<td><p>TopMenu class derivated of wx.MenuBar which contains the Edit and File Menus</p></td>
-</tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">WorkspaceTree</span></code>(parent, frame)</p></td>
-<td><p></p></td>
-</tr>
-</tbody>
-</table>
-<dl class="py function">
-<dt id="menus.Init_ToolBar">
-<code class="sig-prename descclassname">menus.</code><code class="sig-name descname">Init_ToolBar</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">frame</span></em><span class="sig-paren">)</span><a class="headerlink" href="#menus.Init_ToolBar" title="Permalink to this definition">¶</a></dt>
-<dd><p>Inits an instance of the customized ToolBar class and places it on the frame</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>frame</strong> (wx.Frame <a class="reference external" href="https://wxpython.org/Phoenix/docs/html/wx.Frame.html">https://wxpython.org/Phoenix/docs/html/wx.Frame.html</a>) – Frame which will contains the ToolBar</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
-<dt id="menus.Init_Top_Menu">
-<code class="sig-prename descclassname">menus.</code><code class="sig-name descname">Init_Top_Menu</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">frame</span></em><span class="sig-paren">)</span><a class="headerlink" href="#menus.Init_Top_Menu" title="Permalink to this definition">¶</a></dt>
-<dd><p>Inits an instance of customized TopMenu class and places it on the frame</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>frame</strong> (wx.Frame <a class="reference external" href="https://wxpython.org/Phoenix/docs/html/wx.Frame.html">https://wxpython.org/Phoenix/docs/html/wx.Frame.html</a>) – Frame which will contains the MenuBar</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py class">
-<dt id="menus.ToolBar">
-<em class="property">class </em><code class="sig-prename descclassname">menus.</code><code class="sig-name descname">ToolBar</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">parent</span></em><span class="sig-paren">)</span><a class="headerlink" href="#menus.ToolBar" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">wx._core.ToolBar</span></code></p>
-<p>A custom class derivated from wx.ToolBar to access quickly on some commands</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>wx.ToolBar</strong> – see <a class="reference external" href="https://wxpython.org/Phoenix/docs/html/wx.ToolBar.html">https://wxpython.org/Phoenix/docs/html/wx.ToolBar.html</a></p>
-</dd>
-</dl>
-<p><strong>Methods:</strong></p>
-<table class="longtable docutils align-default">
-<colgroup>
-<col style="width: 10%" />
-<col style="width: 90%" />
-</colgroup>
-<tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="#menus.ToolBar.AddTools" title="menus.ToolBar.AddTools"><code class="xref py py-obj docutils literal notranslate"><span class="pre">AddTools</span></code></a>()</p></td>
-<td><p>Fill the objet created with tools buttons</p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#menus.ToolBar.OnClear" title="menus.ToolBar.OnClear"><code class="xref py py-obj docutils literal notranslate"><span class="pre">OnClear</span></code></a>(event)</p></td>
-<td><p>Clear the shell panel</p></td>
-</tr>
-</tbody>
-</table>
-<dl class="py method">
-<dt id="menus.ToolBar.AddTools">
-<code class="sig-name descname">AddTools</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#menus.ToolBar.AddTools" title="Permalink to this definition">¶</a></dt>
-<dd><p>Fill the objet created with tools buttons</p>
-</dd></dl>
-
-<dl class="py method">
-<dt id="menus.ToolBar.OnClear">
-<code class="sig-name descname">OnClear</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">event</span></em><span class="sig-paren">)</span><a class="headerlink" href="#menus.ToolBar.OnClear" title="Permalink to this definition">¶</a></dt>
-<dd><p>Clear the shell panel</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>evt</strong> (<em>wx.Event</em>) – Event to trigger the method</p>
-</dd>
-</dl>
-</dd></dl>
-
-</dd></dl>
-
-<dl class="py class">
-<dt id="menus.TopMenu">
-<em class="property">class </em><code class="sig-prename descclassname">menus.</code><code class="sig-name descname">TopMenu</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">parent</span></em><span class="sig-paren">)</span><a class="headerlink" href="#menus.TopMenu" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">wx._core.MenuBar</span></code></p>
-<p>TopMenu class derivated of wx.MenuBar which contains the Edit and File Menus</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>wx.MenuBar</strong> (wx.MenuBar see  <a class="reference external" href="https://wxpython.org/Phoenix/docs/html/wx.MenuBar.html">https://wxpython.org/Phoenix/docs/html/wx.MenuBar.html</a>) – Class to derivate</p>
-</dd>
-</dl>
-<p><strong>Methods:</strong></p>
-<table class="longtable docutils align-default">
-<colgroup>
-<col style="width: 10%" />
-<col style="width: 90%" />
-</colgroup>
-<tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="#menus.TopMenu.OnAddPage" title="menus.TopMenu.OnAddPage"><code class="xref py py-obj docutils literal notranslate"><span class="pre">OnAddPage</span></code></a>(event)</p></td>
-<td><p>Add a new page on the notebook</p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#menus.TopMenu.OnChangeTheme" title="menus.TopMenu.OnChangeTheme"><code class="xref py py-obj docutils literal notranslate"><span class="pre">OnChangeTheme</span></code></a>(event)</p></td>
-<td><p>Change the theme of the frame and the lexer style</p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#menus.TopMenu.OnClosePage" title="menus.TopMenu.OnClosePage"><code class="xref py py-obj docutils literal notranslate"><span class="pre">OnClosePage</span></code></a>(event)</p></td>
-<td><p>Close the current page and update id order</p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#menus.TopMenu.OnCopy" title="menus.TopMenu.OnCopy"><code class="xref py py-obj docutils literal notranslate"><span class="pre">OnCopy</span></code></a>(event)</p></td>
-<td><p>Copy the selection on the clipboard</p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#menus.TopMenu.OnCut" title="menus.TopMenu.OnCut"><code class="xref py py-obj docutils literal notranslate"><span class="pre">OnCut</span></code></a>(event)</p></td>
-<td><p>Cut the selection on the clipboard</p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#menus.TopMenu.OnDisconnect" title="menus.TopMenu.OnDisconnect"><code class="xref py py-obj docutils literal notranslate"><span class="pre">OnDisconnect</span></code></a>(event)</p></td>
-<td><p>Close the connection with the device connected</p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#menus.TopMenu.OnDownloadFile" title="menus.TopMenu.OnDownloadFile"><code class="xref py py-obj docutils literal notranslate"><span class="pre">OnDownloadFile</span></code></a>(event)</p></td>
-<td><p>Download the file found on the current tab if it was saved</p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#menus.TopMenu.OnExit" title="menus.TopMenu.OnExit"><code class="xref py py-obj docutils literal notranslate"><span class="pre">OnExit</span></code></a>(evt)</p></td>
-<td><p>Quit the app</p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#menus.TopMenu.OnFindReplace" title="menus.TopMenu.OnFindReplace"><code class="xref py py-obj docutils literal notranslate"><span class="pre">OnFindReplace</span></code></a>(event)</p></td>
-<td><p>Open a wx.FindReplaceDialog to find and/, replace text in the current editor</p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#menus.TopMenu.OnOpen" title="menus.TopMenu.OnOpen"><code class="xref py py-obj docutils literal notranslate"><span class="pre">OnOpen</span></code></a>(evt)</p></td>
-<td><p>Open a wx.filedialog to open a file on a editor</p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#menus.TopMenu.OnPaste" title="menus.TopMenu.OnPaste"><code class="xref py py-obj docutils literal notranslate"><span class="pre">OnPaste</span></code></a>(event)</p></td>
-<td><p>Paste the content of the clipboard</p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#menus.TopMenu.OnPortSettings" title="menus.TopMenu.OnPortSettings"><code class="xref py py-obj docutils literal notranslate"><span class="pre">OnPortSettings</span></code></a>(event)</p></td>
-<td><p>Show the port settings dialog.</p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#menus.TopMenu.OnRedo" title="menus.TopMenu.OnRedo"><code class="xref py py-obj docutils literal notranslate"><span class="pre">OnRedo</span></code></a>(event)</p></td>
-<td><p>Redo</p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#menus.TopMenu.OnRun" title="menus.TopMenu.OnRun"><code class="xref py py-obj docutils literal notranslate"><span class="pre">OnRun</span></code></a>(event)</p></td>
-<td><p>Upload the file + run</p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#menus.TopMenu.OnSave" title="menus.TopMenu.OnSave"><code class="xref py py-obj docutils literal notranslate"><span class="pre">OnSave</span></code></a>(evt)</p></td>
-<td><p>Save the current page of the notebook</p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#menus.TopMenu.OnSaveAs" title="menus.TopMenu.OnSaveAs"><code class="xref py py-obj docutils literal notranslate"><span class="pre">OnSaveAs</span></code></a>(evt)</p></td>
-<td><p>Open a wx.filedialog to Save as a file the text of the current editor</p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#menus.TopMenu.OnStop" title="menus.TopMenu.OnStop"><code class="xref py py-obj docutils literal notranslate"><span class="pre">OnStop</span></code></a>(event)</p></td>
-<td><p>Stop the program on executing</p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#menus.TopMenu.OnSyntaxCheck" title="menus.TopMenu.OnSyntaxCheck"><code class="xref py py-obj docutils literal notranslate"><span class="pre">OnSyntaxCheck</span></code></a>(event)</p></td>
-<td><p>Check the python syntax on the current Tab</p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#menus.TopMenu.OnUndo" title="menus.TopMenu.OnUndo"><code class="xref py py-obj docutils literal notranslate"><span class="pre">OnUndo</span></code></a>(event)</p></td>
-<td><p>Undo</p></td>
-</tr>
-</tbody>
-</table>
-<dl class="py method">
-<dt id="menus.TopMenu.OnAddPage">
-<code class="sig-name descname">OnAddPage</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">event</span></em><span class="sig-paren">)</span><a class="headerlink" href="#menus.TopMenu.OnAddPage" title="Permalink to this definition">¶</a></dt>
-<dd><p>Add a new page on the notebook</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>evt</strong> (<em>wx.Event</em>) – Event to trigger the method</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt id="menus.TopMenu.OnChangeTheme">
-<code class="sig-name descname">OnChangeTheme</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">event</span></em><span class="sig-paren">)</span><a class="headerlink" href="#menus.TopMenu.OnChangeTheme" title="Permalink to this definition">¶</a></dt>
-<dd><p>Change the theme of the frame and the lexer style</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>evt</strong> (<em>wx.Event</em>) – Event to trigger the method</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt id="menus.TopMenu.OnClosePage">
-<code class="sig-name descname">OnClosePage</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">event</span></em><span class="sig-paren">)</span><a class="headerlink" href="#menus.TopMenu.OnClosePage" title="Permalink to this definition">¶</a></dt>
-<dd><p>Close the current page and update id order</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>evt</strong> (<em>wx.Event</em>) – Event to trigger the method</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt id="menus.TopMenu.OnCopy">
-<code class="sig-name descname">OnCopy</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">event</span></em><span class="sig-paren">)</span><a class="headerlink" href="#menus.TopMenu.OnCopy" title="Permalink to this definition">¶</a></dt>
-<dd><p>Copy the selection on the clipboard</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>evt</strong> (<em>wx.Event</em>) – Event to trigger the method</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt id="menus.TopMenu.OnCut">
-<code class="sig-name descname">OnCut</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">event</span></em><span class="sig-paren">)</span><a class="headerlink" href="#menus.TopMenu.OnCut" title="Permalink to this definition">¶</a></dt>
-<dd><p>Cut the selection on the clipboard</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>evt</strong> (<em>wx.Event</em>) – Event to trigger the method</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt id="menus.TopMenu.OnDisconnect">
-<code class="sig-name descname">OnDisconnect</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">event</span></em><span class="sig-paren">)</span><a class="headerlink" href="#menus.TopMenu.OnDisconnect" title="Permalink to this definition">¶</a></dt>
-<dd><p>Close the connection with the device connected</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>evt</strong> (<em>wx.Event</em>) – Event to trigger the method</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt id="menus.TopMenu.OnDownloadFile">
-<code class="sig-name descname">OnDownloadFile</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">event</span></em><span class="sig-paren">)</span><a class="headerlink" href="#menus.TopMenu.OnDownloadFile" title="Permalink to this definition">¶</a></dt>
-<dd><p>Download the file found on the current tab if it was saved</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>evt</strong> (<em>wx.Event</em>) – Event to trigger the method</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt id="menus.TopMenu.OnExit">
-<code class="sig-name descname">OnExit</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">evt</span></em><span class="sig-paren">)</span><a class="headerlink" href="#menus.TopMenu.OnExit" title="Permalink to this definition">¶</a></dt>
-<dd><p>Quit the app</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>evt</strong> (<em>wx.Event</em>) – Event to trigger the method</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt id="menus.TopMenu.OnFindReplace">
-<code class="sig-name descname">OnFindReplace</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">event</span></em><span class="sig-paren">)</span><a class="headerlink" href="#menus.TopMenu.OnFindReplace" title="Permalink to this definition">¶</a></dt>
-<dd><p>Open a wx.FindReplaceDialog to find and/, replace text in the current editor</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>evt</strong> (<em>wx.Event</em>) – Event to trigger the method</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt id="menus.TopMenu.OnOpen">
-<code class="sig-name descname">OnOpen</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">evt</span></em><span class="sig-paren">)</span><a class="headerlink" href="#menus.TopMenu.OnOpen" title="Permalink to this definition">¶</a></dt>
-<dd><p>Open a wx.filedialog to open a file on a editor</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>evt</strong> (<em>wx.Event</em>) – Event to trigger the method</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt id="menus.TopMenu.OnPaste">
-<code class="sig-name descname">OnPaste</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">event</span></em><span class="sig-paren">)</span><a class="headerlink" href="#menus.TopMenu.OnPaste" title="Permalink to this definition">¶</a></dt>
-<dd><p>Paste the content of the clipboard</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>evt</strong> (<em>wx.Event</em>) – Event to trigger the method</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt id="menus.TopMenu.OnPortSettings">
-<code class="sig-name descname">OnPortSettings</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">event</span></em><span class="sig-paren">)</span><a class="headerlink" href="#menus.TopMenu.OnPortSettings" title="Permalink to this definition">¶</a></dt>
-<dd><p>Show the port settings dialog. The reader thread is stopped for the
-settings change.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>evt</strong> (<em>wx.Event</em>) – Event to trigger the method</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt id="menus.TopMenu.OnRedo">
-<code class="sig-name descname">OnRedo</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">event</span></em><span class="sig-paren">)</span><a class="headerlink" href="#menus.TopMenu.OnRedo" title="Permalink to this definition">¶</a></dt>
-<dd><p>Redo</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>evt</strong> (<em>wx.Event</em>) – Event to trigger the method</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt id="menus.TopMenu.OnRun">
-<code class="sig-name descname">OnRun</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">event</span></em><span class="sig-paren">)</span><a class="headerlink" href="#menus.TopMenu.OnRun" title="Permalink to this definition">¶</a></dt>
-<dd><p>Upload the file + run</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>evt</strong> (<em>wx.Event</em>) – Event to trigger the method</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt id="menus.TopMenu.OnSave">
-<code class="sig-name descname">OnSave</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">evt</span></em><span class="sig-paren">)</span><a class="headerlink" href="#menus.TopMenu.OnSave" title="Permalink to this definition">¶</a></dt>
-<dd><p>Save the current page of the notebook</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>evt</strong> (<em>wx.Event</em>) – Event to trigger the method</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt id="menus.TopMenu.OnSaveAs">
-<code class="sig-name descname">OnSaveAs</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">evt</span></em><span class="sig-paren">)</span><a class="headerlink" href="#menus.TopMenu.OnSaveAs" title="Permalink to this definition">¶</a></dt>
-<dd><p>Open a wx.filedialog to Save as a file the text of the current editor</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>evt</strong> (<em>wx.Event</em>) – Event to trigger the method</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt id="menus.TopMenu.OnStop">
-<code class="sig-name descname">OnStop</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">event</span></em><span class="sig-paren">)</span><a class="headerlink" href="#menus.TopMenu.OnStop" title="Permalink to this definition">¶</a></dt>
-<dd><p>Stop the program on executing</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>evt</strong> (<em>wx.Event</em>) – Event to trigger the method</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt id="menus.TopMenu.OnSyntaxCheck">
-<code class="sig-name descname">OnSyntaxCheck</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">event</span></em><span class="sig-paren">)</span><a class="headerlink" href="#menus.TopMenu.OnSyntaxCheck" title="Permalink to this definition">¶</a></dt>
-<dd><p>Check the python syntax on the current Tab</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>evt</strong> (<em>wx.Event</em>) – Event to trigger the method</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt id="menus.TopMenu.OnUndo">
-<code class="sig-name descname">OnUndo</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">event</span></em><span class="sig-paren">)</span><a class="headerlink" href="#menus.TopMenu.OnUndo" title="Permalink to this definition">¶</a></dt>
-<dd><p>Undo</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>evt</strong> (<em>wx.Event</em>) – Event to trigger the method</p>
-</dd>
-</dl>
-</dd></dl>
-
-</dd></dl>
-
-<dl class="py function">
-<dt id="menus.create_Edit_Menu">
-<code class="sig-prename descclassname">menus.</code><code class="sig-name descname">create_Edit_Menu</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#menus.create_Edit_Menu" title="Permalink to this definition">¶</a></dt>
-<dd><p>Inits a instance of a wx.Menu to create an Edit menu and his buttons (Copy, Paste, Find,…)</p>
-<dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>the Edit menu filled by buttons</p>
-</dd>
-<dt class="field-even">Return type</dt>
-<dd class="field-even"><p>wx.Menu see <a class="reference external" href="https://wxpython.org/Phoenix/docs/html/wx.Menu.html">https://wxpython.org/Phoenix/docs/html/wx.Menu.html</a></p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
-<dt id="menus.create_File_Menu">
-<code class="sig-prename descclassname">menus.</code><code class="sig-name descname">create_File_Menu</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#menus.create_File_Menu" title="Permalink to this definition">¶</a></dt>
-<dd><p>Inits a Instance of wx.Menu to create a File menu and his buttons (Save, Open,…)</p>
-<dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>the File menu filled by buttons</p>
-</dd>
-<dt class="field-even">Return type</dt>
-<dd class="field-even"><p>wx.Menu see <a class="reference external" href="https://wxpython.org/Phoenix/docs/html/wx.Menu.html">https://wxpython.org/Phoenix/docs/html/wx.Menu.html</a></p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
-<dt id="menus.create_Themes_Menu">
-<code class="sig-prename descclassname">menus.</code><code class="sig-name descname">create_Themes_Menu</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#menus.create_Themes_Menu" title="Permalink to this definition">¶</a></dt>
-<dd><p>Inits a instance of a wx.Menu to create a Theme menu and his buttons (Copy, Paste, Find,…)</p>
-<dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>the Theme menu filled by buttons</p>
-</dd>
-<dt class="field-even">Return type</dt>
-<dd class="field-even"><p>wx.Menu see <a class="reference external" href="https://wxpython.org/Phoenix/docs/html/wx.Menu.html">https://wxpython.org/Phoenix/docs/html/wx.Menu.html</a></p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
-<dt id="menus.create_Tools_Menu">
-<code class="sig-prename descclassname">menus.</code><code class="sig-name descname">create_Tools_Menu</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#menus.create_Tools_Menu" title="Permalink to this definition">¶</a></dt>
-<dd><p>Inits a instance of a wx.Menu to create a Tools menu and his buttons (Copy, Paste, Find,…)</p>
-<dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>the Theme menu filled by buttons</p>
-</dd>
-<dt class="field-even">Return type</dt>
-<dd class="field-even"><p>wx.Menu see <a class="reference external" href="https://wxpython.org/Phoenix/docs/html/wx.Menu.html">https://wxpython.org/Phoenix/docs/html/wx.Menu.html</a></p>
-</dd>
-</dl>
-</dd></dl>
-
+  <p>menus
+===</p>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="Edit_menu.html">Edit_menu module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="File_menu.html">File_menu module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Help_menu.html">Help_menu module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Tools_menu.html">Tools_menu module</a></li>
+</ul>
 </div>
 
 
@@ -709,10 +189,10 @@ settings change.</p>
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="panels.html" class="btn btn-neutral float-right" title="panels module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="Edit_menu.html" class="btn btn-neutral float-right" title="Edit_menu module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="main.html" class="btn btn-neutral float-left" title="main module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="index.html" class="btn btn-neutral float-left" title="Welcome to IDE_MicroPython_accessible’s documentation!" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   

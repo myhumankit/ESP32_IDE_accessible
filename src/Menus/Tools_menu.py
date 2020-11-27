@@ -1,3 +1,7 @@
+"""
+    Module wich contains the ToolsMenu class and some functions linked to this menu
+"""
+
 import wx
 import time
 from Panels import wxSerialConfigDialog
@@ -19,6 +23,11 @@ class ToolsMenu(wx.Menu):
     """
 
     def __init__(self, frame):
+        """ Constructor method
+
+         :param frame: main window
+         :type frame: MainWindow
+         """
         wx.Menu.__init__(self, "Tools")
 
         self.frame = frame
@@ -77,7 +86,7 @@ class ToolsMenu(wx.Menu):
             try:
                 frame.start_thread_serial()
                 frame.show_cmd = False
-                put_cmd(frame, "import os\r\n")
+                frame.exec_cmd("import os\r\n")
                 frame.exec_cmd("os.uname()\r\n")
                 if frame.result.find("upgrade") >= 0:
                     frame.serial.close()
@@ -208,6 +217,10 @@ class ToolsMenu(wx.Menu):
             self.frame.shell.AppendText("serial not open")
 
     def OnBurnFirmware(self, event):
+        """Call :function: SerialManager.burn_firmware
+
+        :param event: event
+        """
         burn_firmware(self.frame, event)
 
 
@@ -219,6 +232,11 @@ class ThemesMenu(wx.Menu):
     """
 
     def __init__(self, frame):
+        """ Constructor method
+
+        :param frame: main window
+        :type frame: MainWindow
+        """
         wx.Menu.__init__(self, "")
 
         self.frame = frame
@@ -253,9 +271,15 @@ class ThemesMenu(wx.Menu):
         except Exception as e:
             print(e)
 
+# TODO: deplacer cette fonction à un autre endroit
 
 
 def create_new_file(frame):
+    """ Create a new file on the card
+
+        :param frame: main window
+        :type frame: MainWindow
+    """
     ok = False
     txt = "Select the name of the new file"
     frame.exec_cmd("\r\n")

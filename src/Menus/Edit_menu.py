@@ -1,3 +1,6 @@
+"""
+    Module wich contains the EditMenu class and some functions linked to this menu
+"""
 import wx
 import sys
 
@@ -14,6 +17,9 @@ class EditMenu(wx.Menu):
     """
 
     def __init__(self, frame):
+        """
+        Constructor method
+        """
         wx.Menu.__init__(self, "Edit")
 
         self.frame = frame

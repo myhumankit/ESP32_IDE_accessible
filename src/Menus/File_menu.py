@@ -1,3 +1,6 @@
+"""
+    Module wich contains the FileMenu class and some functions linked to this menu
+"""
 import wx
 import os
 from Panels.Editor import Styled_Editor
@@ -13,6 +16,11 @@ class FileMenu(wx.Menu):
     """
 
     def __init__(self, frame):
+        """ Constructor method
+
+        :param frame: main window
+        :type frame: MainWindow
+        """
         wx.Menu.__init__(self, "File")
 
         self.frame = frame
@@ -122,7 +130,7 @@ class FileMenu(wx.Menu):
                                "",
                                "",
                                "*",
-                               wx.FD_OPEN)
+                               style=wx.FD_OPEN)
 
         dialog.CenterOnParent()
         if dialog.ShowModal() == wx.ID_OK:

@@ -1,3 +1,7 @@
+"""
+    Contains functions to manage shortcuts
+"""
+
 import wx
 
 wx.ID_VOCAL = wx.NewId()
@@ -24,7 +28,7 @@ def InitF9(frame):
     :return: entrie(here tuple) for AcceleratorTable
     :rtype: tuple(int, int, int)
     """
-    frame.Bind(wx.EVT_MENU, frame.device_tree.set_focus_tree,
+    frame.Bind(wx.EVT_MENU, frame.device_tree.SetFocus,
                id=wx.ID_TREE_FOCUS)
     return (wx.ACCEL_NORMAL,  wx.WXK_F9, wx.ID_TREE_FOCUS)
 
@@ -36,7 +40,7 @@ def InitF10(frame):
     :return: entrie(here tuple) for AcceleratorTable
     :rtype: tuple(int, int, int)
     """
-    frame.Bind(wx.EVT_MENU, frame.set_focus_editor, id=wx.ID_EDITOR_FOCUS)
+    frame.Bind(wx.EVT_MENU, frame.notebook.set_focus_editor, id=wx.ID_EDITOR_FOCUS)
     return (wx.ACCEL_NORMAL,  wx.WXK_F10, wx.ID_EDITOR_FOCUS)
 
 
@@ -47,7 +51,7 @@ def InitF11(frame):
     :return: entrie(here tuple) for AcceleratorTable
     :rtype: tuple(int, int, int)
     """
-    frame.Bind(wx.EVT_MENU, frame.shell.set_focus_shell, id=wx.ID_SHELL_FOCUS)
+    frame.Bind(wx.EVT_MENU, frame.shell.SetFocus, id=wx.ID_SHELL_FOCUS)
     return (wx.ACCEL_NORMAL,  wx.WXK_F11, wx.ID_SHELL_FOCUS)
 
 

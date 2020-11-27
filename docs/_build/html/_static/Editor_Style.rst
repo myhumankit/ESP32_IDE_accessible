@@ -1,7 +1,7 @@
-Editor\_Style module
+editor\_style module
 ====================
 
-.. automodule:: Editor_Style
+.. automodule:: editor_style
    :members:
    :undoc-members:
    :show-inheritance:

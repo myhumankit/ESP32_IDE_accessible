@@ -1,3 +1,6 @@
+""" Module which contains class to install or update an ESP Firmware
+"""
+
 import wx
 import serial
 

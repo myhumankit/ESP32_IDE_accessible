@@ -1,7 +1,7 @@
-Shortcuts module
+shortcuts module
 ================
 
-.. automodule:: Shortcuts
+.. automodule:: shortcuts
    :members:
    :undoc-members:
    :show-inheritance:

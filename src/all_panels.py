@@ -1,3 +1,7 @@
+"""
+    Contains functions to create all panels
+"""
+
 import wx
 import Panels.Device_tree as Tree
 from Panels.Notebook import NotebookPanel
@@ -16,19 +20,12 @@ def create_panels(frame):
     frame.splitter_h = wx.SplitterWindow(frame.splitter_v,
                                          style=style, name="DIMENSION ALL")
     frame.notebook = NotebookPanel(frame.splitter_h, frame)
-    frame.device_tree = Tree.DeviceTree(frame.splitter_v, frame, "", "")
+    frame.device_tree = Tree.DeviceTree(frame.splitter_v, frame)
     frame.shell = ShellPanel(frame.splitter_h, frame)
     frame.splitter_v.SplitVertically(frame.device_tree, frame.splitter_h, 200)
     frame.splitter_h.SplitHorizontally(frame.notebook, frame.shell, 400)
     frame.splitter_h.SetMinimumPaneSize(20)
     frame.splitter_v.SetMinimumPaneSize(20)
-
-
-def create_status_bar(frame):
-    statusbar = frame.CreateStatusBar(2, style=wx.STB_ELLIPSIZE_MIDDLE)
-    statusbar.SetBackgroundColour("Grey")
-    if frame.connected:
-        statusbar.SetStatusText("Status: Connected", 1)
-    else:
-        statusbar.SetStatusText("Status: Not Connected", 1)
-    return statusbar
+    frame.statusbar = frame.CreateStatusBar(2, style=wx.STB_ELLIPSIZE_MIDDLE)
+    frame.statusbar.SetBackgroundColour("Grey")
+    frame.statusbar.SetStatusText("Status: Not Connected", 1)

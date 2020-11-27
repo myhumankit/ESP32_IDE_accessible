@@ -10,6 +10,13 @@ from constantes import stc_style, py_style
 
 
 def change_theme_choice(frame, theme_name):
+    """ Change the theme attribut on all panels
+
+    :param frame: main window
+    :type frame: :class: MainWindow
+    :param theme_name: theme selected
+    :type theme_name: str
+    """
     frame.notebook.theme_choice = theme_name
     frame.shell.theme_choice = theme_name
     frame.device_tree.theme_choice = theme_name
@@ -107,13 +114,19 @@ def customize_lexer_pystyle(editor, theme, font):
 
 
 def activate_highlighted_syntax(notebook, theme_menu):
+    """Enable/disable the syntax highlight
+
+    :param notebook: Notebook panel
+    :type notebook: :class: Panels.NotebookPanel
+    :param theme_menu: themes menu
+    :type theme_menu: :class:Tools.ThemeMenu
+    """
     page = notebook.GetCurrentPage()
     if notebook.colorized:
         notebook.colorized = False
         if page:
             customize_editor(page, notebook.theme_choice)
             theme_menu.syntax_on_item.SetItemLabel("Syntax Highlight Disabled")
-            
     else:
         notebook.colorized = True
         if page:

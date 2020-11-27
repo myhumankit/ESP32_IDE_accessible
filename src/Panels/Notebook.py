@@ -1,3 +1,6 @@
+""" Module wich contain the custom FlatNotebook class
+"""
+
 import wx
 import json
 import wx.lib.agw.flatnotebook as fnb
@@ -78,11 +81,11 @@ class NotebookPanel(fnb.FlatNotebook):
         self.colorized = True
 
     def custom_notebook(self, theme):
-        """Custom the Notebook according to the theme passed on args
+        """ Custom the Notebook according to the theme passed on args
 
-        :param theme: The theme to apply
-        :type theme: list
-        """
+         :param theme: The theme to apply
+         :type theme: list
+         """
         try:
             file = open("./customize.json")
             theme = json.load(file)
@@ -97,6 +100,8 @@ class NotebookPanel(fnb.FlatNotebook):
             print("Can't Customize Notebook")
 
     def set_focus_editor(self, evt):
+        """ Set the focus on the current editor tab
+         """
         try:
             page = self.GetCurrentPage()
             page = self.GetTabArea()
@@ -105,6 +110,17 @@ class NotebookPanel(fnb.FlatNotebook):
             print(e)
 
     def new_page(self, filename, path, text, on_card):
+        """ Add the new tab and his infos on the notebook
+
+        :param filename: name of the file opened (or str empty)
+        :type filename: str
+        :param path: path of the file opened (or str empty)
+        :type path: str
+        :param text: text to display on the tab (or str empty)
+        :type text: str
+        :param on_card: flag to know if the file opened comes from the device connected
+        :type on_card: boolean
+        """
         new_tab = Styled_Editor(self, self.topwindow, text, on_card)
         new_tab.filename = filename
         new_tab.directory = path

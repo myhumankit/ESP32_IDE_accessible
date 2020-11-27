@@ -1,0 +1,385 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Edit_menu module &mdash; IDE_MicroPython_accessible  documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+
+  
+  
+  
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="File_menu module" href="File_menu.html" />
+    <link rel="prev" title="&lt;no title&gt;" href="Menus.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="index.html" class="icon icon-home" alt="Documentation Home"> IDE_MicroPython_accessible
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Edit_menu module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="File_menu.html">File_menu module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Help_menu.html">Help_menu module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Tools_menu.html">Tools_menu module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Editor.html">Editor module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Notebook.html">Notebook module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Shell.html">Shell module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Device_tree.html">Device_tree module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="wxSerialConfigDialog.html">wxSerialConfigDialog module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="wx_burn_firmware.html">wx_burn_firmware module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="connexion.html">connexion module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="firmware.html">firmware module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="receive_infos.html">receive_infos module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="send_infos.html">send_infos module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="shortcuts.html">shortcuts module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="IDE_accessible_MHK.html">IDE_accessible_MHK module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="all_panels.html">all_panels module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="constantes.html">constantes module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="editor_style.html">editor_style module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="shortcuts.html">shortcuts module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api.html">API</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">IDE_MicroPython_accessible</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="Menus.html">&lt;no title&gt;</a> &raquo;</li>
+        
+      <li>Edit_menu module</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/Edit_menu.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="module-Edit_menu">
+<span id="edit-menu-module"></span><h1>Edit_menu module<a class="headerlink" href="#module-Edit_menu" title="Permalink to this headline">¶</a></h1>
+<p>Module wich contains the EditMenu class and some functions linked to this menu</p>
+<p><strong>Functions:</strong></p>
+<table class="longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">CheckPySyntax</span></code>([prog, args])</p></td>
+<td><p>Entry point for the script “pyflakes”.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">my_speak</span></code>(frame, txt)</p></td>
+<td><p>Speak the texte given in params by creating a thread dedicated</p></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Classes:</strong></p>
+<table class="longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#Edit_menu.EditMenu" title="Edit_menu.EditMenu"><code class="xref py py-obj docutils literal notranslate"><span class="pre">EditMenu</span></code></a>(frame)</p></td>
+<td><p>Inits a instance of a wx.Menu to create a Theme menu and his buttons (Copy, Paste, Find,…)</p></td>
+</tr>
+</tbody>
+</table>
+<dl class="py class">
+<dt id="Edit_menu.EditMenu">
+<em class="property">class </em><code class="sig-prename descclassname">Edit_menu.</code><code class="sig-name descname">EditMenu</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">frame</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Edit_menu.EditMenu" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">wx._core.Menu</span></code></p>
+<p>Inits a instance of a wx.Menu to create a Theme menu and his buttons (Copy, Paste, Find,…)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>the Theme menu filled by buttons</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>wx.Menu see <a class="reference external" href="https://wxpython.org/Phoenix/docs/html/wx.Menu.html">https://wxpython.org/Phoenix/docs/html/wx.Menu.html</a></p>
+</dd>
+</dl>
+<p><strong>Methods:</strong></p>
+<table class="longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#Edit_menu.EditMenu.OnCopy" title="Edit_menu.EditMenu.OnCopy"><code class="xref py py-obj docutils literal notranslate"><span class="pre">OnCopy</span></code></a>(evt)</p></td>
+<td><p>Copy the selection on the clipboard</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#Edit_menu.EditMenu.OnCut" title="Edit_menu.EditMenu.OnCut"><code class="xref py py-obj docutils literal notranslate"><span class="pre">OnCut</span></code></a>(evt)</p></td>
+<td><p>Cut the selection on the clipboard</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#Edit_menu.EditMenu.OnFindReplace" title="Edit_menu.EditMenu.OnFindReplace"><code class="xref py py-obj docutils literal notranslate"><span class="pre">OnFindReplace</span></code></a>(evt)</p></td>
+<td><p>Open a wx.FindReplaceDialog to find and/, replace text in the current editor</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#Edit_menu.EditMenu.OnPaste" title="Edit_menu.EditMenu.OnPaste"><code class="xref py py-obj docutils literal notranslate"><span class="pre">OnPaste</span></code></a>(evt)</p></td>
+<td><p>Paste the content of the clipboard</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#Edit_menu.EditMenu.OnRedo" title="Edit_menu.EditMenu.OnRedo"><code class="xref py py-obj docutils literal notranslate"><span class="pre">OnRedo</span></code></a>(evt)</p></td>
+<td><p>Redo</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#Edit_menu.EditMenu.OnSyntaxCheck" title="Edit_menu.EditMenu.OnSyntaxCheck"><code class="xref py py-obj docutils literal notranslate"><span class="pre">OnSyntaxCheck</span></code></a>(evt)</p></td>
+<td><p>Check the python syntax on the current Tab</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#Edit_menu.EditMenu.OnUndo" title="Edit_menu.EditMenu.OnUndo"><code class="xref py py-obj docutils literal notranslate"><span class="pre">OnUndo</span></code></a>(evt)</p></td>
+<td><p>Undo</p></td>
+</tr>
+</tbody>
+</table>
+<dl class="py method">
+<dt id="Edit_menu.EditMenu.OnCopy">
+<code class="sig-name descname">OnCopy</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">evt</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Edit_menu.EditMenu.OnCopy" title="Permalink to this definition">¶</a></dt>
+<dd><p>Copy the selection on the clipboard</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>evt</strong> (<em>wx.Event</em>) – Event to trigger the method</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="Edit_menu.EditMenu.OnCut">
+<code class="sig-name descname">OnCut</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">evt</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Edit_menu.EditMenu.OnCut" title="Permalink to this definition">¶</a></dt>
+<dd><p>Cut the selection on the clipboard</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>evt</strong> (<em>wx.Event</em>) – Event to trigger the method</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="Edit_menu.EditMenu.OnFindReplace">
+<code class="sig-name descname">OnFindReplace</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">evt</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Edit_menu.EditMenu.OnFindReplace" title="Permalink to this definition">¶</a></dt>
+<dd><p>Open a wx.FindReplaceDialog to find and/, replace text in the current editor</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>evt</strong> (<em>wx.Event</em>) – Event to trigger the method</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="Edit_menu.EditMenu.OnPaste">
+<code class="sig-name descname">OnPaste</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">evt</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Edit_menu.EditMenu.OnPaste" title="Permalink to this definition">¶</a></dt>
+<dd><p>Paste the content of the clipboard</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>evt</strong> (<em>wx.Event</em>) – Event to trigger the method</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="Edit_menu.EditMenu.OnRedo">
+<code class="sig-name descname">OnRedo</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">evt</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Edit_menu.EditMenu.OnRedo" title="Permalink to this definition">¶</a></dt>
+<dd><p>Redo</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>evt</strong> (<em>wx.Event</em>) – Event to trigger the method</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="Edit_menu.EditMenu.OnSyntaxCheck">
+<code class="sig-name descname">OnSyntaxCheck</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">evt</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Edit_menu.EditMenu.OnSyntaxCheck" title="Permalink to this definition">¶</a></dt>
+<dd><p>Check the python syntax on the current Tab</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>evt</strong> (<em>wx.Event</em>) – Event to trigger the method</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="Edit_menu.EditMenu.OnUndo">
+<code class="sig-name descname">OnUndo</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">evt</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Edit_menu.EditMenu.OnUndo" title="Permalink to this definition">¶</a></dt>
+<dd><p>Undo</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>evt</strong> (<em>wx.Event</em>) – Event to trigger the method</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="File_menu.html" class="btn btn-neutral float-right" title="File_menu module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="Menus.html" class="btn btn-neutral float-left" title="&lt;no title&gt;" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        
+        &copy; Copyright 2020, @MyHumanKit
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

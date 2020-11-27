@@ -1,7 +1,11 @@
-panels module
-=============
+menus
+===
 
-.. automodule:: panels
-   :members:
-   :undoc-members:
-   :show-inheritance:
+.. toctree::
+
+    Editor 
+    Notebook
+    Shell
+    Device_tree
+    wxSerialConfigDialog
+    wx_burn_firmware

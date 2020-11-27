@@ -3,6 +3,7 @@ Module which has functions and classes to manage the connection
 and communication with the card
 """
 
+import os
 import time
 import wx
 from Serial_manager.send_infos import put_cmd
@@ -16,6 +17,8 @@ class TerminalSetup:
     options to the TerminalSettingsDialog.
     """
     def __init__(self):
+        """ Constructor method
+        """
         self.echo = False
         self.unprintable = False
         self.newline = NEWLINE_CRLF
@@ -82,7 +85,17 @@ class ManageConnection():
                 % str(filename))
         self.frame.shell.SetFocus()
 
+# TODO: rename to upload
     def download(self, filepath, filename):
+        """ Download a file on the card
+
+        :param filepath: path of the file to upload
+        :type filepath: str
+        :param filename: name of the file to upload
+        :type filename: str
+        :return: success flag
+        :rtype: boolean
+        """
         filepath = filepath.replace("\\", "/")
         file_to_open = _check_extension_file(filename, ".py")
 
@@ -91,6 +104,7 @@ class ManageConnection():
             return False
         try:
             fileHandle = open(filepath, 'rbU')
+            print("SIZE_open=", os.path.getsize(filepath))
         except Exception as e:
             print("Error file : %s" % (e))
             self.frame.shell.WriteText("Error on during file upload\n...")
@@ -101,137 +115,136 @@ class ManageConnection():
         self.frame.shell.WriteText("Ready to download this file...!\n")
         self.write_in_file(fileHandle, file_to_open)
 
-    # def write_in_file(self, fileHandle, file_to_open):
-    #     cmd = "myfile=open(\'%s\',\'w\')\r\n" % str(file_to_open)
-    #     done = 0
-
-    #     put_cmd(self.frame, cmd)
-    #     while not done:
-    #         aline = fileHandle.read(128)
-    #         if(str(aline) != "b''"):
-    #             try:
-    #                 aline = aline.decode()
-    #                 # aline=aline.replace("\r\n","\r")
-    #                 # aline=aline.replace("\n","\r")
-    #                 aline = "myfile.write(%s)\r" % repr(aline)
-    #             except Exception as e:
-    #                 print(e)
-    #                 break
-    #             for i in aline:
-    #                 put_cmd(self.frame, i)
-    #         else:
-    #             done = 1
-    #     fileHandle.close()
-    #     put_cmd(self.frame, "myfile.close()\r\n")
-
     def write_in_file(self, fileHandle, file_to_open):
+        """Write bytes of a computer file on a file on the device
+
+        :param fileHandle: fileHandle to read
+        :type fileHandle: file handled see :function: open()
+        :param file_to_open: device file
+        :type file_to_open: str
+        """
         cmd = "myfile=open(\'%s\',\'w\')\r\n" % str(file_to_open)
 
-        put_cmd(self.frame, cmd)
+        self.frame.exec_cmd(cmd)
         aline = fileHandle.read()
         try:
             aline = aline.decode()
-            aline = "myfile.write(%s)\r" % repr(aline)
-            put_cmd(self.frame, aline)
+            aline = "myfile.write(%s)\r\n" % repr(aline)
+            self.frame.exec_cmd(aline)
+
         except Exception as e:
             print(e)
         finally:
             fileHandle.close()
-            put_cmd(self.frame, "myfile.close()\r\n")
-            put_cmd(self.frame, "\r\n")
+            self.frame.exec_cmd("myfile.close()\r\n")
+            self.frame.exec_cmd("\r\n")
             self.frame.shell_text = ""
             treeModel(self.frame)
 
 
 def ConnectSerial(self):
-        self.shell.Clear()
-        self.serial.write('\x03'.encode())
+    """Try to connect the device and the software
 
-        startdata=""
-        startTime=time.time()
-        while True:
-            n = self.serial.inWaiting()
-            if n>0:
-                startdata += (self.serial.read(n)).decode(encoding='utf-8',errors='ignore')
-                print("[%s]"%startdata)
-                if startdata.find('>>> '):
-                    print("OK")
-                    break
-            time.sleep(0.1)
-            endTime=time.time()
-            if endTime-startTime > 10:
-                self.serial.close()
-                if not self.serial.isOpen():
-                    print("UPDATE FIRMWARE")
-                    return False
-                return False
-        senddata="import sys\r\n"
-        put_cmd(self, "import sys\r\n")
-        for i in senddata:
-            self.serial.write(i.encode())
-        startdata=""
-        startTime=time.time()
-        while True:
-            n = self.serial.inWaiting()
-            if n>0:
-                startdata+=(self.serial.read(n)).decode('utf-8', 'ignore')
-                if startdata.find('>>> ')>=0:
-                    self.shell.AppendText(">>> ")
-                    break
-            time.sleep(0.1)
-            endTime=time.time()
-            if endTime-startTime>2:
-                print(startdata)
-                self.serial.close()
-                self.shell.AppendText("connect serial timeout")
-                return False
+    :return: success flag
+    :rtype: boolean
+    """
+    self.shell.Clear()
+    self.serial.write('\x03'.encode())
 
-        senddata="sys.platform\r\n"
-        for i in senddata:
-            self.serial.write(i.encode())
-        startdata=""
-        startTime=time.time()
-        while True:
-            n = self.serial.inWaiting()
-            if n>0:
-                startdata+=(self.serial.read(n)).decode('utf-8')
-                if startdata.find('>>> ')>=0:
-                    break
-            time.sleep(0.1)
-            endTime=time.time()
-            if endTime-startTime>2:
-                self.serial.close()
-                self.shell.AppendText("connect serial timeout")
-                return False
-
-        # self.start_thread_serial()
-        return True
-
-
-
-def try_send_data(frame):
     startdata = ""
     startTime = time.time()
     while True:
-        n = frame.serial.inWaiting()
+        n = self.serial.inWaiting()
         if n > 0:
-            startdata += (frame.serial.read(n)).decode(encoding='utf-8',
-                                                       errors='ignore')
+            startdata += (self.serial.read(n)).decode(encoding='utf-8', errors='ignore')
             print("[%s]" % startdata)
             if startdata.find('>>> '):
                 print("OK")
-                return True
+                break
         time.sleep(0.1)
-        endTime = time.time()
+        endTime=time.time()
         if endTime-startTime > 10:
-            frame.serial.close()
-            if not frame.serial.isOpen():
+            self.serial.close()
+            if not self.serial.isOpen():
                 print("UPDATE FIRMWARE")
                 return False
             return False
+    senddata="import sys\r\n"
+    put_cmd(self, "import sys\r\n")
+    for i in senddata:
+        self.serial.write(i.encode())
+    startdata=""
+    startTime=time.time()
+    while True:
+        n = self.serial.inWaiting()
+        if n>0:
+            startdata+=(self.serial.read(n)).decode('utf-8', 'ignore')
+            if startdata.find('>>> ')>=0:
+                self.shell.AppendText(">>> ")
+                break
+        time.sleep(0.1)
+        endTime=time.time()
+        if endTime-startTime>2:
+            print(startdata)
+            self.serial.close()
+            self.shell.AppendText("connect serial timeout")
+            return False
 
+    senddata="sys.platform\r\n"
+    for i in senddata:
+        self.serial.write(i.encode())
+    startdata=""
+    startTime=time.time()
+    while True:
+        n = self.serial.inWaiting()
+        if n>0:
+            startdata+=(self.serial.read(n)).decode('utf-8')
+            if startdata.find('>>> ')>=0:
+                break
+        time.sleep(0.1)
+        endTime=time.time()
+        if endTime-startTime>2:
+            self.serial.close()
+            self.shell.AppendText("connect serial timeout")
+            return False
+
+    # self.start_thread_serial()
+    return True
+
+
+# def try_send_data(frame):
+#     startdata = ""
+#     startTime = time.time()
+#     while True:
+#         n = frame.serial.inWaiting()
+#         if n > 0:
+#             startdata += (frame.serial.read(n)).decode(encoding='utf-8',
+#                                                        errors='ignore')
+#             print("[%s]" % startdata)
+#             if startdata.find('>>> '):
+#                 print("OK")
+#                 return True
+#         time.sleep(0.1)
+#         endTime = time.time()
+#         if endTime-startTime > 10:
+#             frame.serial.close()
+#             if not frame.serial.isOpen():
+#                 print("UPDATE FIRMWARE")
+#                 return False
+#             return False
+
+# TODO : vérifier ce qu'on envoie à cette fonction
 
 def _check_extension_file(filename, extension):
+    """Check the extension file correspond to the extension asked
+
+    :param filename: file to chek
+    :type filename: str
+    :param extension: extensions to find
+    :type extension: [type]
+    :return:
+    :rtype: [type]
+    """
     finalname = ""
     if str(filename).find(extension) >= 0:
         if str(filename).find(":") < 0:

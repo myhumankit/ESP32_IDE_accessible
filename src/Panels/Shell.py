@@ -1,39 +1,38 @@
+""" Module wich contain classes related to the Shell Panel
+"""
+
 import wx
 import json
 
 
 class ShellPanel(wx.TextCtrl):
-    def __init__(self, parent, frame):
-        """ inits Spamfilter with training data
+    """ Constructor method
 
-        :param training_dir: path of training directory with subdirectories
-         '/ham' and '/spam'
-        """
+        :param parent: in this case :class:wx.SplittedWindow
+        :param frame: Main of the app :class:MainWindow
+    """
+    def __init__(self, parent, frame):
+        """ Constructor method
+         """
         wx.TextCtrl.__init__(self, parent=parent,
                              style=wx.TE_MULTILINE |
                              wx.TE_READONLY | wx.TE_RICH)
         self.__set_properties__(frame)
 
-    def InitShortcuts(self):
-        """Initiate shortcuts of the Application with wx.Accelerator Table
-            :param frame: parent class to bind events)
-            :Type frame: wx.frame
-         """
-        accel_tbl = wx.AcceleratorTable([Init_paste(self),
-                                        ])
-        self.SetAcceleratorTable(accel_tbl)
-
-    def Init_paste(self):
-        frame.Bind(wx.EVT_MENU, frame.OnStatus, id=wx.ID_STATIC)
-        return (wx.ACCEL_CTRL,  wx.WXK_END, wx.ID_STATIC)
-
     def __set_properties__(self, frame):
+        """ Method to define new attributes and set style
+         """
         self.frame = frame
         self.SetName("Python Shell")
         self.theme_choice = frame.notebook.theme_choice
         self.custom_shell(self.theme_choice)
 
     def custom_shell(self, theme_choice):
+        """Custom the Shell panel with the given theme_choice
+
+        :param theme_choice: The theme selected
+        :type theme_choice: str
+        """
         try:
             file = open("./customize.json")
             theme = json.load(file)
@@ -55,14 +54,29 @@ class ShellPanel(wx.TextCtrl):
             # print("Can't customize shell")
             return
 
-    def set_focus_shell(self, evt):
-        self.SetFocus()
+    def move_key_left(self):
+        """ Move the cursor on the previous character
+        """
+        cursor = self.GetInsertionPoint()
+        self.SetInsertionPoint(cursor - 1)
 
+    def move_key_right(self):
+        """ Move the cursor on the next character
+        """
+        cursor = self.GetInsertionPoint()
+        self.SetInsertionPoint(cursor + 1)
 
-class Mycommands():
-    def __init__(self, shell):
-        self.list_cmd = []
-        self.cursor = 0
+    def remove_char(self):
+        """ Remove the previous character
+        """
+        cursor = self.GetInsertionPoint()
+        self.Remove(cursor - 1, cursor)
 
-    def down(self):
-        print("")
+#TODO: My commands 
+# class Mycommands():
+#     def __init__(self, shell):
+#         self.list_cmd = []
+#         self.cursor = 0
+
+#     def down(self):
+#         print("")

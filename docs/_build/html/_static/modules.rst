@@ -1,19 +1,10 @@
-IDE_MicroPython_Accessible
-==========================
+Modules diverse
+===
 
 .. toctree::
-   :maxdepth: 4
-
-   Constantes
-   Editor_Style
-   FileTree
-   Find_Replace
-   Packages
-   Serial
-   Shortcuts
-   Utilitaries
-   api
-   main
-   menus
-   panels
-   wxSerialConfigDialog
+   
+   IDE_accessible_MHK
+   all_panels
+   constantes
+   editor_style
+   shortcuts

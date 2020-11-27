@@ -1,6 +1,6 @@
 #!/usr/bin/env python
-#
-# A serial port configuration dialog for wxPython. A number of flags can
+""" A serial port configuration dialog for wxPython. A number of flags can
+"""
 # be used to configure the fields that are displayed.
 #
 # (C) 2001-2015 Chris Liechti <cliechti@gmx.net>
@@ -30,6 +30,8 @@ class SerialConfigDialog(wx.Dialog):
     """
 
     def __init__(self, *args, **kwds):
+        """ Constructor method
+        """
         # grab the serial keyword and remove it from the dict
         self.serial = kwds['serial']
         del kwds['serial']
@@ -78,8 +80,9 @@ class SerialConfigDialog(wx.Dialog):
         # attach the event handlers
         self.__attach_events()
 
-    # TODO : SIMPLIFIER
     def __set_properties(self):
+        """ Method to define new attributes and set style
+         """
         # begin wxGlade: SerialConfigDialog.__set_properties
         self.SetTitle("Serial Port Configuration")
         self.choice_databits.SetSelection(0)
@@ -167,6 +170,8 @@ class SerialConfigDialog(wx.Dialog):
         self.button_ok.SetLabel("Connect")
 
     def __do_layout(self):
+        """ Method to place elements in the screen
+         """
         # begin wxGlade: SerialConfigDialog.__do_layout
         sizer_2 = wx.BoxSizer(wx.VERTICAL)
         sizer_3 = wx.BoxSizer(wx.HORIZONTAL)
@@ -220,13 +225,16 @@ class SerialConfigDialog(wx.Dialog):
         # end wxGlade
 
     def __attach_events(self):
+        """ Method to link events and methods
+         """
         self.Bind(wx.EVT_BUTTON, self.OnOK, id=wx.ID_OK)
         self.Bind(wx.EVT_BUTTON, self.OnCancel, id=wx.ID_CANCEL)
         if self.show & SHOW_TIMEOUT:
             wx.EVT_CHECKBOX(self, self.checkbox_timeout.GetId(), self.OnTimeout)
 
-    # TODO: Simplifier
     def OnOK(self, events):
+        """ Method called after a click or a press on the OK button
+         """
         ser = self.serial
         success = True
         try:
@@ -275,9 +283,13 @@ class SerialConfigDialog(wx.Dialog):
             self.EndModal(wx.ID_OK)
 
     def OnCancel(self, events):
+        """ Method called after a click or a press on the CANCEL button
+         """
         self.EndModal(wx.ID_CANCEL)
 
     def OnTimeout(self, events):
+        """ Method to delete
+         """
         if self.checkbox_timeout.GetValue():
             self.text_ctrl_timeout.Enable(True)
         else:

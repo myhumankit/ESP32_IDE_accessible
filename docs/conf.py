@@ -12,9 +12,20 @@
 #
 import os
 import sys
-sys.path.insert(0, os.path.abspath('..'))
+sys.path.insert(0, os.path.abspath('../src'))
+sys.path.insert(0, os.path.abspath("../src/Panels"))
+sys.path.insert(0, os.path.abspath("../src/Menus"))
+sys.path.insert(0, os.path.abspath("../src/Utils"))
+sys.path.insert(0, os.path.abspath("../src/api"))
+sys.path.insert(0, os.path.abspath("../src/Serial_manager"))
 
-autoapi_dirs = ['..']
+autoapi_dirs = ['../src',
+                '../src/Panels',
+                '../src/Menus',
+                '../src/Serial_manager',
+                '../src/Utils',
+                '../src/api'
+                ]
 # -- Project information -----------------------------------------------------
 
 project = 'IDE_MicroPython_accessible'

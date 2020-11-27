@@ -1,3 +1,7 @@
+"""
+    Contains functions to create all panels
+"""
+
 import wx
 
 from Utils.utilitaries import load_img

@@ -1,7 +1,7 @@
+"""
+    Module wich contains the functions used to receive infos from the device connected
+"""
 import wx
-
-from Utils.keys import remove_char, move_key_left, move_key_right
-from constantes import NEWLINE_CR, NEWLINE_CRLF, NEWLINE_LF
 
 
 def GetCmdReturn(shell_text, cmd):
@@ -14,6 +14,8 @@ def GetCmdReturn(shell_text, cmd):
     :return: the return of the command searched
     :rtype: str
     """
+    if cmd == "":
+        return "clean"
     try:
         return_cmd = shell_text.split(cmd)
         return_cmd = return_cmd[len(return_cmd) - 1]
@@ -24,11 +26,6 @@ def GetCmdReturn(shell_text, cmd):
     return return_cmd
 
 
-def get_cmd_result(frame, cmd):
-    frame.exec_cmd(cmd)
-    return frame.result
-
-
 def serial_read_data(frame, data):
     """Handle input from the serial port."""
     msg = frame.keypressmsg
@@ -37,11 +34,11 @@ def serial_read_data(frame, data):
     txt = data.decode('UTF-8', 'ignore')
     if msg == "\x08":
         frame.keypressmsg = "debug"
-        return remove_char(frame.shell, frame)
+        return frame.shell.remove_char()
     elif msg == "\x1b\x5b\x44":
-        return move_key_left(frame.shell)
+        return frame.shell.move_key_left()
     elif msg == "\x1b\x5b\x43":
-        return move_key_right(frame.shell)
+        return frame.shell.move_key_right()
     elif frame.keypressmsg == "debug":
         frame.keypressmsg = "else"
         return

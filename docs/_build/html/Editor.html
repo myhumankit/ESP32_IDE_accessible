@@ -1,0 +1,414 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Editor module &mdash; IDE_MicroPython_accessible  documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+
+  
+  
+  
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Notebook module" href="Notebook.html" />
+    <link rel="prev" title="&lt;no title&gt;" href="Panels.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="index.html" class="icon icon-home" alt="Documentation Home"> IDE_MicroPython_accessible
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="Edit_menu.html">Edit_menu module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="File_menu.html">File_menu module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Help_menu.html">Help_menu module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Tools_menu.html">Tools_menu module</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Editor module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Notebook.html">Notebook module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Shell.html">Shell module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Device_tree.html">Device_tree module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="wxSerialConfigDialog.html">wxSerialConfigDialog module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="wx_burn_firmware.html">wx_burn_firmware module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="connexion.html">connexion module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="firmware.html">firmware module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="receive_infos.html">receive_infos module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="send_infos.html">send_infos module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="shortcuts.html">shortcuts module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="IDE_accessible_MHK.html">IDE_accessible_MHK module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="all_panels.html">all_panels module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="constantes.html">constantes module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="editor_style.html">editor_style module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="shortcuts.html">shortcuts module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api.html">API</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">IDE_MicroPython_accessible</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="Panels.html">&lt;no title&gt;</a> &raquo;</li>
+        
+      <li>Editor module</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/Editor.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="module-Editor">
+<span id="editor-module"></span><h1>Editor module<a class="headerlink" href="#module-Editor" title="Permalink to this headline">¶</a></h1>
+<p>Module wich contains the classes and functions related to the editor tab panel</p>
+<p><strong>Classes:</strong></p>
+<table class="longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#Editor.Styled_Editor" title="Editor.Styled_Editor"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Styled_Editor</span></code></a>(parent, topwindow, text, on_card)</p></td>
+<td><p>Customizable Editor page</p></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Functions:</strong></p>
+<table class="longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">customize_editor</span></code>(editor, theme_choice)</p></td>
+<td><p>Change theme of the Editor panel</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">find_next</span></code>(editor, evt)</p></td>
+<td><p>Useful function to find the next occurence of a word on the EditWindow panel</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">init_editor_style</span></code>(editor)</p></td>
+<td><p>Init some settings for Editor Window</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">replace</span></code>(editor, evt)</p></td>
+<td><p>Useful function to replace a the selected text by an other word on the EditWindow panel</p></td>
+</tr>
+</tbody>
+</table>
+<dl class="py class">
+<dt id="Editor.Styled_Editor">
+<em class="property">class </em><code class="sig-prename descclassname">Editor.</code><code class="sig-name descname">Styled_Editor</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">parent</span></em>, <em class="sig-param"><span class="n">topwindow</span></em>, <em class="sig-param"><span class="n">text</span></em>, <em class="sig-param"><span class="n">on_card</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Editor.Styled_Editor" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">wx.py.editwindow.EditWindow</span></code></p>
+<p>Customizable Editor page</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>pysh.editwindow.EditWindow</strong> (<em>wx.py.editwindow.EditWindow</em>) – see <a class="reference external" href="https://wxpython.org/Phoenix/docs/html/wx.py.html">https://wxpython.org/Phoenix/docs/html/wx.py.html</a></p>
+</dd>
+</dl>
+<p><strong>Methods:</strong></p>
+<table class="longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#Editor.Styled_Editor.Expand" title="Editor.Styled_Editor.Expand"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Expand</span></code></a>(line, doExpand[, force, visLevels, level])</p></td>
+<td><p>Expand the tab content</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#Editor.Styled_Editor.FoldAll" title="Editor.Styled_Editor.FoldAll"><code class="xref py py-obj docutils literal notranslate"><span class="pre">FoldAll</span></code></a>()</p></td>
+<td><p>Fold all the tab content</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#Editor.Styled_Editor.OnFind" title="Editor.Styled_Editor.OnFind"><code class="xref py py-obj docutils literal notranslate"><span class="pre">OnFind</span></code></a>(evt)</p></td>
+<td><p>Method to find a string on the current tab editor</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#Editor.Styled_Editor.OnFindClose" title="Editor.Styled_Editor.OnFindClose"><code class="xref py py-obj docutils literal notranslate"><span class="pre">OnFindClose</span></code></a>(evt)</p></td>
+<td><p>Close the find and replace dialog</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#Editor.Styled_Editor.OnKeyPressed" title="Editor.Styled_Editor.OnKeyPressed"><code class="xref py py-obj docutils literal notranslate"><span class="pre">OnKeyPressed</span></code></a>(event)</p></td>
+<td><p>Manage the keyboard events related to the tab</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#Editor.Styled_Editor.OnMarginClick" title="Editor.Styled_Editor.OnMarginClick"><code class="xref py py-obj docutils literal notranslate"><span class="pre">OnMarginClick</span></code></a>(evt)</p></td>
+<td><p>Fold the tab content if an event is happened</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#Editor.Styled_Editor.OnShowFindReplace" title="Editor.Styled_Editor.OnShowFindReplace"><code class="xref py py-obj docutils literal notranslate"><span class="pre">OnShowFindReplace</span></code></a>([evt])</p></td>
+<td><p>Show the Find and Replace dialog and call the bind_find_events method</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#Editor.Styled_Editor.OnUpdateUI" title="Editor.Styled_Editor.OnUpdateUI"><code class="xref py py-obj docutils literal notranslate"><span class="pre">OnUpdateUI</span></code></a>(evt)</p></td>
+<td><p>Manage the syntax highlight on the braces</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#Editor.Styled_Editor.bind_find_events" title="Editor.Styled_Editor.bind_find_events"><code class="xref py py-obj docutils literal notranslate"><span class="pre">bind_find_events</span></code></a>(win)</p></td>
+<td><p>Bind events of the find and replace dialog</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#Editor.Styled_Editor.custom_stc" title="Editor.Styled_Editor.custom_stc"><code class="xref py py-obj docutils literal notranslate"><span class="pre">custom_stc</span></code></a>()</p></td>
+<td><p>Custom the editwindow instance based on the model of the wxDemo StyledCtrl2.py</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#Editor.Styled_Editor.set_style" title="Editor.Styled_Editor.set_style"><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_style</span></code></a>(parent)</p></td>
+<td><p>Load the first style of the editor</p></td>
+</tr>
+</tbody>
+</table>
+<dl class="py method">
+<dt id="Editor.Styled_Editor.Expand">
+<code class="sig-name descname">Expand</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">line</span></em>, <em class="sig-param"><span class="n">doExpand</span></em>, <em class="sig-param"><span class="n">force</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">visLevels</span><span class="o">=</span><span class="default_value">0</span></em>, <em class="sig-param"><span class="n">level</span><span class="o">=</span><span class="default_value">- 1</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Editor.Styled_Editor.Expand" title="Permalink to this definition">¶</a></dt>
+<dd><p>Expand the tab content</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="Editor.Styled_Editor.FoldAll">
+<code class="sig-name descname">FoldAll</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#Editor.Styled_Editor.FoldAll" title="Permalink to this definition">¶</a></dt>
+<dd><p>Fold all the tab content</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="Editor.Styled_Editor.OnFind">
+<code class="sig-name descname">OnFind</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">evt</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Editor.Styled_Editor.OnFind" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method to find a string on the current tab editor</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>evt</strong> (<em>wx.Event</em>) – Event which decide to what execute</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="Editor.Styled_Editor.OnFindClose">
+<code class="sig-name descname">OnFindClose</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">evt</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Editor.Styled_Editor.OnFindClose" title="Permalink to this definition">¶</a></dt>
+<dd><p>Close the find and replace dialog</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>evt</strong> (<em>wx.Event</em>) – Event to close the dialog</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="Editor.Styled_Editor.OnKeyPressed">
+<code class="sig-name descname">OnKeyPressed</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">event</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Editor.Styled_Editor.OnKeyPressed" title="Permalink to this definition">¶</a></dt>
+<dd><p>Manage the keyboard events related to the tab</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="Editor.Styled_Editor.OnMarginClick">
+<code class="sig-name descname">OnMarginClick</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">evt</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Editor.Styled_Editor.OnMarginClick" title="Permalink to this definition">¶</a></dt>
+<dd><p>Fold the tab content if an event is happened</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="Editor.Styled_Editor.OnShowFindReplace">
+<code class="sig-name descname">OnShowFindReplace</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">evt</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Editor.Styled_Editor.OnShowFindReplace" title="Permalink to this definition">¶</a></dt>
+<dd><p>Show the Find and Replace dialog and call the bind_find_events method</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>evt</strong> (<em>wx.Event</em><em>, </em><em>optional</em>) – , defaults to None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="Editor.Styled_Editor.OnUpdateUI">
+<code class="sig-name descname">OnUpdateUI</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">evt</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Editor.Styled_Editor.OnUpdateUI" title="Permalink to this definition">¶</a></dt>
+<dd><p>Manage the syntax highlight on the braces</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="Editor.Styled_Editor.bind_find_events">
+<code class="sig-name descname">bind_find_events</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">win</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Editor.Styled_Editor.bind_find_events" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bind events of the find and replace dialog</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>win</strong> (<em>MainWindow class</em>) – the main frame</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="Editor.Styled_Editor.custom_stc">
+<code class="sig-name descname">custom_stc</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#Editor.Styled_Editor.custom_stc" title="Permalink to this definition">¶</a></dt>
+<dd><p>Custom the editwindow instance based on the model of the wxDemo StyledCtrl2.py</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="Editor.Styled_Editor.set_style">
+<code class="sig-name descname">set_style</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">parent</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Editor.Styled_Editor.set_style" title="Permalink to this definition">¶</a></dt>
+<dd><p>Load the first style of the editor</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>parent</strong> (<em>Notebook class</em>) – Notebook Panel</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="Notebook.html" class="btn btn-neutral float-right" title="Notebook module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="Panels.html" class="btn btn-neutral float-left" title="&lt;no title&gt;" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        
+        &copy; Copyright 2020, @MyHumanKit
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>
