@@ -179,13 +179,16 @@ class DeviceTree(wx.TreeCtrl):
         self.frame.open_file = True
         start_time = time.time()
         end_time = 0
-        while (len(self.frame.open_file_txt) - len(cmd) - 1) < int(size) and end_time < 10:
-            end_time = time.time() - start_time
-        print("Size_opened:", len(self.frame.open_file_txt))
-        if end_time >= 10:
-            self.frame.shell.AppendText("Can't Open file")
-            put_cmd(self.frame, "impossible.close()\r\n")
-            return
+        if int(size) == 0:
+            pass
+        else:
+            while (len(self.frame.open_file_txt) - len(cmd) - 1) < int(size) and end_time < 10:
+                end_time = time.time() - start_time
+            print("Size_opened:", len(self.frame.open_file_txt))
+            if end_time >= 10:
+                self.frame.shell.AppendText("Can't Open file")
+                put_cmd(self.frame, "impossible.close()\r\n")
+                return
         self.frame.open_file = False
         put_cmd(self.frame, "impossible.close()\r\n")
         res = self.frame.open_file_txt[len(cmd) - 1:]
