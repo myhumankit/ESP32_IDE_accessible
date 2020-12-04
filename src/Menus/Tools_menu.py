@@ -112,6 +112,7 @@ class ToolsMenu(wx.Menu):
         :type evt: wx.Event
         """
         frame = self.frame
+        frame.shell_text = ""
         notebookP = self.frame.notebook
         page = notebookP.GetCurrentPage()
 
@@ -137,12 +138,15 @@ class ToolsMenu(wx.Menu):
                 frame.serial_manager.download(pathfile, page.filename)
                 self.frame.shell.Clear()
                 self.frame.shell.WriteText("Downloaded file : " + page.filename)
+                wx.CallAfter(my_speak, self.frame, "Uploaded")
                 self.frame.show_cmd = True
                 self.frame.shell.SetFocus()
                 put_cmd(self.frame, '\r\n')
                 return True
             return False
-        except Exception:
+        except Exception as e:
+            print("Error: ", e)
+            # TODO: finir le upload du tab
             create_new_file(frame)
 
     def OnRun(self, evt):

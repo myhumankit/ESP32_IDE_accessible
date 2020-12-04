@@ -96,8 +96,8 @@ class NotebookPanel(fnb.FlatNotebook):
             # self.SetTabAreaColour(theme['Background tab area'])
             self.SetActiveTabTextColour(theme['Active tab text'])
             self.SetNonActiveTabTextColour(theme['Active tab text'])
-        except Exception:
-            print("Can't Customize Notebook")
+        except Exception as e:
+            print("Can't Customize Notebook: ", e)
 
     def set_focus_editor(self, evt):
         """ Set the focus on the current editor tab

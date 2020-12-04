@@ -25,8 +25,8 @@ class ChooseBin(wx.FilePickerCtrl):
         wx.FilePickerCtrl.__init__(self, parent,
                                    message="Select the binary to install",
                                    wildcard="*.bin",
-                                   name="select the binary to install",
-                                   style=wx.FLP_FILE_MUST_EXIST)
+                                   name="select the binary to install"
+                                   )
 
         self.burn_manager = burn_manager
         self.__set_properties()

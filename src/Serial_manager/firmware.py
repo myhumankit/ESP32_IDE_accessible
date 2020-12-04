@@ -140,7 +140,8 @@ def burn_firmware(frame, event):
                 frame_burn.Destroy()
                 sys.stdout = sys.__stdout__
                 ok = True
-            except Exception:
+            except Exception as e:
+                print("Error :", e)
                 with wx.MessageDialog(frame, "Incorrect Path or Port", "Error",
                                       wx.OK | wx.ICON_ERROR)as dlg:
                     dlg.ShowModal()

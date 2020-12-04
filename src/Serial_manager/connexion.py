@@ -71,6 +71,8 @@ class ManageConnection():
             self.machine = list_res[4]
         except Exception as e:
             print("Error get infos device:", e)
+        if self.card == "pyboard":
+            self.frame.time_to_send = 0.001
 
     def download_and_run(self, filename):
         """Execute the file gived in params on the MicroPython card
@@ -123,22 +125,29 @@ class ManageConnection():
         :param file_to_open: device file
         :type file_to_open: str
         """
-        cmd = "myfile=open(\'%s\',\'w\')\r\n" % str(file_to_open)
-
-        self.frame.exec_cmd(cmd)
-        aline = fileHandle.read()
         try:
-            aline = aline.decode()
-            aline = "myfile.write(%s)\r\n" % repr(aline)
-            self.frame.exec_cmd(aline)
-
+            if self.card == "pyboard":
+                cmd = "myfile=open('%s','a')\r\n" % str(file_to_open)
+                self.frame.exec_cmd(cmd)
+                for line in fileHandle:
+                    line = line.decode()
+                    cmd = "myfile.write(%s)\r\n" % repr(line)
+                    put_cmd(self.frame, cmd)
+                    time.sleep(0.001)
+                self.frame.exec_cmd("\r\n")
+            else:
+                cmd = "myfile=open('%s','w')\r\n" % str(file_to_open)
+                self.frame.exec_cmd(cmd)
+                line = fileHandle.read().decode()
+                cmd = "myfile.write(%s)\r\n" % repr(line)
+                self.frame.exec_cmd(cmd)
         except Exception as e:
             print(e)
         finally:
             fileHandle.close()
             self.frame.exec_cmd("myfile.close()\r\n")
             self.frame.exec_cmd("\r\n")
-            self.frame.shell_text = ""
+            self.frame.last_cmd_red = ""
             treeModel(self.frame)
 
 
@@ -211,27 +220,6 @@ def ConnectSerial(self):
     # self.start_thread_serial()
     return True
 
-
-# def try_send_data(frame):
-#     startdata = ""
-#     startTime = time.time()
-#     while True:
-#         n = frame.serial.inWaiting()
-#         if n > 0:
-#             startdata += (frame.serial.read(n)).decode(encoding='utf-8',
-#                                                        errors='ignore')
-#             print("[%s]" % startdata)
-#             if startdata.find('>>> '):
-#                 print("OK")
-#                 return True
-#         time.sleep(0.1)
-#         endTime = time.time()
-#         if endTime-startTime > 10:
-#             frame.serial.close()
-#             if not frame.serial.isOpen():
-#                 print("UPDATE FIRMWARE")
-#                 return False
-#             return False
 
 # TODO : vérifier ce qu'on envoie à cette fonction
 

@@ -247,7 +247,7 @@ class MyApp(wx.App):
             --if True the app works
         """
         wx.InitAllImageHandlers()
-        window = MainWindow("IDE Accessible MHK V1.3.9", (800, 600))
+        window = MainWindow("IDE Accessible MHK V1.4.0", (800, 600))
         self.SetTopWindow(window)
         window.Show()
         return True

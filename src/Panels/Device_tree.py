@@ -26,6 +26,18 @@ class DeviceTree(wx.TreeCtrl):
         """
         wx.TreeCtrl.__init__(self, parent)
         self.frame = frame
+        self.__set_properties()
+        self.Expand(self.main_root)
+        self.workspace_from_file()
+        self.SetImageList(self.il)
+        self.SetItemData(self.device, None)
+        self.SetItemImage(self.device, self.fldridx, wx.TreeItemIcon_Normal)
+        self.SetItemImage(self.device, self.fldropenidx,
+                          wx.TreeItemIcon_Expanded)
+        self.custom_tree_ctrl()
+        self.__attach_events()
+
+    def __set_properties(self):
         isz = (16, 16)
         self.il = wx.ImageList(isz[0], isz[1])
         self.fldridx = self.il.Add(wx.ArtProvider.GetBitmap(
@@ -40,40 +52,11 @@ class DeviceTree(wx.TreeCtrl):
                             weight=wx.FONTWEIGHT_NORMAL,
                             underline=False,
                             faceName="Arial", encoding=0)
-        self.theme_choice = frame.notebook.theme_choice
+        self.theme_choice = self.frame.notebook.theme_choice
         self.main_root = self.AddRoot("")
         self.device = self.AppendItem(self.main_root, "Device")
-        self.sd = self.AppendItem(self.main_root, "Librairies")
+        self.librairies = self.AppendItem(self.main_root, "Librairies")
         self.workspace = self.AppendItem(self.main_root, "Workspace")
-        self.Expand(self.main_root)
-
-        self.SetImageList(self.il)
-        self.SetItemData(self.device, None)
-        self.SetItemImage(self.device, self.fldridx, wx.TreeItemIcon_Normal)
-        self.SetItemImage(self.device, self.fldropenidx,
-                          wx.TreeItemIcon_Expanded)
-        self.custom_tree_ctrl()
-        self.__attach_events()
-
-    def fill_workspace(self, item, path):
-        """Manage the creation of the treeview item selected (recursive)
-
-        :param section: section to build
-        :type section: wx.TreeItem
-        :param path: path to analyse
-        :type path: str
-        """
-        for a, directories, files in os.walk(path):
-            for dire in directories:
-                child = self.AppendItem(item, dire)
-                self.SetItemImage(child, self.fldridx, wx.TreeItemIcon_Normal)
-                self.SetItemImage(child, self.fldropenidx,
-                                  wx.TreeItemIcon_Expanded)
-                self.fill_workspace(child, path + "/" + dire)
-            for file in files:
-                child = self.AppendItem(item, file)
-                self.SetItemImage(child, self.fileidx, wx.TreeItemIcon_Normal)
-                self.SetItemImage(child, self.fileidx, wx.TreeItemIcon_Expanded)
 
     def __attach_events(self):
         """ Bind events with methods
@@ -84,6 +67,40 @@ class DeviceTree(wx.TreeCtrl):
         self.Bind(wx.EVT_TREE_SEL_CHANGED, self.OnSelChanged, self)
         self.Bind(wx.EVT_RIGHT_DOWN, self.OnRightDown)
         self.Bind(wx.EVT_RIGHT_UP, self.OnClipboardMenu)
+
+    def workspace_from_file(self):
+        """Init the workspace if a path exist in customize.json
+         """
+        try:
+            file = open("./customize.json")
+            path = json.load(file)
+            path = path['Workspace Path']
+            if path != "":
+                self.fill_section(self.workspace, path)
+        except Exception as e:
+            print("Error :", e)
+        finally:
+            file.close()
+
+    def fill_section(self, item, path):
+        """Manage the creation of the treeview item selected (recursive)
+
+        :param section: section to build
+        :type section: wx.TreeItem
+        :param path: path to analyse
+        :type path: str
+        """
+        for element in os.listdir(path):
+            if os.path.isdir(os.path.join(path, element)):
+                child = self.AppendItem(item, element)
+                self.SetItemImage(child, self.fldridx, wx.TreeItemIcon_Normal)
+                self.SetItemImage(child, self.fldropenidx,
+                                  wx.TreeItemIcon_Expanded)
+                self.fill_section(child, path + "\\" + element)
+            else:
+                child = self.AppendItem(item, element)
+                self.SetItemImage(child, self.fileidx, wx.TreeItemIcon_Normal)
+                self.SetItemImage(child, self.fileidx, wx.TreeItemIcon_Expanded)
 
     def custom_tree_ctrl(self):
         """Custom the treeView with the theme selected
@@ -135,6 +152,11 @@ class DeviceTree(wx.TreeCtrl):
                 self.define_workspace()
             elif self.GetItemImage(self.item, which=wx.TreeItemIcon_Normal):
                 self.open_file()
+            elif self.GetItemImage(self.item, which=wx.TreeItemIcon_Normal) == self.fldridx:
+                if self.IsExpanded(self.item):
+                    self.Collapse(self.item)
+                else:
+                    self.Expand(self.item)
         sys.stdout.write("OnActivate: %s\n" % self.path)
 
     def get_path_item(self, item, name):
@@ -145,12 +167,14 @@ class DeviceTree(wx.TreeCtrl):
         :param name: Name of the item
         :type name: str
         """
+        self.path = ""
         parent_it = self.GetItemParent(item)
         list_files = []
         if self.GetItemText(item) == "Device":
             self.path = "."
             return self.path
-        while parent_it != self.device:
+        while self.GetItemParent(parent_it):
+            print(self.GetItemText(parent_it))
             list_files.insert(0, self.GetItemText(parent_it))
             parent_it = self.GetItemParent(parent_it)
         list_files.insert(0, self.GetItemText(parent_it))
@@ -163,20 +187,28 @@ class DeviceTree(wx.TreeCtrl):
 
     def open_file(self):
         """
-        Open the file given
+        Open the file selected in a editor tab
          """
+        self.frame.shell_text = ""
         name = self.GetItemText(self.item)
         self.get_path_item(self.item, name)
-        self.frame.exec_cmd("\r\n")
-        self.frame.show_cmd = False
-        self.frame.exec_cmd("info = os.stat('%s')\r\n" % self.path)
-        size = self.frame.exec_cmd("info[6]\r\n")
-        self.frame.exec_cmd("del info\r\n")
-        self.frame.exec_cmd("impossible = open('%s','r')\r\n" % self.path)
-        print("SIZE", size)
+        if self.path.find("Workspace") >= 1:
+            self.path = self.path.replace("/Workspace/", "\\")
+            with open("./customize.json", "r") as file:
+                tab = json.load(file)
+            filehandle = open(tab['Workspace Path'] + self.path, 'r')
+            res = filehandle.read()
+        elif self.path.find("Librairies") >= 1:
+            print("COMING SOON")
+        else:
+            res = self.open_file_on_card()
+        notebookP = self.frame.notebook
+        notebookP.new_page(name, self.path, res, True)
+        self.frame.open_file_txt = ""
+
+    def open_file_on_card(self):
+        size = self.init_open_on_card()
         cmd = "print(impossible.read())\r\n"
-        put_cmd(self.frame, cmd)
-        self.frame.open_file = True
         start_time = time.time()
         end_time = 0
         if int(size) == 0:
@@ -187,17 +219,28 @@ class DeviceTree(wx.TreeCtrl):
             print("Size_opened:", len(self.frame.open_file_txt))
             if end_time >= 10:
                 self.frame.shell.AppendText("Can't Open file")
+                self.frame.open_file = False
                 put_cmd(self.frame, "impossible.close()\r\n")
                 return
         self.frame.open_file = False
         put_cmd(self.frame, "impossible.close()\r\n")
-        res = self.frame.open_file_txt[len(cmd) - 1:]
+        res = self.frame.open_file_txt[len("print(impossible.read())\r\n") - 1:]
         res = res.split('\n>>> ')[0]
         res = res.replace('\r', '')
-        notebookP = self.frame.notebook
-        notebookP.new_page(name, self.path, res, True)
-        self.frame.open_file_txt = ""
         self.frame.show_cmd = True
+        return res
+
+    def init_open_on_card(self):
+        self.frame.exec_cmd("\r\n")
+        self.frame.show_cmd = False
+        self.frame.exec_cmd("info = os.stat('%s')\r\n" % self.path)
+        size = self.frame.exec_cmd("print(info[6])\r\n")
+        self.frame.exec_cmd("del info\r\n")
+        self.frame.exec_cmd("impossible = open('%s','r')\r\n" % self.path)
+        print("SIZE", size)
+        put_cmd(self.frame, "print(impossible.read())\r\n")
+        self.frame.open_file = True
+        return size
 
     def define_workspace(self):
         """
@@ -210,13 +253,25 @@ class DeviceTree(wx.TreeCtrl):
         dialog.CenterOnParent()
         if dialog.ShowModal() == wx.ID_OK:
             path = dialog.GetPath()
-            self.fill_workspace(self.workspace, path)
+            print(path)
+            self.DeleteChildren(self.workspace)
+            self.fill_section(self.workspace, path)
+            try:
+                with open("./customize.json", "r") as file:
+                    tab = json.load(file)
+                with open("./customize.json", "w") as file:
+                    tab['Workspace Path'] = path
+                    file.write(json.dumps(tab, indent=4))
+            except Exception as e:
+                print("Error :", e)
 
     def OnClipboardMenu(self, evt):
         """
         Create an instance of the :class:ClipboardMenuDevice and display it
          """
         img = self.GetItemImage(self.item)
+        self.get_path_item(self.item, self.GetItemText(self.item))
+        print(self.path)
         if img == self.fldridx or img == self.fldropenidx:
             print("DIR")
             menu = ClipboardMenuDevice(True, self.frame, self.item)
@@ -277,7 +332,6 @@ class ClipboardMenuDevice(wx.Menu):
             self.Bind(wx.EVT_MENU, self.OnNewdir, id=wx.ID_DIRECTORY)
             self.Bind(wx.EVT_MENU, self.OnDelete, id=wx.ID_DELETE)
         else:
-
             self.Bind(wx.EVT_MENU, self.OnRun, id=wx.ID_RUN)
             self.Bind(wx.EVT_MENU, self.frame.device_tree.OnActivate,
                       id=wx.ID_OPEN)
@@ -461,7 +515,8 @@ def getFileTree(frame, dir):
     for i in filelist:
         res = frame.exec_cmd("os.stat(\'%s\')\r\n" % (dir + "/" + i))
         if res == "err":
-            return res
+            print("Error Build TreeView: ", "os.stat(./)")
+            #return res
         isdir = res.split("\n")[1]
         isdir = isdir.split(", ")
         try:
@@ -479,7 +534,7 @@ def getFileTree(frame, dir):
                 ret[dir].append(i)
         except Exception as e:
             print("Error Build TreeView: ", e)
-            return "err"
+            #return "err"
     return ret
 
 
@@ -490,7 +545,9 @@ def treeModel(frame):
     frame.show_cmd = False
     frame.reflushTreeBool = True
     frame.cmd_return = ""
+    frame.last_cmd_red = ""
     frame.device_tree.DeleteChildren(frame.device_tree.device)
+    frame.device_tree.DeleteChildren(frame.device_tree.librairies)
     res = json.loads("{}")
     res = getFileTree(frame, ".")
 
@@ -499,6 +556,7 @@ def treeModel(frame):
         return
     try:
         ReflushTree(frame, frame.device_tree.device, res['.'])
+        define_librairies(frame.device_tree, frame.serial_manager.card)
     except Exception as e:
         print("Error Build TreeView", e)
     frame.cmd_return = ""
@@ -571,3 +629,31 @@ def save_on_card(frame, page):
         wx.CallAfter(frame.shell.AppendText, "Content Saved\n")
         my_speak(frame, "Content Saved")
         frame.show_cmd = True
+
+
+def define_librairies(tree, name_of_card):
+    if os.getcwd().find("dist") >= 1:
+        path = os.getcwd() + "\\..\\..\\examples\\Common"
+    else:
+        path = os.getcwd() + "\\examples\\Common"
+    common_examples = tree.AppendItem(tree.librairies, "Common")
+    board_examples = tree.AppendItem(tree.librairies, "Board")
+    tree.SetItemImage(common_examples, tree.fldridx, wx.TreeItemIcon_Normal)
+    tree.SetItemImage(board_examples, tree.fldridx, wx.TreeItemIcon_Normal)
+    try:
+        tree.fill_section(common_examples, path)
+        if os.getcwd().find("dist") >= 1:
+            path = os.getcwd() + "\\..\\..\\examples\\Boards"
+        else:
+            path = os.getcwd() + "\\examples\\Boards"
+        if name_of_card == "esp32":
+            path += "\\ESP32"
+            tree.fill_section(board_examples, path)
+        elif name_of_card == "pyboard":
+            path += "\\pyboard"
+            tree.fill_section(board_examples, path)
+        elif name_of_card == "esp8266":
+            path += "\\ESP8266"
+            tree.fill_section(board_examples, path)
+    except Exception as e:
+        print("Error :", e)
