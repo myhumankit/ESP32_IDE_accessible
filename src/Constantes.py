@@ -41,11 +41,6 @@ SERIALRX = wx.NewEventType()
 # bind to serial data receive events
 EVT_SERIALRX = wx.PyEventBinder(SERIALRX, 0)
 
-NEWLINE_CR = 0
-NEWLINE_LF = 1
-NEWLINE_CRLF = 2
-
-
 # black #FFFF00
 # orange #FF9933
 # white #FFFFFF

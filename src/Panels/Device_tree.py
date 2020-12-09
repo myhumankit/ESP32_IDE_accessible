@@ -5,15 +5,16 @@ import wx
 import json
 import os
 import sys
+import time
+
 from Utils.voice_synthese import my_speak
 from Serial_manager.send_infos import put_cmd
-import time
 
 
 class DeviceTree(wx.TreeCtrl):
     """[summary]
 
-    :param wx.TreeCtrl: Class to derivate 
+    :param wx.TreeCtrl: Class to derivate
     :type wx.TreeCtrl: :class:wx.TreeCtrl
     """
     def __init__(self, parent, frame):
@@ -183,28 +184,36 @@ class DeviceTree(wx.TreeCtrl):
                 i = "."
             self.path += i + "/"
         self.path += name
+        self.path = self.path.split("/", 1)[1]
         return self.path
 
     def open_file(self):
         """
         Open the file selected in a editor tab
          """
-        self.frame.shell_text = ""
+
         name = self.GetItemText(self.item)
         self.get_path_item(self.item, name)
-        if self.path.find("Workspace") >= 1:
-            self.path = self.path.replace("/Workspace/", "\\")
+        notebookP = self.frame.notebook
+        print("PAth =", self.path)
+        print(self.path.find('Workspace'))
+        if self.path.find("Workspace") >= 0:
+            self.path = self.path.replace("Workspace/", '\\')
             with open("./customize.json", "r") as file:
                 tab = json.load(file)
             filehandle = open(tab['Workspace Path'] + self.path, 'r')
             res = filehandle.read()
-        elif self.path.find("Librairies") >= 1:
-            print("COMING SOON")
+            page = notebookP.new_page(name, self.path, res, False)
+        elif self.path.find("Librairies") >= 0:
+            res = open_library(self, self.frame.serial_manager.card)
+            page = notebookP.new_page(name, self.path, res, False)
         else:
             res = self.open_file_on_card()
-        notebookP = self.frame.notebook
-        notebookP.new_page(name, self.path, res, True)
+            page = notebookP.new_page(name, self.path, res, True)
+        page.saved = True
+        page.last_save = page.GetValue()
         self.frame.open_file_txt = ""
+        self.frame.show_cmd = True
 
     def open_file_on_card(self):
         size = self.init_open_on_card()
@@ -224,10 +233,11 @@ class DeviceTree(wx.TreeCtrl):
                 return
         self.frame.open_file = False
         put_cmd(self.frame, "impossible.close()\r\n")
+        put_cmd(self.frame, "del impossible\r\n")
         res = self.frame.open_file_txt[len("print(impossible.read())\r\n") - 1:]
         res = res.split('\n>>> ')[0]
         res = res.replace('\r', '')
-        self.frame.show_cmd = True
+        self.frame.open_file_txt = ""
         return res
 
     def init_open_on_card(self):
@@ -304,6 +314,8 @@ class ClipboardMenuDevice(wx.Menu):
         self.frame = frame
         self.device_tree = frame.device_tree
         self.item = item
+        name = self.device_tree.GetItemText(self.item)
+        self.item_path = self.device_tree.get_path_item(item, name)
         self.__set_properties(frame)
         self.__attach_events()
 
@@ -311,6 +323,12 @@ class ClipboardMenuDevice(wx.Menu):
         """
         Set attributs of the instance
          """
+        if self.item_path.find("Workspace") >= 0:
+            self.Append(wx.ID_OPEN, "&Open")
+            return
+        if self.item_path.find("Librairies") >= 0:
+            self.Append(wx.ID_OPEN, "&Open")
+            return
         if self.is_dir_menu:
             self.Append(wx.ID_NEW, "&New file")
             self.Append(wx.ID_DIRECTORY, "&New Directory")
@@ -642,18 +660,40 @@ def define_librairies(tree, name_of_card):
     tree.SetItemImage(board_examples, tree.fldridx, wx.TreeItemIcon_Normal)
     try:
         tree.fill_section(common_examples, path)
-        if os.getcwd().find("dist") >= 1:
-            path = os.getcwd() + "\\..\\..\\examples\\Boards"
-        else:
-            path = os.getcwd() + "\\examples\\Boards"
+        path = os.getcwd() + "\\examples\\Boards"
         if name_of_card == "esp32":
+            tree.SetItemText(board_examples, "ESP32")
             path += "\\ESP32"
             tree.fill_section(board_examples, path)
         elif name_of_card == "pyboard":
+            tree.SetItemText(board_examples, "Pyboard")
             path += "\\pyboard"
             tree.fill_section(board_examples, path)
         elif name_of_card == "esp8266":
+            tree.SetItemText(board_examples, "ESP8266")
             path += "\\ESP8266"
             tree.fill_section(board_examples, path)
     except Exception as e:
         print("Error :", e)
+
+
+def open_library(tree, name_of_card):
+    path = os.getcwd() + "\\examples\\Boards"
+    if name_of_card == "esp32" and tree.path.find("ESP32") >= 0:
+        path += "\\ESP32"
+        tree.path = tree.path.replace("ESP32/", "")
+    elif name_of_card == "pyboard" and tree.path.find("Pyboard") >= 0:
+        path += "\\pyboard"
+        tree.path = tree.path.replace("Pyboard/", "")
+    elif name_of_card == "esp8266" and tree.path.find("ESP8266") >= 0:
+        path += "\\ESP8266"
+        tree.path = tree.path.replace("ESP8266/", "")
+    else:
+        path = os.getcwd() + "\\examples"
+    tree.path = tree.path.replace("Librairies", "")
+    tree.path = tree.path.replace("/", "\\")
+    tree.path = path + tree.path
+    print("Path:", path)
+    with open(tree.path, "r") as file:
+        res = file.read()
+    return res

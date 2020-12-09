@@ -23,8 +23,11 @@ class Speak(Thread):
     def run(self):
         """Thread run
         """
-        self.frame.voice_on.say(self.info)
-        self.frame.voice_on.runAndWait()
+        try:
+            self.frame.voice_on.say(self.info)
+            self.frame.voice_on.runAndWait()
+        except Exception as e:
+            print("Error pyttsx3:", e)
 
 
 def my_speak(frame, txt):

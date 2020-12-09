@@ -11,11 +11,12 @@ import sys
 from shortcuts import InitShortcuts
 from Serial_manager.firmware import FirmwareManager
 from api.install_fonts import Install_fonts
-from Serial_manager.connexion import TerminalSetup, ManageConnection
+from Serial_manager.connexion import ManageConnection
 from menus import init_top_menu, init_toolbar
 from all_panels import create_panels
 from Serial_manager.receive_infos import serial_read_data, read_cmd
 from Serial_manager.send_infos import Exec_cmd
+from Utils.voice_synthese import my_speak
 
 
 class MainWindow(wx.Frame):
@@ -48,7 +49,6 @@ class MainWindow(wx.Frame):
         self.serial.timeout = 0.5
         # make sure that the alive event can be checked from time to time
         self.time_to_send = 0.1
-        self.settings = TerminalSetup()  # placeholder for the settings
         self.thread = None
         self.alive = threading.Event()
 
@@ -99,6 +99,8 @@ class MainWindow(wx.Frame):
         self.read_thread.start()
         self.read_thread.join()
         read_cmd(self, cmd[:-2])
+        self.shell_text = ""
+        self.last_cmd_red = ""
         print("Result Commande ==>", self.result)
         return self.result
 
@@ -153,8 +155,12 @@ class MainWindow(wx.Frame):
         transformation (newlines) and call an serial_read_data
         """
         while self.alive.isSet():
-            b = self.serial.read(self.serial.in_waiting)
-            self.is_data = False
+            try:
+                b = self.serial.read(self.serial.in_waiting)
+                self.is_data = False
+            except Exception as e:
+                my_speak(self, "Device Disconnected")
+                print("Error: ", e)
             if b:  # and b != b'\x00':
                 self.is_data = True
                 b = b.replace(b'\r\n', b'\n')

@@ -100,6 +100,8 @@ class FirmwareThread(Thread):
             if self.board == "esp8266":
                 Esp.downOkReset()
             self.burn_frame.EnableCloseButton(enable=True)
+            self.burn_frame.button_close.Enable()
+            print("Firmware Installed")
             my_speak(self.frame, "Firmware Installed")
             self.stop_thread = True
             break
@@ -135,6 +137,7 @@ def burn_firmware(frame, event):
                 frame_burn.ShowModal()
                 burn_thread.join()
                 burn_thread = None
+                print("Firmware Installed")
                 my_speak(frame, "Firmware installed")
                 frame_burn.txt.Destroy()
                 frame_burn.Destroy()

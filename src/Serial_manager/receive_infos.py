@@ -14,6 +14,7 @@ def GetCmdReturn(shell_text, cmd):
     :return: the return of the command searched
     :rtype: str
     """
+    print("***\n", shell_text, "***\n")
     if cmd == "":
         return "clean"
     try:
@@ -82,6 +83,7 @@ def read_cmd(frame, data):
     """
     b = frame.serial.read(frame.serial.in_waiting)
     frame.is_data = False
+
     if b:
         frame.is_data = True
         b = b.replace(b'\r\n', b'\n')

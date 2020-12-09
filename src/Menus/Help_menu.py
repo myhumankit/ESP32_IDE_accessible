@@ -39,24 +39,14 @@ class HelpMenu(wx.Menu):
     def OnHelp(self, evt):
         """ Open a webrowser and display the shortcuts list
         """
-        if os.getcwd().find("dist") >= 1:
-            webbrowser.open(os.getcwd()+"\\..\\..\\docs\\Help\\output\\shortcuts.html")
-        else:
-            webbrowser.open(os.getcwd()+"\\docs\\Help\\output\\shortcuts.html")
+        webbrowser.open(os.getcwd()+"\\docs\\Help\\output\\shortcuts.html")
 
     def OnAbout(self, evt):
         """ Open a webrowser and display the about
         """
-        print("about")
-        if os.getcwd().find("dist") >= 1:
-            webbrowser.open(os.getcwd()+"../../docs/Help/output/shortcuts.html")
-        else:
-            webbrowser.open(os.getcwd()+"./docs/Help/output/shortcuts.html")
+        webbrowser.open(os.getcwd()+"\\docs\\Help\\output\\about.html")
 
     def OnDocumentation(self, evt):
         """ Open a webrowser and display the docs
         """
-        if os.getcwd().find("dist") >= 1:
-            webbrowser.open(os.getcwd()+"../../docs/_build/html/index.html")
-        else:
-            webbrowser.open(os.getcwd()+"./docs/_build/html/index.html")
+        webbrowser.open(os.getcwd()+"\\docs\\_build\\html\\index.html")

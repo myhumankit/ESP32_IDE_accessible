@@ -124,6 +124,7 @@ class NotebookPanel(fnb.FlatNotebook):
         new_tab = Styled_Editor(self, self.topwindow, text, on_card)
         new_tab.filename = filename
         new_tab.directory = path
-        new_tab = self.AddPage(new_tab, "%s" % filename, select=True)
+        self.AddPage(new_tab, "%s" % filename, select=True)
         self.tab_num = self.GetPageCount()
         self.GetCurrentPage().SetFocus()
+        return new_tab

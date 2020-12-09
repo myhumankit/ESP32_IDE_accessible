@@ -5,23 +5,8 @@ and communication with the card
 
 import os
 import time
-import wx
 from Serial_manager.send_infos import put_cmd
-from constantes import NEWLINE_CRLF, NEWLINE_LF
 from Panels.Device_tree import treeModel
-
-
-class TerminalSetup:
-    """
-    Placeholder for various terminal settings. Used to pass the
-    options to the TerminalSettingsDialog.
-    """
-    def __init__(self):
-        """ Constructor method
-        """
-        self.echo = False
-        self.unprintable = False
-        self.newline = NEWLINE_CRLF
 
 
 class ManageConnection():
@@ -72,7 +57,7 @@ class ManageConnection():
         except Exception as e:
             print("Error get infos device:", e)
         if self.card == "pyboard":
-            self.frame.time_to_send = 0.001
+            self.frame.time_to_send = 0.1
 
     def download_and_run(self, filename):
         """Execute the file gived in params on the MicroPython card
@@ -116,6 +101,7 @@ class ManageConnection():
         self.frame.shell.Clear()
         self.frame.shell.WriteText("Ready to download this file...!\n")
         self.write_in_file(fileHandle, file_to_open)
+        treeModel(self.frame)
 
     def write_in_file(self, fileHandle, file_to_open):
         """Write bytes of a computer file on a file on the device
@@ -127,28 +113,41 @@ class ManageConnection():
         """
         try:
             if self.card == "pyboard":
-                cmd = "myfile=open('%s','a')\r\n" % str(file_to_open)
-                self.frame.exec_cmd(cmd)
-                for line in fileHandle:
-                    line = line.decode()
-                    cmd = "myfile.write(%s)\r\n" % repr(line)
-                    put_cmd(self.frame, cmd)
-                    time.sleep(0.001)
-                self.frame.exec_cmd("\r\n")
+                done = 0
+                cmd = "myfile=open(\'%s\',\'w\')\r\n" % str(file_to_open)
+                put_cmd(self.frame, cmd)
+                while not done:
+                    aline = fileHandle.read(128)
+                    if(str(aline) != "b''"):
+                        try:
+                            aline = aline.decode()
+                            aline = "myfile.write(%s)\r\n" % repr(aline)
+                        except Exception as e:
+                            aline = "myfile.write(%s)\r\n" % repr(aline)
+                            print(e)
+                        for i in aline:
+                            put_cmd(self.frame, i)
+                        self.frame.shell.AppendText("Wait...\n")
+                        self.frame.shell.AppendText("Wait..\n")
+                        self.frame.shell.AppendText("Wait.\n")
+                    else:
+                        done = 1
+                fileHandle.close()
+                put_cmd(self.frame, "myfile.close()\r")
+                for i in range(10):
+                    self.frame.exec_cmd("\r\n")
+                #self.frame.exec_cmd("myfile.close()\r\n")
+                time.sleep(0.01)
             else:
                 cmd = "myfile=open('%s','w')\r\n" % str(file_to_open)
                 self.frame.exec_cmd(cmd)
                 line = fileHandle.read().decode()
                 cmd = "myfile.write(%s)\r\n" % repr(line)
                 self.frame.exec_cmd(cmd)
+                self.frame.exec_cmd("myfile.close()\r\n")
+                self.frame.exec_cmd("\r\n")
         except Exception as e:
             print(e)
-        finally:
-            fileHandle.close()
-            self.frame.exec_cmd("myfile.close()\r\n")
-            self.frame.exec_cmd("\r\n")
-            self.frame.last_cmd_red = ""
-            treeModel(self.frame)
 
 
 def ConnectSerial(self):

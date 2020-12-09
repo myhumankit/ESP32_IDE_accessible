@@ -128,13 +128,15 @@ class ToolsMenu(wx.Menu):
             frame.shell.AppendText('Please choose file or input something')
         try:
             if page.directory[len(page.directory) - 1] == '/':
+                print("CONDITION")
                 pathfile = page.directory + page.filename
             else:
-                pathfile = page.directory + '/' + page.filename
+                pathfile = page.directory + '\\' + page.filename
             if page.saved is False:
-                frame.shell.append('Please save the file before download')
+                frame.shell.AppendText('Please save the file before download')
                 return False
             elif str(pathfile).find(":") >= 0:
+                print(pathfile)
                 frame.serial_manager.download(pathfile, page.filename)
                 self.frame.shell.Clear()
                 self.frame.shell.WriteText("Downloaded file : " + page.filename)
@@ -185,6 +187,8 @@ class ToolsMenu(wx.Menu):
             self.frame.show_cmd = True
             self.frame.serial_manager.download_and_run(page.filename)
             return True
+        self.frame.show_cmd = True
+        self.frame.serial_manager.download_and_run(page.filename)
         return False
 
     def OnDisconnect(self, evt):
@@ -207,6 +211,9 @@ class ToolsMenu(wx.Menu):
         self.frame.device_tree.DeleteChildren(self.frame.device_tree.device)
         self.frame.shell.Clear()
         self.frame.shell.SetEditable(False)
+        self.frame.shell_text = ""
+        self.frame.last_cmd_red = ""
+
         my_speak(self.frame, "Device Disconnected")
 
     def OnStop(self, evt):

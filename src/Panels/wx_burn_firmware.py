@@ -227,9 +227,11 @@ class BurnFrame(wx.Dialog):
         """
 
         wx.Dialog.__init__(self, parent, style=wx.DEFAULT_DIALOG_STYLE)
+
+        self.button_close = wx.Button(self, wx.ID_CLOSE, "Close")
+        self.button_clipboard = wx.Button(self, wx.ID_COPY, "Copy Clipboard")
         self.EnableCloseButton(enable=False)
         self.SetTitle("Burn Firmware Console")
-        sizer = wx.BoxSizer(wx.VERTICAL)
         self.txt = wx.TextCtrl(self, style=wx.TE_MULTILINE |
                                wx.TE_READONLY | wx.TE_RICH2)
         font = wx.Font(pointSize=12, family=wx.FONTFAMILY_SWISS,
@@ -237,5 +239,31 @@ class BurnFrame(wx.Dialog):
                        underline=False, faceName="Arial", encoding=0)
         self.txt.SetFont(font)
         self.txt.SetMaxClientSize(self.txt.GetMaxSize())
+        self.button_close.Disable()
+        self.__do_layout()
+        self.__bind_events()
+
+    def __do_layout(self):
+        """Place elements on the main_frame
+        """
+        sizer = wx.BoxSizer(wx.VERTICAL)
+        sizer_buttons = wx.BoxSizer(wx.HORIZONTAL)
         sizer.Add(self.txt, 1, wx.EXPAND | wx.ALL, 0)
+        sizer_buttons.Add(self.button_close)
+        sizer_buttons.Add(self.button_clipboard)
+        sizer.Add(sizer_buttons, 0, wx.BOTTOM)
         self.SetSizer(sizer)
+
+    def __bind_events(self):
+        self.Bind(wx.EVT_BUTTON, self.OnClose, id=wx.ID_CLOSE)
+        self.Bind(wx.EVT_BUTTON, self.OnClipboard, id=wx.ID_COPY)
+
+    def OnClose(self, event):
+        self.Close()
+
+    def OnClipboard(self, event):
+        text = self.txt.GetValue()
+
+        if wx.TheClipboard.Open():
+            wx.TheClipboard.SetData(wx.TextDataObject(text))
+            wx.TheClipboard.Close()
