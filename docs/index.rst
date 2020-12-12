@@ -1,8 +1,8 @@
 Welcome to IDE_MicroPython_accessible's documentation!
-===================================
+======================================================
 
 .. toctree::
-   :caption: Contents:
+   :caption: Content:
 
    Menus
    Panels

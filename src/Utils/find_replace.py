@@ -13,6 +13,7 @@ def find_next(editor, evt):
     :return: True if the string is found, False if not
     :rtype: Boolean
     """
+
     findTxt = evt.GetFindString()
     editor.pos = editor.txt.find(findTxt, editor.pos)
     if editor.pos == -1:
@@ -37,6 +38,7 @@ def replace(editor, evt):
     :return: True if something is replaced, False if not
     :rtype: Boolean
     """
+
     if editor.GetSelectedText() == "":
         return False
     replaceTxt = evt.GetReplaceString()

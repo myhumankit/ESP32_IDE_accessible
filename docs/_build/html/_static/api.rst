@@ -5,4 +5,3 @@ API
 
     api_pyflakes
     api_esptool
-    install_fonts

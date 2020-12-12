@@ -16,6 +16,7 @@ class Speak(Thread):
         :param info: text to speech
         :type info: str
         """
+
         Thread.__init__(self)
         self.frame = frame
         self.info = info
@@ -23,6 +24,7 @@ class Speak(Thread):
     def run(self):
         """Thread run
         """
+    
         try:
             self.frame.voice_on.say(self.info)
             self.frame.voice_on.runAndWait()
@@ -38,6 +40,7 @@ def my_speak(frame, txt):
     :param txt: text to speech
     :type txt: str
     """
+
     if frame.speak_on:
         if frame.speak_thread is not None:
             frame.voice_on.stop()

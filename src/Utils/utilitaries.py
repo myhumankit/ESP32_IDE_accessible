@@ -3,7 +3,6 @@
 """
 
 import wx
-import os
 
 
 def load_img(path):

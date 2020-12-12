@@ -24,9 +24,8 @@ class NotebookPanel(fnb.FlatNotebook):
         :type parent: MainWindow class
 
         """
-        style = fnb.FNB_FF2 | \
-                wx.FULL_REPAINT_ON_RESIZE | \
-                fnb.FNB_BACKGROUND_GRADIENT
+
+        style = fnb.FNB_FF2 | wx.FULL_REPAINT_ON_RESIZE | fnb.FNB_BACKGROUND_GRADIENT
         fnb.FlatNotebook.__init__(self,
                                   parent=parent, style=style, name="COUCOU")
 
@@ -48,6 +47,7 @@ class NotebookPanel(fnb.FlatNotebook):
         :param event: Event to repaint the notebook background
         :type event: wx.Event
         """
+
         x = 0
         y = 0
         w, h = self.GetSize()
@@ -86,14 +86,14 @@ class NotebookPanel(fnb.FlatNotebook):
          :param theme: The theme to apply
          :type theme: list
          """
+
         try:
             file = open("./customize.json")
             theme = json.load(file)
             file.close()
             theme = theme['Dark Theme']['Panels Colors']
-            self.SetTabAreaColour("#D3D3D3")  # FIXME: ADD TAB TO JSON
+            self.SetTabAreaColour("#D3D3D3")
             self.SetActiveTabColour(theme['Background active tab area'])
-            # self.SetTabAreaColour(theme['Background tab area'])
             self.SetActiveTabTextColour(theme['Active tab text'])
             self.SetNonActiveTabTextColour(theme['Active tab text'])
         except Exception as e:
@@ -102,6 +102,7 @@ class NotebookPanel(fnb.FlatNotebook):
     def set_focus_editor(self, evt):
         """ Set the focus on the current editor tab
          """
+
         try:
             page = self.GetCurrentPage()
             page = self.GetTabArea()
@@ -121,6 +122,7 @@ class NotebookPanel(fnb.FlatNotebook):
         :param on_card: flag to know if the file opened comes from the device connected
         :type on_card: boolean
         """
+
         new_tab = Styled_Editor(self, self.topwindow, text, on_card)
         new_tab.filename = filename
         new_tab.directory = path

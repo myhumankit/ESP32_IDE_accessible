@@ -17,6 +17,7 @@ class DeviceTree(wx.TreeCtrl):
     :param wx.TreeCtrl: Class to derivate
     :type wx.TreeCtrl: :class:wx.TreeCtrl
     """
+
     def __init__(self, parent, frame):
         """Constructor method
 
@@ -25,16 +26,12 @@ class DeviceTree(wx.TreeCtrl):
         :param frame: main window if the application
         :type frame: :class:MainWindow
         """
+
         wx.TreeCtrl.__init__(self, parent)
         self.frame = frame
         self.__set_properties()
         self.Expand(self.main_root)
         self.workspace_from_file()
-        self.SetImageList(self.il)
-        self.SetItemData(self.device, None)
-        self.SetItemImage(self.device, self.fldridx, wx.TreeItemIcon_Normal)
-        self.SetItemImage(self.device, self.fldropenidx,
-                          wx.TreeItemIcon_Expanded)
         self.custom_tree_ctrl()
         self.__attach_events()
 
@@ -58,10 +55,15 @@ class DeviceTree(wx.TreeCtrl):
         self.device = self.AppendItem(self.main_root, "Device")
         self.librairies = self.AppendItem(self.main_root, "Librairies")
         self.workspace = self.AppendItem(self.main_root, "Workspace")
+        self.SetImageList(self.il)
+        self.SetItemData(self.device, None)
+        self.SetItemImage(self.device, self.fldridx, wx.TreeItemIcon_Normal)
+        self.SetItemImage(self.device, self.fldropenidx, wx.TreeItemIcon_Expanded)
 
     def __attach_events(self):
         """ Bind events with methods
          """
+
         self.Bind(wx.EVT_TREE_ITEM_ACTIVATED, self.OnActivate, self)
         self.Bind(wx.EVT_RIGHT_DCLICK, self.OnClipboardMenu)
         self.Bind(wx.EVT_RIGHT_UP, self.OnClipboardMenu)
@@ -72,6 +74,7 @@ class DeviceTree(wx.TreeCtrl):
     def workspace_from_file(self):
         """Init the workspace if a path exist in customize.json
          """
+
         try:
             file = open("./customize.json")
             path = json.load(file)
@@ -91,6 +94,7 @@ class DeviceTree(wx.TreeCtrl):
         :param path: path to analyse
         :type path: str
         """
+
         for element in os.listdir(path):
             if os.path.isdir(os.path.join(path, element)):
                 child = self.AppendItem(item, element)
@@ -106,14 +110,14 @@ class DeviceTree(wx.TreeCtrl):
     def custom_tree_ctrl(self):
         """Custom the treeView with the theme selected
          """
+
         try:
             file = open("./customize.json")
             theme = json.load(file)
             theme = theme[self.theme_choice]
             file.close()
 
-            self.SetBackgroundColour(
-                theme['Panels Colors']['Filetree background'])
+            self.SetBackgroundColour(theme['Panels Colors']['Filetree background'])
             self.SetForegroundColour(theme['Panels Colors']['Text foreground'])
             self.SetFont(self.font)
         except Exception as e:
@@ -195,15 +199,16 @@ class DeviceTree(wx.TreeCtrl):
         name = self.GetItemText(self.item)
         self.get_path_item(self.item, name)
         notebookP = self.frame.notebook
-        print("PAth =", self.path)
-        print(self.path.find('Workspace'))
+
         if self.path.find("Workspace") >= 0:
             self.path = self.path.replace("Workspace/", '\\')
             with open("./customize.json", "r") as file:
                 tab = json.load(file)
             filehandle = open(tab['Workspace Path'] + self.path, 'r')
             res = filehandle.read()
-            page = notebookP.new_page(name, self.path, res, False)
+            page = notebookP.new_page(name, tab['Workspace Path'], res, False)
+            page.directory = tab['Workspace Path']
+            page.filename = self.path
         elif self.path.find("Librairies") >= 0:
             res = open_library(self, self.frame.serial_manager.card)
             page = notebookP.new_page(name, self.path, res, False)
@@ -230,7 +235,7 @@ class DeviceTree(wx.TreeCtrl):
                 self.frame.shell.AppendText("Can't Open file")
                 self.frame.open_file = False
                 put_cmd(self.frame, "impossible.close()\r\n")
-                return
+                return "err"
         self.frame.open_file = False
         put_cmd(self.frame, "impossible.close()\r\n")
         put_cmd(self.frame, "del impossible\r\n")
@@ -450,6 +455,7 @@ class ClipboardMenuDevice(wx.Menu):
         """
         Rename the device item selected(file and dir)
          """
+
         self.device_tree.path = ""
         name = self.device_tree.GetItemText(self.item)
         path_actual = self.device_tree.get_path_item(self.item, name)
@@ -510,8 +516,8 @@ def getFileTree(frame, dir):
     """
         Get the TreeView structure (recursive way)
     """
+
     frame.cmd_return = ""
-    frame.get_cmd = True
     frame.exec_cmd("\r\n")
     result = frame.exec_cmd("os.listdir(\'%s\')\r\n" % dir)
     if result == "err":
@@ -534,7 +540,6 @@ def getFileTree(frame, dir):
         res = frame.exec_cmd("os.stat(\'%s\')\r\n" % (dir + "/" + i))
         if res == "err":
             print("Error Build TreeView: ", "os.stat(./)")
-            #return res
         isdir = res.split("\n")[1]
         isdir = isdir.split(", ")
         try:
@@ -552,7 +557,6 @@ def getFileTree(frame, dir):
                 ret[dir].append(i)
         except Exception as e:
             print("Error Build TreeView: ", e)
-            #return "err"
     return ret
 
 
@@ -560,6 +564,7 @@ def treeModel(frame):
     """
     Build the TreeView
     """
+
     frame.show_cmd = False
     frame.reflushTreeBool = True
     frame.cmd_return = ""
@@ -571,6 +576,7 @@ def treeModel(frame):
 
     if res == "err":
         frame.cmd_return = ""
+        frame.last_cmd_red = ""
         return
     try:
         ReflushTree(frame, frame.device_tree.device, res['.'])
@@ -616,8 +622,6 @@ def ReflushTree(frame, device, msg):
             else:
                 pass
 
-# TODO: move this function on Editor
-
 
 def save_on_card(frame, page):
     """ Save the tab on the device connected
@@ -627,11 +631,11 @@ def save_on_card(frame, page):
     :param page: tab to save
     :type page: :class:StyledEditor
     """
-    # Check if save is required
+
     if (page.GetValue() != page.last_save):
         page.saved = False
-        # Grab the content to be saved
         save_as_file_content = page.GetValue()
+
         frame.exec_cmd("\r\n")
         frame.show_cmd = False
         cmd = "f = os.remove('%s')\r\n" % (page.directory)
@@ -650,6 +654,14 @@ def save_on_card(frame, page):
 
 
 def define_librairies(tree, name_of_card):
+    """Define the library section that's depends of the card connected
+
+    :param tree: TreeView
+    :type tree: Device_tree
+    :param name_of_card: Esp32, esp8266 or pyboard
+    :type name_of_card: str
+    """
+
     if os.getcwd().find("dist") >= 1:
         path = os.getcwd() + "\\..\\..\\examples\\Common"
     else:
@@ -678,6 +690,15 @@ def define_librairies(tree, name_of_card):
 
 
 def open_library(tree, name_of_card):
+    """Return the content of the library file detected
+
+    :param tree: [description]
+    :type tree: :class Device_tree.DeviceTree:
+    :param name_of_card: type of the connected card
+    :type name_of_card: str
+    :return: the content of the file
+    :rtype: str
+    """
     path = os.getcwd() + "\\examples\\Boards"
     if name_of_card == "esp32" and tree.path.find("ESP32") >= 0:
         path += "\\ESP32"
@@ -693,7 +714,6 @@ def open_library(tree, name_of_card):
     tree.path = tree.path.replace("Librairies", "")
     tree.path = tree.path.replace("/", "\\")
     tree.path = path + tree.path
-    print("Path:", path)
     with open(tree.path, "r") as file:
         res = file.read()
     return res

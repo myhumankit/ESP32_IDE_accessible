@@ -17,6 +17,7 @@ def change_theme_choice(frame, theme_name):
     :param theme_name: theme selected
     :type theme_name: str
     """
+
     frame.notebook.theme_choice = theme_name
     frame.shell.theme_choice = theme_name
     frame.device_tree.theme_choice = theme_name
@@ -28,6 +29,7 @@ def init_editor_style(editor):
     :param editor: editorWindow
     :type editor: wx.py.editwindow.EditWindow
     """
+
     font = wx.Font(12, wx.MODERN, wx.NORMAL, wx.NORMAL, 0, "Arial")
     editor.SetIndentationGuides(stc.STC_IV_LOOKFORWARD)
     if editor.parent.colorized:
@@ -63,7 +65,9 @@ def customize_editor(editor, theme_choice):
         customize_lexer_stcstyle(editor, theme['Panels Colors'], font)
         customize_lexer_pystyle(editor, theme, font)
     except Exception as e:
-        print("Can't customize Editor\nError: %s" % e)
+        text = "Can't customize Editor\nError: %s" % e
+        print(text)
+        editor.frame.shell.AppendText(text)
 
 
 def customize_lexer_stcstyle(editor, theme, font):
@@ -77,6 +81,7 @@ def customize_lexer_stcstyle(editor, theme, font):
     :param font: font to apply on lexer
     :type font: wx.Font
     """
+
     for i in stc_style:
         editor.StyleSetFont(i, font)
     for i in stc_style:
@@ -96,6 +101,7 @@ def customize_lexer_pystyle(editor, theme, font):
     :param font: font to apply on lexer
     :type font: wx.Font
     """
+
     x = 0
     keys = []
 
@@ -121,6 +127,7 @@ def activate_highlighted_syntax(notebook, theme_menu):
     :param theme_menu: themes menu
     :type theme_menu: :class:Tools.ThemeMenu
     """
+
     page = notebook.GetCurrentPage()
     if notebook.colorized:
         notebook.colorized = False

@@ -28,6 +28,7 @@ class ToolsMenu(wx.Menu):
          :param frame: main window
          :type frame: MainWindow
          """
+
         wx.Menu.__init__(self, "Tools")
 
         self.frame = frame
@@ -49,6 +50,7 @@ class ToolsMenu(wx.Menu):
         :param evt: Event to trigger the method
         :type evt: wx.Event
         """
+
         ok = False
         frame = self.frame
         while not ok:
@@ -78,6 +80,8 @@ class ToolsMenu(wx.Menu):
                 # on startup, dialog aborted
                 frame.alive.clear()
                 ok = True
+                return
+
         if frame.serial.isOpen() is True:
             if ConnectSerial(frame) is False:
                 return
@@ -105,12 +109,13 @@ class ToolsMenu(wx.Menu):
                 self.frame.speak_on = "Connection Error Retry"
                 wx.CallAfter(frame.shell.Clear)
 
-    def Ondownload(self, evt):
-        """Download the file found on the current tab if it was saved
+    def OnUpload(self, evt):
+        """Uploadload the file found on the current tab if it was saved
 
         :param evt: Event to trigger the method
         :type evt: wx.Event
         """
+
         frame = self.frame
         frame.shell_text = ""
         notebookP = self.frame.notebook
@@ -127,17 +132,16 @@ class ToolsMenu(wx.Menu):
         if page.on_card is True:
             frame.shell.AppendText('Please choose file or input something')
         try:
-            if page.directory[len(page.directory) - 1] == '/':
-                print("CONDITION")
-                pathfile = page.directory + page.filename
+            if page.directory.find(".") >= 0:
+                pathfile = page.directory
             else:
                 pathfile = page.directory + '\\' + page.filename
+            print(pathfile)
             if page.saved is False:
-                frame.shell.AppendText('Please save the file before download')
+                frame.shell.AppendText('Please save the file before upload')
                 return False
             elif str(pathfile).find(":") >= 0:
-                print(pathfile)
-                frame.serial_manager.download(pathfile, page.filename)
+                frame.serial_manager.upload(pathfile, page.filename)
                 self.frame.shell.Clear()
                 self.frame.shell.WriteText("Downloaded file : " + page.filename)
                 wx.CallAfter(my_speak, self.frame, "Uploaded")
@@ -147,8 +151,9 @@ class ToolsMenu(wx.Menu):
                 return True
             return False
         except Exception as e:
-            print("Error: ", e)
-            # TODO: finir le upload du tab
+            text = "Can't Upload file Error: %s" % e
+            print(text)
+            self.frame.shell.AppendText(text)
             create_new_file(frame)
 
     def OnRun(self, evt):
@@ -157,6 +162,7 @@ class ToolsMenu(wx.Menu):
         :param evt: Event to trigger the method
         :type evt: wx.Event
         """
+
         frame = self.frame
         notebookP = self.frame.notebook
         page = notebookP.GetCurrentPage()
@@ -169,9 +175,8 @@ class ToolsMenu(wx.Menu):
         if page is None:
             frame.shell.AppendText('Please choose file or input something')
             return False
-        # print("dir = %s %s"%(page.directory, page.filename))
         if page.saved is False:
-            frame.shell.AppendText('Please save the file before download')
+            frame.shell.AppendText('Please save the file before upload')
             return False
 
         self.frame.show_cmd = False
@@ -180,15 +185,15 @@ class ToolsMenu(wx.Menu):
         else:
             pathfile = page.directory + '/' + page.filename
         if str(pathfile).find(":") >= 0:
-            frame.serial_manager.download(pathfile, page.filename)
+            frame.serial_manager.upload(pathfile, page.filename)
             time.sleep(1)
             self.frame.shell.WriteText("Downloaded file : " + page.filename)
             self.frame.shell.SetFocus()
             self.frame.show_cmd = True
-            self.frame.serial_manager.download_and_run(page.filename)
+            self.frame.serial_manager.upload_and_run(page.filename)
             return True
         self.frame.show_cmd = True
-        self.frame.serial_manager.download_and_run(page.filename)
+        self.frame.serial_manager.upload_and_run(page.filename)
         return False
 
     def OnDisconnect(self, evt):
@@ -201,19 +206,21 @@ class ToolsMenu(wx.Menu):
         if not self.frame.serial.isOpen():
             self.frame.shell.AppendText("already close.")
             return
-
-        put_cmd(self.frame, '\x03')
+        try:
+            put_cmd(self.frame, '\x03')
+            self.frame.stop_thread_serial()
+        except Exception as e:
+            print("Brute Disconnection !!!!!", e)
         time.sleep(0.1)
         self.frame.serial.close()
+        self.frame.thread_serial = None
         self.frame.connected = False
-        self.frame.stop_thread_serial()
         self.frame.statusbar.SetStatusText("Status: Not Connected", 1)
         self.frame.device_tree.DeleteChildren(self.frame.device_tree.device)
         self.frame.shell.Clear()
         self.frame.shell.SetEditable(False)
         self.frame.shell_text = ""
         self.frame.last_cmd_red = ""
-
         my_speak(self.frame, "Device Disconnected")
 
     def OnStop(self, evt):
@@ -222,6 +229,7 @@ class ToolsMenu(wx.Menu):
         :param evt: Event to trigger the method
         :type evt: wx.Event
         """
+
         if self.frame.serial.isOpen():
             put_cmd(self.frame, '\x03')
         else:
@@ -232,11 +240,13 @@ class ToolsMenu(wx.Menu):
 
         :param event: event
         """
+
         burn_firmware(self.frame, event)
 
 
 class ThemesMenu(wx.Menu):
-    """Inits a instance of a wx.Menu to create a Theme menu and his buttons (Copy, Paste, Find,...)
+    """Inits a instance of a wx.Menu to create a Theme menu and his buttons
+     (Copy, Paste, Find,...)
 
     :return: the Theme menu filled by buttons
     :rtype: wx.Menu see https://wxpython.org/Phoenix/docs/html/wx.Menu.html
@@ -248,13 +258,13 @@ class ThemesMenu(wx.Menu):
         :param frame: main window
         :type frame: MainWindow
         """
+
         wx.Menu.__init__(self, "")
 
         self.frame = frame
         self.Append(wx.ID_DARK_THEME, "&Dark")
         self.Append(wx.ID_LIGHT_THEME, "&Light")
-        self.syntax_on_item = self.Append(wx.ID_NVDA_THEME,
-                                          "&Syntax Highlight Enabled")
+        self.syntax_on_item = self.Append(wx.ID_NVDA_THEME, "&Syntax Highlight Enabled")
 
     def OnChangeTheme(self, evt):
         """Change the theme of the frame and the lexer style
@@ -268,9 +278,7 @@ class ThemesMenu(wx.Menu):
         elif evt.Id == wx.ID_LIGHT_THEME:
             theme_name = 'Light Theme'
         else:
-            return activate_highlighted_syntax(
-                self.frame.notebook,
-                self)
+            return activate_highlighted_syntax(self.frame.notebook, self)
         try:
             change_theme_choice(self.frame, theme_name)
             page = self.frame.notebook.GetCurrentPage()
@@ -280,9 +288,7 @@ class ThemesMenu(wx.Menu):
             self.frame.device_tree.custom_tree_ctrl()
             self.frame.notebook.custom_notebook(theme_name)
         except Exception as e:
-            print(e)
-
-# TODO: deplacer cette fonction à un autre endroit
+            print("Error: Can't change theme : ", e)
 
 
 def create_new_file(frame):
@@ -291,6 +297,7 @@ def create_new_file(frame):
         :param frame: main window
         :type frame: MainWindow
     """
+
     ok = False
     txt = "Select the name of the new file"
     frame.exec_cmd("\r\n")

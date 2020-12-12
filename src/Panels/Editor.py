@@ -39,13 +39,10 @@ class Styled_Editor(pysh.editwindow.EditWindow):
          """
         self.CmdKeyAssign(ord('+'), stc.STC_SCMOD_CTRL, stc.STC_CMD_ZOOMIN)
         self.CmdKeyAssign(ord('-'), stc.STC_SCMOD_CTRL, stc.STC_CMD_ZOOMOUT)
-
         self.SetKeyWords(0, " ".join(keyword.kwlist))
-
         self.SetProperty("fold", "1")
         self.SetProperty("tab.timmy.whinge.level", "1")
         self.SetMargins(0, 0)
-
         self.SetViewWhiteSpace(False)
         self.SetMarginType(2, stc.STC_MARGIN_SYMBOL)
         self.SetMarginMask(2, stc.STC_MASK_FOLDERS)
@@ -92,12 +89,7 @@ class Styled_Editor(pysh.editwindow.EditWindow):
             else:
 
                 kw = keyword.kwlist[:]
-                kw.append("zzzzzz?2")
-                kw.append("aaaaa?2")
-                kw.append("__init__?3")
-                kw.append("zzaaaaa?2")
-                kw.append("zzbaaaa?2")
-                kw.append("this_is_a_longer_value")
+
                 # kw.append("this_is_a_much_much_much_much_much_much_much_longer_value")
 
                 kw.sort()  # Python sorts are case sensitive

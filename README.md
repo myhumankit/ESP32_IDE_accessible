@@ -19,11 +19,12 @@ Development of this application has been based on Upycraft model. But,
 ## Installation
 
 
-Windows:
+**Windows**:
 
-```
-Go to dist/Ide_accessible/
-Double click on Ide_accesible.exe
+```powershell
+* Clone the repository with git clone or download the zip
+* Go to the IDE_accessible_MHK folder
+* Double click on Ide_accesible.exe
 ```
 
 ## Usage example
@@ -42,11 +43,11 @@ Distributed under the MIT license. See ``LICENSE`` for more information.
 
 https://github.com/EvanSabre
 
-##Contribution
+## Contribution
 
 <!-- Markdown link & img dfn's -->
 
 All sources and documentation are available on 
 [wiki]: https://wikilab.myhumankit.org/index.php?title=Projets:Blind_IDE
 
-Github : ………………
+Github : https://github.com/myhumankit

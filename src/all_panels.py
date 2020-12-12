@@ -6,7 +6,6 @@ import wx
 import Panels.Device_tree as Tree
 from Panels.Notebook import NotebookPanel
 from Panels.Shell import ShellPanel
-# TODO: rajouter le path workspace dans le json
 
 
 def create_panels(frame):
@@ -15,6 +14,7 @@ def create_panels(frame):
     :param frame: MainWindow or window to split
     :type frame: MainWindow or other panel
     """
+
     style = wx.SP_3D | wx.SP_NO_XP_THEME | wx.SP_LIVE_UPDATE
     frame.splitter_v = wx.SplitterWindow(frame, style=style, name="Dimension")
     frame.splitter_h = wx.SplitterWindow(frame.splitter_v,

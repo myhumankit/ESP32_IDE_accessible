@@ -80,23 +80,11 @@
               
             
             
-              <p class="caption"><span class="caption-text">Contents:</span></p>
+              <p class="caption"><span class="caption-text">Content:</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="Edit_menu.html">Edit_menu module</a></li>
-<li class="toctree-l1"><a class="reference internal" href="File_menu.html">File_menu module</a></li>
-<li class="toctree-l1"><a class="reference internal" href="Help_menu.html">Help_menu module</a></li>
-<li class="toctree-l1"><a class="reference internal" href="Tools_menu.html">Tools_menu module</a></li>
-<li class="toctree-l1"><a class="reference internal" href="Editor.html">Editor module</a></li>
-<li class="toctree-l1"><a class="reference internal" href="Notebook.html">Notebook module</a></li>
-<li class="toctree-l1"><a class="reference internal" href="Shell.html">Shell module</a></li>
-<li class="toctree-l1"><a class="reference internal" href="Device_tree.html">Device_tree module</a></li>
-<li class="toctree-l1"><a class="reference internal" href="wxSerialConfigDialog.html">wxSerialConfigDialog module</a></li>
-<li class="toctree-l1"><a class="reference internal" href="wx_burn_firmware.html">wx_burn_firmware module</a></li>
-<li class="toctree-l1"><a class="reference internal" href="connexion.html">connexion module</a></li>
-<li class="toctree-l1"><a class="reference internal" href="firmware.html">firmware module</a></li>
-<li class="toctree-l1"><a class="reference internal" href="receive_infos.html">receive_infos module</a></li>
-<li class="toctree-l1"><a class="reference internal" href="send_infos.html">send_infos module</a></li>
-<li class="toctree-l1"><a class="reference internal" href="shortcuts.html">shortcuts module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Menus.html">Menus lib</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Panels.html">Panels lib</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Serial_manager.html">Serial Manager lib</a></li>
 <li class="toctree-l1"><a class="reference internal" href="IDE_accessible_MHK.html">IDE_accessible_MHK module</a></li>
 <li class="toctree-l1"><a class="reference internal" href="all_panels.html">all_panels module</a></li>
 <li class="toctree-l1"><a class="reference internal" href="constantes.html">constantes module</a></li>
@@ -380,14 +368,16 @@
       </ul></li>
       <li><a href="api_esptool.html#api_esptool.ESPLoader.DEFAULT_PORT">DEFAULT_PORT (api_esptool.ESPLoader attribute)</a>
 </li>
+      <li><a href="Device_tree.html#Device_tree.define_librairies">define_librairies() (in module Device_tree)</a>
+</li>
       <li><a href="Device_tree.html#Device_tree.DeviceTree.define_workspace">define_workspace() (Device_tree.DeviceTree method)</a>
 </li>
       <li><a href="api_esptool.html#api_esptool.ESPLoader.detect_chip">detect_chip() (api_esptool.ESPLoader static method)</a>
 </li>
-      <li><a href="api_esptool.html#api_esptool.detect_flash_size">detect_flash_size() (in module api_esptool)</a>
-</li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api_esptool.html#api_esptool.detect_flash_size">detect_flash_size() (in module api_esptool)</a>
+</li>
       <li>
     Device_tree
 
@@ -398,10 +388,6 @@
       <li><a href="Device_tree.html#Device_tree.DeviceTree">DeviceTree (class in Device_tree)</a>
 </li>
       <li><a href="api_esptool.html#api_esptool.div_roundup">div_roundup() (in module api_esptool)</a>
-</li>
-      <li><a href="connexion.html#connexion.ManageConnection.download">download() (connexion.ManageConnection method)</a>
-</li>
-      <li><a href="connexion.html#connexion.ManageConnection.download_and_run">download_and_run() (connexion.ManageConnection method)</a>
 </li>
       <li><a href="api_esptool.html#api_esptool.downOkReset">downOkReset() (in module api_esptool)</a>
 </li>
@@ -565,7 +551,7 @@
       </ul></li>
       <li><a href="File_menu.html#File_menu.FileMenu">FileMenu (class in File_menu)</a>
 </li>
-      <li><a href="Device_tree.html#Device_tree.DeviceTree.fill_workspace">fill_workspace() (Device_tree.DeviceTree method)</a>
+      <li><a href="Device_tree.html#Device_tree.DeviceTree.fill_section">fill_section() (Device_tree.DeviceTree method)</a>
 </li>
       <li>
     firmware
@@ -722,6 +708,8 @@
 </li>
       <li><a href="editor_style.html#editor_style.init_editor_style">init_editor_style() (in module editor_style)</a>
 </li>
+      <li><a href="Device_tree.html#Device_tree.DeviceTree.init_open_on_card">init_open_on_card() (Device_tree.DeviceTree method)</a>
+</li>
       <li><a href="shortcuts.html#shortcuts.InitCTRL_fin">InitCTRL_fin() (in module shortcuts)</a>
 </li>
       <li><a href="shortcuts.html#shortcuts.InitF10">InitF10() (in module shortcuts)</a>
@@ -734,22 +722,11 @@
 </li>
       <li><a href="shortcuts.html#shortcuts.InitMajF10">InitMajF10() (in module shortcuts)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="shortcuts.html#shortcuts.InitMajF6">InitMajF6() (in module shortcuts)</a>
 </li>
       <li><a href="shortcuts.html#shortcuts.InitShortcuts">InitShortcuts() (in module shortcuts)</a>
-</li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="install_fonts.html#install_fonts.install_font">install_font() (in module install_fonts)</a>
-</li>
-      <li>
-    install_fonts
-
-      <ul>
-        <li><a href="install_fonts.html#module-install_fonts">module</a>
-</li>
-      </ul></li>
-      <li><a href="install_fonts.html#install_fonts.Install_fonts">Install_fonts() (in module install_fonts)</a>
 </li>
       <li><a href="api_esptool.html#api_esptool.ESP32ROM.IROM_MAP_END">IROM_MAP_END (api_esptool.ESP32ROM attribute)</a>
 
@@ -849,8 +826,6 @@
 </li>
         <li><a href="IDE_accessible_MHK.html#module-IDE_accessible_MHK">IDE_accessible_MHK</a>
 </li>
-        <li><a href="install_fonts.html#module-install_fonts">install_fonts</a>
-</li>
         <li><a href="Notebook.html#module-Notebook">Notebook</a>
 </li>
         <li><a href="receive_infos.html#module-receive_infos">receive_infos</a>
@@ -925,7 +900,11 @@
       </ul></li>
       <li><a href="Tools_menu.html#Tools_menu.ThemesMenu.OnChangeTheme">OnChangeTheme() (Tools_menu.ThemesMenu method)</a>
 </li>
+      <li><a href="wx_burn_firmware.html#wx_burn_firmware.BurnFrame.OnClipboard">OnClipboard() (wx_burn_firmware.BurnFrame method)</a>
+</li>
       <li><a href="Device_tree.html#Device_tree.DeviceTree.OnClipboardMenu">OnClipboardMenu() (Device_tree.DeviceTree method)</a>
+</li>
+      <li><a href="wx_burn_firmware.html#wx_burn_firmware.BurnFrame.OnClose">OnClose() (wx_burn_firmware.BurnFrame method)</a>
 </li>
       <li><a href="File_menu.html#File_menu.FileMenu.OnClosePage">OnClosePage() (File_menu.FileMenu method)</a>
 </li>
@@ -939,9 +918,9 @@
 </li>
       <li><a href="Tools_menu.html#Tools_menu.ToolsMenu.OnDisconnect">OnDisconnect() (Tools_menu.ToolsMenu method)</a>
 </li>
-      <li><a href="IDE_accessible_MHK.html#IDE_accessible_MHK.MainWindow.OnDownFocus">OnDownFocus() (IDE_accessible_MHK.MainWindow method)</a>
+      <li><a href="Help_menu.html#Help_menu.HelpMenu.OnDocumentation">OnDocumentation() (Help_menu.HelpMenu method)</a>
 </li>
-      <li><a href="Tools_menu.html#Tools_menu.ToolsMenu.Ondownload">Ondownload() (Tools_menu.ToolsMenu method)</a>
+      <li><a href="IDE_accessible_MHK.html#IDE_accessible_MHK.MainWindow.OnDownFocus">OnDownFocus() (IDE_accessible_MHK.MainWindow method)</a>
 </li>
       <li><a href="File_menu.html#File_menu.FileMenu.OnExit">OnExit() (File_menu.FileMenu method)</a>
 </li>
@@ -959,12 +938,12 @@
 </li>
       <li><a href="Editor.html#Editor.Styled_Editor.OnKeyPressed">OnKeyPressed() (Editor.Styled_Editor method)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="Editor.html#Editor.Styled_Editor.OnMarginClick">OnMarginClick() (Editor.Styled_Editor method)</a>
 </li>
       <li><a href="Device_tree.html#Device_tree.ClipboardMenuDevice.OnNewdir">OnNewdir() (Device_tree.ClipboardMenuDevice method)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="Device_tree.html#Device_tree.ClipboardMenuDevice.OnNewFile">OnNewFile() (Device_tree.ClipboardMenuDevice method)</a>
 </li>
       <li><a href="wx_burn_firmware.html#wx_burn_firmware.UpdateFirmwareDialog.OnOK">OnOK() (wx_burn_firmware.UpdateFirmwareDialog method)</a>
@@ -983,6 +962,10 @@
 </li>
       <li><a href="Device_tree.html#Device_tree.ClipboardMenuDevice.OnRename">OnRename() (Device_tree.ClipboardMenuDevice method)</a>
 </li>
+      <li><a href="Device_tree.html#Device_tree.DeviceTree.OnRightDown">OnRightDown() (Device_tree.DeviceTree method)</a>
+</li>
+      <li><a href="Device_tree.html#Device_tree.DeviceTree.OnRightUp">OnRightUp() (Device_tree.DeviceTree method)</a>
+</li>
       <li><a href="Device_tree.html#Device_tree.ClipboardMenuDevice.OnRun">OnRun() (Device_tree.ClipboardMenuDevice method)</a>
 
       <ul>
@@ -992,6 +975,8 @@
       <li><a href="File_menu.html#File_menu.FileMenu.OnSave">OnSave() (File_menu.FileMenu method)</a>
 </li>
       <li><a href="File_menu.html#File_menu.FileMenu.OnSaveAs">OnSaveAs() (File_menu.FileMenu method)</a>
+</li>
+      <li><a href="Device_tree.html#Device_tree.DeviceTree.OnSelChanged">OnSelChanged() (Device_tree.DeviceTree method)</a>
 </li>
       <li><a href="Editor.html#Editor.Styled_Editor.OnShowFindReplace">OnShowFindReplace() (Editor.Styled_Editor method)</a>
 </li>
@@ -1009,7 +994,13 @@
 </li>
       <li><a href="IDE_accessible_MHK.html#IDE_accessible_MHK.MainWindow.OnUpFocus">OnUpFocus() (IDE_accessible_MHK.MainWindow method)</a>
 </li>
+      <li><a href="Tools_menu.html#Tools_menu.ToolsMenu.OnUpload">OnUpload() (Tools_menu.ToolsMenu method)</a>
+</li>
       <li><a href="Device_tree.html#Device_tree.DeviceTree.open_file">open_file() (Device_tree.DeviceTree method)</a>
+</li>
+      <li><a href="Device_tree.html#Device_tree.DeviceTree.open_file_on_card">open_file_on_card() (Device_tree.DeviceTree method)</a>
+</li>
+      <li><a href="Device_tree.html#Device_tree.open_library">open_library() (in module Device_tree)</a>
 </li>
       <li><a href="api_esptool.html#api_esptool.Args.operation">operation (api_esptool.Args attribute)</a>
 </li>
@@ -1235,14 +1226,10 @@
 <h2 id="T">T</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="connexion.html#connexion.TerminalSetup">TerminalSetup (class in connexion)</a>
-</li>
       <li><a href="Tools_menu.html#Tools_menu.ThemesMenu">ThemesMenu (class in Tools_menu)</a>
 </li>
       <li><a href="IDE_accessible_MHK.html#IDE_accessible_MHK.MainWindow.thread_listen_port">thread_listen_port() (IDE_accessible_MHK.MainWindow method)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li>
     Tools_menu
 
@@ -1250,6 +1237,8 @@
         <li><a href="Tools_menu.html#module-Tools_menu">module</a>
 </li>
       </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="Tools_menu.html#Tools_menu.ToolsMenu">ToolsMenu (class in Tools_menu)</a>
 </li>
       <li><a href="Device_tree.html#Device_tree.treeModel">treeModel() (in module Device_tree)</a>
@@ -1264,13 +1253,17 @@
 </li>
       <li><a href="api_esptool.html#api_esptool.Args.ucIsHspi">ucIsHspi (api_esptool.Args attribute)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="api_esptool.html#api_esptool.Args.ucIsLegacy">ucIsLegacy (api_esptool.Args attribute)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="api_esptool.html#api_esptool.unhexify">unhexify() (in module api_esptool)</a>
 </li>
       <li><a href="wx_burn_firmware.html#wx_burn_firmware.UpdateFirmwareDialog">UpdateFirmwareDialog (class in wx_burn_firmware)</a>
+</li>
+      <li><a href="connexion.html#connexion.ManageConnection.upload">upload() (connexion.ManageConnection method)</a>
+</li>
+      <li><a href="connexion.html#connexion.ManageConnection.upload_and_run">upload_and_run() (connexion.ManageConnection method)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -1299,6 +1292,8 @@
 </li>
       </ul></li>
       <li><a href="api_esptool.html#api_esptool.FatalError.WithResult">WithResult() (api_esptool.FatalError static method)</a>
+</li>
+      <li><a href="Device_tree.html#Device_tree.DeviceTree.workspace_from_file">workspace_from_file() (Device_tree.DeviceTree method)</a>
 </li>
       <li><a href="api_esptool.html#api_esptool.ESPLoader.write">write() (api_esptool.ESPLoader method)</a>
 </li>

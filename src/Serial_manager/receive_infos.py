@@ -1,6 +1,7 @@
 """
     Module wich contains the functions used to receive infos from the device connected
 """
+
 import wx
 
 
@@ -14,7 +15,7 @@ def GetCmdReturn(shell_text, cmd):
     :return: the return of the command searched
     :rtype: str
     """
-    print("***\n", shell_text, "***\n")
+
     if cmd == "":
         return "clean"
     try:
@@ -29,6 +30,7 @@ def GetCmdReturn(shell_text, cmd):
 
 def serial_read_data(frame, data):
     """Handle input from the serial port."""
+
     msg = frame.keypressmsg
     if data == b'':
         return
@@ -62,6 +64,7 @@ def print_device_data(frame, txt):
     :return: [description]
     :rtype: [type]
     """
+
     wx.CallAfter(frame.shell.WriteText, txt)
     if frame.last_enter:
         frame.cmd_return += txt
@@ -81,6 +84,7 @@ def read_cmd(frame, data):
     :return: the return of the command sent
     :rtype: str
     """
+
     b = frame.serial.read(frame.serial.in_waiting)
     frame.is_data = False
 

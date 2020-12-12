@@ -200,11 +200,17 @@
 <tr class="row-odd"><td><p><a class="reference internal" href="#Device_tree.ReflushTree" title="Device_tree.ReflushTree"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ReflushTree</span></code></a>(frame, device, msg)</p></td>
 <td><p>Create the branches of the treeview(recursive)</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#Device_tree.getFileTree" title="Device_tree.getFileTree"><code class="xref py py-obj docutils literal notranslate"><span class="pre">getFileTree</span></code></a>(frame, dir)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#Device_tree.define_librairies" title="Device_tree.define_librairies"><code class="xref py py-obj docutils literal notranslate"><span class="pre">define_librairies</span></code></a>(tree, name_of_card)</p></td>
+<td><p>Define the library section that’s depends of the card connected</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#Device_tree.getFileTree" title="Device_tree.getFileTree"><code class="xref py py-obj docutils literal notranslate"><span class="pre">getFileTree</span></code></a>(frame, dir)</p></td>
 <td><p>Get the TreeView structure (recursive way)</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">my_speak</span></code>(frame, txt)</p></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">my_speak</span></code>(frame, txt)</p></td>
 <td><p>Speak the texte given in params by creating a thread dedicated</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#Device_tree.open_library" title="Device_tree.open_library"><code class="xref py py-obj docutils literal notranslate"><span class="pre">open_library</span></code></a>(tree, name_of_card)</p></td>
+<td><p>Return the content of the library file detected</p></td>
 </tr>
 <tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">put_cmd</span></code>(frame, msg_cmd)</p></td>
 <td><p>Send a Python command to the connected card</p></td>
@@ -313,20 +319,38 @@
 <tr class="row-even"><td><p><a class="reference internal" href="#Device_tree.DeviceTree.OnClipboardMenu" title="Device_tree.DeviceTree.OnClipboardMenu"><code class="xref py py-obj docutils literal notranslate"><span class="pre">OnClipboardMenu</span></code></a>(evt)</p></td>
 <td><p>Create an instance of the :class:ClipboardMenuDevice and display it</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#Device_tree.DeviceTree.custom_tree_ctrl" title="Device_tree.DeviceTree.custom_tree_ctrl"><code class="xref py py-obj docutils literal notranslate"><span class="pre">custom_tree_ctrl</span></code></a>()</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#Device_tree.DeviceTree.OnRightDown" title="Device_tree.DeviceTree.OnRightDown"><code class="xref py py-obj docutils literal notranslate"><span class="pre">OnRightDown</span></code></a>(event)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#Device_tree.DeviceTree.OnRightUp" title="Device_tree.DeviceTree.OnRightUp"><code class="xref py py-obj docutils literal notranslate"><span class="pre">OnRightUp</span></code></a>(event)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#Device_tree.DeviceTree.OnSelChanged" title="Device_tree.DeviceTree.OnSelChanged"><code class="xref py py-obj docutils literal notranslate"><span class="pre">OnSelChanged</span></code></a>(event)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#Device_tree.DeviceTree.custom_tree_ctrl" title="Device_tree.DeviceTree.custom_tree_ctrl"><code class="xref py py-obj docutils literal notranslate"><span class="pre">custom_tree_ctrl</span></code></a>()</p></td>
 <td><p>Custom the treeView with the theme selected</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#Device_tree.DeviceTree.define_workspace" title="Device_tree.DeviceTree.define_workspace"><code class="xref py py-obj docutils literal notranslate"><span class="pre">define_workspace</span></code></a>()</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#Device_tree.DeviceTree.define_workspace" title="Device_tree.DeviceTree.define_workspace"><code class="xref py py-obj docutils literal notranslate"><span class="pre">define_workspace</span></code></a>()</p></td>
 <td><p>Define the workspace treeview and call :function:fill_workspace()</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#Device_tree.DeviceTree.fill_workspace" title="Device_tree.DeviceTree.fill_workspace"><code class="xref py py-obj docutils literal notranslate"><span class="pre">fill_workspace</span></code></a>(item, path)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#Device_tree.DeviceTree.fill_section" title="Device_tree.DeviceTree.fill_section"><code class="xref py py-obj docutils literal notranslate"><span class="pre">fill_section</span></code></a>(item, path)</p></td>
 <td><p>Manage the creation of the treeview item selected (recursive)</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#Device_tree.DeviceTree.get_path_item" title="Device_tree.DeviceTree.get_path_item"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_path_item</span></code></a>(item, name)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#Device_tree.DeviceTree.get_path_item" title="Device_tree.DeviceTree.get_path_item"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_path_item</span></code></a>(item, name)</p></td>
 <td><p>Catch the path name of an item in the tree</p></td>
 </tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#Device_tree.DeviceTree.init_open_on_card" title="Device_tree.DeviceTree.init_open_on_card"><code class="xref py py-obj docutils literal notranslate"><span class="pre">init_open_on_card</span></code></a>()</p></td>
+<td><p></p></td>
+</tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="#Device_tree.DeviceTree.open_file" title="Device_tree.DeviceTree.open_file"><code class="xref py py-obj docutils literal notranslate"><span class="pre">open_file</span></code></a>()</p></td>
-<td><p>Open the file given</p></td>
+<td><p>Open the file selected in a editor tab</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#Device_tree.DeviceTree.open_file_on_card" title="Device_tree.DeviceTree.open_file_on_card"><code class="xref py py-obj docutils literal notranslate"><span class="pre">open_file_on_card</span></code></a>()</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#Device_tree.DeviceTree.workspace_from_file" title="Device_tree.DeviceTree.workspace_from_file"><code class="xref py py-obj docutils literal notranslate"><span class="pre">workspace_from_file</span></code></a>()</p></td>
+<td><p>Init the workspace if a path exist in customize.json</p></td>
 </tr>
 </tbody>
 </table>
@@ -343,6 +367,21 @@
 </dd></dl>
 
 <dl class="py method">
+<dt id="Device_tree.DeviceTree.OnRightDown">
+<code class="sig-name descname">OnRightDown</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">event</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Device_tree.DeviceTree.OnRightDown" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="Device_tree.DeviceTree.OnRightUp">
+<code class="sig-name descname">OnRightUp</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">event</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Device_tree.DeviceTree.OnRightUp" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="Device_tree.DeviceTree.OnSelChanged">
+<code class="sig-name descname">OnSelChanged</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">event</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Device_tree.DeviceTree.OnSelChanged" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
 <dt id="Device_tree.DeviceTree.custom_tree_ctrl">
 <code class="sig-name descname">custom_tree_ctrl</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#Device_tree.DeviceTree.custom_tree_ctrl" title="Permalink to this definition">¶</a></dt>
 <dd><p>Custom the treeView with the theme selected</p>
@@ -355,8 +394,8 @@
 </dd></dl>
 
 <dl class="py method">
-<dt id="Device_tree.DeviceTree.fill_workspace">
-<code class="sig-name descname">fill_workspace</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">item</span></em>, <em class="sig-param"><span class="n">path</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Device_tree.DeviceTree.fill_workspace" title="Permalink to this definition">¶</a></dt>
+<dt id="Device_tree.DeviceTree.fill_section">
+<code class="sig-name descname">fill_section</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">item</span></em>, <em class="sig-param"><span class="n">path</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Device_tree.DeviceTree.fill_section" title="Permalink to this definition">¶</a></dt>
 <dd><p>Manage the creation of the treeview item selected (recursive)</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -383,9 +422,25 @@
 </dd></dl>
 
 <dl class="py method">
+<dt id="Device_tree.DeviceTree.init_open_on_card">
+<code class="sig-name descname">init_open_on_card</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#Device_tree.DeviceTree.init_open_on_card" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
 <dt id="Device_tree.DeviceTree.open_file">
 <code class="sig-name descname">open_file</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#Device_tree.DeviceTree.open_file" title="Permalink to this definition">¶</a></dt>
-<dd><p>Open the file given</p>
+<dd><p>Open the file selected in a editor tab</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="Device_tree.DeviceTree.open_file_on_card">
+<code class="sig-name descname">open_file_on_card</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#Device_tree.DeviceTree.open_file_on_card" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="Device_tree.DeviceTree.workspace_from_file">
+<code class="sig-name descname">workspace_from_file</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#Device_tree.DeviceTree.workspace_from_file" title="Permalink to this definition">¶</a></dt>
+<dd><p>Init the workspace if a path exist in customize.json</p>
 </dd></dl>
 
 </dd></dl>
@@ -406,9 +461,43 @@
 </dd></dl>
 
 <dl class="py function">
+<dt id="Device_tree.define_librairies">
+<code class="sig-prename descclassname">Device_tree.</code><code class="sig-name descname">define_librairies</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">tree</span></em>, <em class="sig-param"><span class="n">name_of_card</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Device_tree.define_librairies" title="Permalink to this definition">¶</a></dt>
+<dd><p>Define the library section that’s depends of the card connected</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>tree</strong> (<em>Device_tree</em>) – TreeView</p></li>
+<li><p><strong>name_of_card</strong> (<em>str</em>) – Esp32, esp8266 or pyboard</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
 <dt id="Device_tree.getFileTree">
 <code class="sig-prename descclassname">Device_tree.</code><code class="sig-name descname">getFileTree</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">frame</span></em>, <em class="sig-param"><span class="n">dir</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Device_tree.getFileTree" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the TreeView structure (recursive way)</p>
+</dd></dl>
+
+<dl class="py function">
+<dt id="Device_tree.open_library">
+<code class="sig-prename descclassname">Device_tree.</code><code class="sig-name descname">open_library</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">tree</span></em>, <em class="sig-param"><span class="n">name_of_card</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Device_tree.open_library" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the content of the library file detected</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>tree</strong> – [description]</p></li>
+<li><p><strong>name_of_card</strong> (<em>str</em>) – type of the connected card</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>the content of the file</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">

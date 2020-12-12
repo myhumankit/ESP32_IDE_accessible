@@ -43,6 +43,7 @@ class TopMenu(wx.MenuBar):
     :type wx.MenuBar: :class:wx.MenuBar see
      https://wxpython.org/Phoenix/docs/html/wx.MenuBar.html
     """
+
     def __init__(self, frame):
         """Constructor which append the Edit and File Menus on the Menubar
            and bind related events
@@ -50,6 +51,7 @@ class TopMenu(wx.MenuBar):
         :param frame: frame class (in this case MainWindow)
         :type frame: MainWindow(here Mainwindow class derivated of wx.frame)
         """
+
         wx.MenuBar.__init__(self)
         self.frame = frame
         self.__set_properties(frame)
@@ -59,13 +61,14 @@ class TopMenu(wx.MenuBar):
         """
         Set properties and define variables of the objet instantiated
         """
+
         self.MenuFile = FileMenu(self.frame)
         self.MenuEdit = EditMenu(self.frame)
         self.MenuTools = ToolsMenu(self.frame)
         self.MenuHelp = HelpMenu(self.frame)
+
         self.SetBackgroundColour("Black")
         self.SetForegroundColour("White")
-
         self.Append(self.MenuFile, "&File")
         self.Append(self.MenuEdit, "&Edit")
         self.Append(self.MenuTools, "Tools")
@@ -75,6 +78,7 @@ class TopMenu(wx.MenuBar):
         """
         Bind events with the objet instantiated
         """
+
         MenuFile = self.MenuFile
         MenuEdit = self.MenuEdit
         MenuTools = self.MenuTools
@@ -92,16 +96,13 @@ class TopMenu(wx.MenuBar):
         self.Bind(wx.EVT_MENU, MenuEdit.OnFindReplace, id=wx.ID_FIND)
         self.Bind(wx.EVT_MENU, MenuEdit.OnSyntaxCheck, id=wx.ID_SYNTAX_CHECK)
         self.Bind(wx.EVT_MENU, MenuTools.OnPortSettings, id=wx.ID_SETTINGS)
-        self.Bind(wx.EVT_MENU, MenuTools.Ondownload, id=wx.ID_DOWNLOAD)
+        self.Bind(wx.EVT_MENU, MenuTools.OnUpload, id=wx.ID_DOWNLOAD)
         self.Bind(wx.EVT_MENU, MenuTools.OnRun, id=wx.ID_EXECUTE)
         self.Bind(wx.EVT_MENU, MenuTools.OnStop, id=wx.ID_STOP)
         self.Bind(wx.EVT_MENU, MenuTools.OnBurnFirmware, id=wx.ID_BURN_FIRMWARE)
-        self.Bind(wx.EVT_MENU,  MenuTheme.OnChangeTheme,
-                  id=wx.ID_LIGHT_THEME)
-        self.Bind(wx.EVT_MENU,  MenuTheme.OnChangeTheme,
-                  id=wx.ID_DARK_THEME)
-        self.Bind(wx.EVT_MENU,  MenuTheme.OnChangeTheme,
-                  id=wx.ID_NVDA_THEME)
+        self.Bind(wx.EVT_MENU, MenuTheme.OnChangeTheme, id=wx.ID_LIGHT_THEME)
+        self.Bind(wx.EVT_MENU, MenuTheme.OnChangeTheme, id=wx.ID_DARK_THEME)
+        self.Bind(wx.EVT_MENU, MenuTheme.OnChangeTheme, id=wx.ID_NVDA_THEME)
         self.Bind(wx.EVT_MENU, self.MenuTools.OnDisconnect, id=wx.ID_CANCEL)
 
 
@@ -111,47 +112,27 @@ class ToolBar(wx.ToolBar):
     :param wx.ToolBar:
     see https://wxpython.org/Phoenix/docs/html/wx.ToolBar.html
     """
+
     def __init__(self, frame):
         """constructor for ToolBar
 
         :param frame: frame class generally the main window
         :type frame: MainWindow (generally)
         """
+
         wx.ToolBar.__init__(self, parent=frame, style=wx.TB_RIGHT |
                             wx.TB_DOCKABLE | wx.FULL_REPAINT_ON_RESIZE)
-        self.CentreOnParent()
         self.frame = frame
 
         self.add_tools()
         self.__set_properties()
         self.__attach_events(frame.top_menu)
-
-    def add_tools(self):
-        """
-        Fill the objet created with tools buttons
-        """
-        self.AddTool(wx.ID_NEW, '', load_img('./img/newfile.png'),
-                     shortHelp="New")
-        self.AddTool(wx.ID_OPEN, '',
-                     load_img('./img/fileopen.png'), shortHelp="Open")
-        self.AddTool(wx.ID_SAVE, '',
-                     load_img('./img/save.png'), shortHelp="Save")
-        self.AddTool(wx.ID_EXECUTE, '', load_img('./img/downloadandrun.png'),
-                     shortHelp="Run")
-        self.AddTool(wx.ID_STOP, '', load_img('./img/stop.png'),
-                     shortHelp="Stop")
-        self.AddTool(wx.ID_UNDO, '', load_img('./img/undo.png'),
-                     shortHelp="Undo")
-        self.AddTool(wx.ID_REDO, '', load_img('./img/redo.png'),
-                     shortHelp="Redo")
-        self.AddTool(wx.ID_SYNTAX_CHECK, '', load_img('./img/syntaxCheck.png'),
-                     shortHelp="Check syntax")
-        self.AddTool(wx.ID_CLEAR, '',
-                     load_img('./img/clear.png'), shortHelp="Clear")
+        self.CentreOnParent()
 
     def __set_properties(self):
         """Set properties and declare variables of the instance
         """
+
         self.Realize()
         self.SetBackgroundColour("black")
 
@@ -161,6 +142,7 @@ class ToolBar(wx.ToolBar):
         :param frame: often the MainWindow
         :type frame: MainWindow class
         """
+
         self.Bind(wx.EVT_MENU, top_menu.MenuFile.OnAddPage, id=wx.ID_NEW)
         self.Bind(wx.EVT_MENU, top_menu.MenuFile.OnOpen, id=wx.ID_OPEN)
         self.Bind(wx.EVT_MENU, top_menu.MenuFile.OnSave, id=wx.ID_SAVE)
@@ -172,11 +154,29 @@ class ToolBar(wx.ToolBar):
         self.Bind(wx.EVT_MENU, top_menu.MenuEdit.OnUndo, id=wx.ID_UNDO)
         self.Bind(wx.EVT_MENU, top_menu.MenuEdit.OnRedo, id=wx.ID_REDO)
 
+    def add_tools(self):
+        """
+        Fill the objet created with tools buttons
+        """
+
+        self.AddTool(wx.ID_NEW, '', load_img('./img/newfile.png'), shortHelp="New")
+        self.AddTool(wx.ID_OPEN, '', load_img('./img/fileopen.png'), shortHelp="Open")
+        self.AddTool(wx.ID_SAVE, '', load_img('./img/save.png'), shortHelp="Save")
+        self.AddTool(wx.ID_EXECUTE, '', load_img('./img/downloadandrun.png'),
+                     shortHelp="Run")
+        self.AddTool(wx.ID_STOP, '', load_img('./img/stop.png'), shortHelp="Stop")
+        self.AddTool(wx.ID_UNDO, '', load_img('./img/undo.png'), shortHelp="Undo")
+        self.AddTool(wx.ID_REDO, '', load_img('./img/redo.png'), shortHelp="Redo")
+        self.AddTool(wx.ID_SYNTAX_CHECK, '', load_img('./img/syntaxCheck.png'),
+                     shortHelp="Check syntax")
+        self.AddTool(wx.ID_CLEAR, '', load_img('./img/clear.png'), shortHelp="Clear")
+
     def OnClear(self, event):
         """Clear the shell panel
 
         :param evt: Event to trigger the method
         :type evt: wx.Event
         """
+
         self.frame.shell.Clear()
         my_speak(self.frame, "Terminal Cleared")

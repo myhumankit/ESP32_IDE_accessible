@@ -22,6 +22,7 @@ class ChooseBin(wx.FilePickerCtrl):
         :param burn_manager: :class:FirmwareManager to fill
         :type burn_manager: :class:FirmwareManager
         """
+
         wx.FilePickerCtrl.__init__(self, parent,
                                    message="Select the binary to install",
                                    wildcard="*.bin",
@@ -29,13 +30,8 @@ class ChooseBin(wx.FilePickerCtrl):
                                    )
 
         self.burn_manager = burn_manager
-        self.__set_properties()
-        self.Bind(wx.EVT_FILEPICKER_CHANGED, self.change_bin_path)
-
-    def __set_properties(self):
-        """Custom the current class
-        """
         self.SetLabelText("Select path of the bin")
+        self.Bind(wx.EVT_FILEPICKER_CHANGED, self.change_bin_path)
 
     def change_bin_path(self, event):
         """Change the binary path by the path selected
@@ -43,6 +39,7 @@ class ChooseBin(wx.FilePickerCtrl):
         :param event: event which sets off the function
         :type event: wx.EVT_FILE_PICKER_CHANGED
         """
+
         self.burn_manager.bin_path = self.GetPath()
 
 
@@ -59,8 +56,8 @@ class UpdateFirmwareDialog(wx.Dialog):
         :param burn_manager: :class:FirmwareManager to fill
         :type burn_manager: :class:FirmwareManager
         """
-        wx.Dialog.__init__(self, parent, style=wx.DEFAULT_DIALOG_STYLE)
 
+        wx.Dialog.__init__(self, parent, style=wx.DEFAULT_DIALOG_STYLE)
         self.burn_manager = burn_manager
         self.label_port = wx.StaticText(self, -1, "Port")
         self.choice_port = wx.Choice(self, -1, choices=[])
@@ -178,7 +175,7 @@ class UpdateFirmwareDialog(wx.Dialog):
         self.SetSizer(sizer_2)
         sizer_2.Fit(self)
         self.Layout()
-        self.button_ok.SetLabel("Install")
+        self.button_ok.SetLabel("Install Firmware")
         # end wxGlade
 
     def __attach_events(self):

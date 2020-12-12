@@ -204,9 +204,6 @@ and communication with the card</p>
 <tr class="row-odd"><td><p><a class="reference internal" href="#connexion.ManageConnection" title="connexion.ManageConnection"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ManageConnection</span></code></a>(frame)</p></td>
 <td><p>Class with useful methods to manage Connection related with the frame</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#connexion.TerminalSetup" title="connexion.TerminalSetup"><code class="xref py py-obj docutils literal notranslate"><span class="pre">TerminalSetup</span></code></a>()</p></td>
-<td><p>Placeholder for various terminal settings.</p></td>
-</tr>
 </tbody>
 </table>
 <dl class="py function">
@@ -235,14 +232,14 @@ and communication with the card</p>
 <col style="width: 90%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="#connexion.ManageConnection.download" title="connexion.ManageConnection.download"><code class="xref py py-obj docutils literal notranslate"><span class="pre">download</span></code></a>(filepath, filename)</p></td>
-<td><p>Download a file on the card</p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#connexion.ManageConnection.download_and_run" title="connexion.ManageConnection.download_and_run"><code class="xref py py-obj docutils literal notranslate"><span class="pre">download_and_run</span></code></a>(filename)</p></td>
-<td><p>Execute the file gived in params on the MicroPython card</p></td>
-</tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="#connexion.ManageConnection.get_card_infos" title="connexion.ManageConnection.get_card_infos"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_card_infos</span></code></a>(msg_cmd)</p></td>
 <td><p>Get the name, the version of the firmware and the type of the</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#connexion.ManageConnection.upload" title="connexion.ManageConnection.upload"><code class="xref py py-obj docutils literal notranslate"><span class="pre">upload</span></code></a>(filepath, filename)</p></td>
+<td><p>Download a file on the card</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#connexion.ManageConnection.upload_and_run" title="connexion.ManageConnection.upload_and_run"><code class="xref py py-obj docutils literal notranslate"><span class="pre">upload_and_run</span></code></a>(filename)</p></td>
+<td><p>Execute the file gived in params on the MicroPython card</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="#connexion.ManageConnection.write_in_file" title="connexion.ManageConnection.write_in_file"><code class="xref py py-obj docutils literal notranslate"><span class="pre">write_in_file</span></code></a>(fileHandle, file_to_open)</p></td>
 <td><p>Write bytes of a computer file on a file on the device</p></td>
@@ -250,8 +247,22 @@ and communication with the card</p>
 </tbody>
 </table>
 <dl class="py method">
-<dt id="connexion.ManageConnection.download">
-<code class="sig-name descname">download</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">filepath</span></em>, <em class="sig-param"><span class="n">filename</span></em><span class="sig-paren">)</span><a class="headerlink" href="#connexion.ManageConnection.download" title="Permalink to this definition">¶</a></dt>
+<dt id="connexion.ManageConnection.get_card_infos">
+<code class="sig-name descname">get_card_infos</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">msg_cmd</span></em><span class="sig-paren">)</span><a class="headerlink" href="#connexion.ManageConnection.get_card_infos" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="simple">
+<dt>Get the name, the version of the firmware and the type of the</dt><dd><p>connected device</p>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>msg_cmd</strong> (<em>string</em>) – Result of a command</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="connexion.ManageConnection.upload">
+<code class="sig-name descname">upload</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">filepath</span></em>, <em class="sig-param"><span class="n">filename</span></em><span class="sig-paren">)</span><a class="headerlink" href="#connexion.ManageConnection.upload" title="Permalink to this definition">¶</a></dt>
 <dd><p>Download a file on the card</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -270,26 +281,12 @@ and communication with the card</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="connexion.ManageConnection.download_and_run">
-<code class="sig-name descname">download_and_run</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">filename</span></em><span class="sig-paren">)</span><a class="headerlink" href="#connexion.ManageConnection.download_and_run" title="Permalink to this definition">¶</a></dt>
+<dt id="connexion.ManageConnection.upload_and_run">
+<code class="sig-name descname">upload_and_run</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">filename</span></em><span class="sig-paren">)</span><a class="headerlink" href="#connexion.ManageConnection.upload_and_run" title="Permalink to this definition">¶</a></dt>
 <dd><p>Execute the file gived in params on the MicroPython card</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>filename</strong> (<em>str</em>) – the path of the file to execute</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt id="connexion.ManageConnection.get_card_infos">
-<code class="sig-name descname">get_card_infos</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">msg_cmd</span></em><span class="sig-paren">)</span><a class="headerlink" href="#connexion.ManageConnection.get_card_infos" title="Permalink to this definition">¶</a></dt>
-<dd><dl class="simple">
-<dt>Get the name, the version of the firmware and the type of the</dt><dd><p>connected device</p>
-</dd>
-</dl>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>msg_cmd</strong> (<em>string</em>) – Result of a command</p>
 </dd>
 </dl>
 </dd></dl>
@@ -308,14 +305,6 @@ and communication with the card</p>
 </dl>
 </dd></dl>
 
-</dd></dl>
-
-<dl class="py class">
-<dt id="connexion.TerminalSetup">
-<em class="property">class </em><code class="sig-prename descclassname">connexion.</code><code class="sig-name descname">TerminalSetup</code><a class="headerlink" href="#connexion.TerminalSetup" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
-<p>Placeholder for various terminal settings. Used to pass the
-options to the TerminalSettingsDialog.</p>
 </dd></dl>
 
 </div>

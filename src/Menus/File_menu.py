@@ -1,6 +1,7 @@
 """
     Module wich contains the FileMenu class and some functions linked to this menu
 """
+
 import wx
 import os
 from Panels.Editor import Styled_Editor
@@ -9,9 +10,10 @@ from Utils.voice_synthese import my_speak
 
 
 class FileMenu(wx.Menu):
-    """Inits a instance of a wx.Menu to create a Theme menu and his buttons (Copy, Paste, Find,...)
+    """Inits a instance of a wx.Menu to create a File menu and his buttons
+     (Copy, Paste, Find,...)
 
-    :return: the Theme menu filled by buttons
+    :return: the File menu filled by buttons
     :rtype: wx.Menu see https://wxpython.org/Phoenix/docs/html/wx.Menu.html
     """
 
@@ -21,8 +23,8 @@ class FileMenu(wx.Menu):
         :param frame: main window
         :type frame: MainWindow
         """
-        wx.Menu.__init__(self, "File")
 
+        wx.Menu.__init__(self, "File")
         self.frame = frame
 
         self.Append(wx.ID_NEW, "&New\tCTRL+N")
@@ -38,6 +40,7 @@ class FileMenu(wx.Menu):
         :param evt: Event to trigger the method
         :type evt: wx.Event
         """
+
         self.frame.stop_thread_serial()
         self.frame.serial.close()
         self.frame.Destroy()
@@ -48,28 +51,22 @@ class FileMenu(wx.Menu):
         :param evt: Event to trigger the method
         :type evt: wx.Event
         """
+
         notebookP = self.frame.notebook
         page = notebookP.GetCurrentPage()
         if page.on_card:
             return save_on_card(self.frame, page)
-        # Check if save is required
         if (page.GetValue() != page.last_save):
             page.saved = False
-
-        # Check if Save should bring up FileDialog
         if (page.saved is False and page.last_save == ""):
             dialog = wx.FileDialog(self.frame, "Choose a file",
                                    page.directory, "", "*",
                                    wx.FD_SAVE | wx.FD_OVERWRITE_PROMPT)
             if dialog.ShowModal() == wx.ID_OK:
-                # Grab the content to be saved
                 save_as_file_contents = page.GetValue()
-
-                # Open, Write & Close File
                 save_as_name = dialog.GetFilename()
                 save_as_directory = dialog.GetDirectory()
-                filehandle = open(os.path.join(
-                    save_as_directory, save_as_name), 'w')
+                filehandle = open(os.path.join(save_as_directory, save_as_name), 'w')
                 filehandle.write(save_as_file_contents)
                 filehandle.close()
                 notebookP.SetPageText(notebookP.GetSelection(), save_as_name)
@@ -78,7 +75,6 @@ class FileMenu(wx.Menu):
                 page.last_save = save_as_file_contents
                 page.saved = True
         else:
-            # Grab the content to be saved
             save_as_file_contents = page.GetValue()
             filehandle = open(os.path.join(page.directory, page.filename), 'w')
             filehandle.write(save_as_file_contents)
@@ -94,6 +90,7 @@ class FileMenu(wx.Menu):
         :param evt: Event to trigger the method
         :type evt: wx.Event
         """
+
         notebookP = self.frame.notebook
         page = notebookP.GetCurrentPage()
         dialog = wx.FileDialog(self.frame, "Choose a file", page.directory,
@@ -101,9 +98,7 @@ class FileMenu(wx.Menu):
 
         dialog.CenterOnParent()
         if dialog.ShowModal() == wx.ID_OK:
-            # Grab the content to be saved
             save_as_file_contents = page.GetValue()
-            # Open, Write & Close File
             save_as_name = dialog.GetFilename()
             save_as_directory = dialog.GetDirectory()
             filehandle = open(os.path.join(
@@ -124,6 +119,7 @@ class FileMenu(wx.Menu):
         :param evt: Event to trigger the method
         :type evt: wx.Event
         """
+
         notebookP = self.frame.notebook
         dialog = wx.FileDialog(self.frame,
                                "Choose a File",
@@ -150,6 +146,7 @@ class FileMenu(wx.Menu):
         :param evt: Event to trigger the method
         :type evt: wx.Event
         """
+
         notebookP = self.frame.notebook
         new_tab = Styled_Editor(notebookP, self.frame, "", False)
         notebookP.AddPage(new_tab, "Tab %s" % new_tab.id, select=True)
@@ -162,7 +159,6 @@ class FileMenu(wx.Menu):
         :param evt: Event to trigger the method
         :type evt: wx.Event
         """
-        # TODO: ajouter dialogue pour sauvegarder si pas saved
 
         notebook = self.frame.notebook
         page = notebook.GetCurrentPage()

@@ -5,12 +5,10 @@ import wx
 import serial
 import threading
 import pyttsx3
-import os
 import sys
 
 from shortcuts import InitShortcuts
 from Serial_manager.firmware import FirmwareManager
-from api.install_fonts import Install_fonts
 from Serial_manager.connexion import ManageConnection
 from menus import init_top_menu, init_toolbar
 from all_panels import create_panels
@@ -38,47 +36,41 @@ class MainWindow(wx.Frame):
         self.SetIcon(wx.Icon("./img/Icone.png"))
         self.FromDIP(size)
         self.__set_properties__()
-        self.on_key = True
-        self.keypressmsg = ""
-        self.result = ""
+        create_panels(self)
+        init_toolbar(self)
+        InitShortcuts(self)
+        self.__attach_events()
 
     def __set_properties__(self):
         """ Set attributs of the class instancied
         """
         self.serial = serial.Serial()
         self.serial.timeout = 0.5
-        # make sure that the alive event can be checked from time to time
         self.time_to_send = 0.1
-        self.thread = None
+        self.thread_serial = None
         self.alive = threading.Event()
-
         #####
-        self.messycode = b""
-        self.recvdata = ""
+        self.on_key = True
+        self.keypressmsg = ""
+        self.result = ""
         self.show_cmd = True
         self.connected = False
         self.shell_text = ""
-        self.get_cmd = False
         self.cmd_return = ""
         self.last_cmd_red = ""
         self.last_enter = False
+        self.open_file = False
+        self.open_file_txt = ""
         #####
         self.who_is_focus = 0
         self.theme = 'Dark Theme'
+        #####
         self.top_menu = init_top_menu(self)
         self.serial_manager = ManageConnection(self)
         self.voice_on = pyttsx3.init()
+        self.firmware_manager = FirmwareManager()
         self.speak_on = True
         self.speak_thread = None
-        self.firmware_manager = FirmwareManager()
-        self.open_file = False
-        self.open_file_txt = ""
-
-        create_panels(self)
-        init_toolbar(self)
-        InitShortcuts(self)
-        self.__attach_events()
-        print("Initialisation OK")
 
     def __attach_events(self):
         """ Link events to methods
@@ -106,19 +98,19 @@ class MainWindow(wx.Frame):
 
     def start_thread_serial(self):
         """Start the receiver thread"""
-        self.thread = threading.Thread(target=self.thread_listen_port)
+        self.thread_serial = threading.Thread(target=self.thread_listen_port)
         self.alive.set()
-        self.thread.start()
+        self.thread_serial.start()
         self.serial.rts = True
         self.serial.dtr = True
         self.read_thread = None
 
     def stop_thread_serial(self):
         """Stop the receiver thread, wait until it's finished."""
-        if self.thread is not None:
+        if self.thread_serial is not None:
             self.alive.clear()          # clear alive event for thread
-            self.thread.join()          # wait until thread has finished
-            self.thread = None
+            self.thread_serial.join()          # wait until thread has finished
+            self.thread_serial = None
 
     def OnKey(self, evt):
         """
@@ -161,7 +153,9 @@ class MainWindow(wx.Frame):
             except Exception as e:
                 my_speak(self, "Device Disconnected")
                 print("Error: ", e)
-            if b:  # and b != b'\x00':
+                self.alive.clear()
+                self.top_menu.MenuTools.OnDisconnect(None)
+            if b:
                 self.is_data = True
                 b = b.replace(b'\r\n', b'\n')
                 if not self.open_file:
@@ -253,7 +247,7 @@ class MyApp(wx.App):
             --if True the app works
         """
         wx.InitAllImageHandlers()
-        window = MainWindow("IDE Accessible MHK V1.4.0", (800, 600))
+        window = MainWindow("IDE Accessible MHK V 1.0", (800, 600))
         self.SetTopWindow(window)
         window.Show()
         return True
@@ -261,21 +255,6 @@ class MyApp(wx.App):
 
 if __name__ == "__main__":
     sys.stdout = sys.__stdout__
-    if sys.platform.startswith('win32') or sys.platform.startswith('cygwin'):
-        FONTDIRS = os.path.join(os.environ['WINDIR'], 'Fonts')
-        fonts = os.listdir(FONTDIRS)
-        flags = False
-    for filename in fonts:
-        if(filename.find('FiraCode') != 0):
-            flags = True
-            break
-    if flags is False:
-        try:
-            fonts = ["./FiraCode-Medium.ttf", "./FiraCode-Regular.ttf",
-                     "./FiraCode-Retina.ttf", "./FiraCode-Light.ttf"]
-            Install_fonts(fonts)
-        except Exception as e:
-            print("Error during Install Fonts:", e)
     app = MyApp()
     app.MainLoop()
-    print("Exit")
+    print("Exit App")

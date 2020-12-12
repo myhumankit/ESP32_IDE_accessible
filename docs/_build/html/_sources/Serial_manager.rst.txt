@@ -1,5 +1,5 @@
-Modules diverse
-===
+Serial Manager lib
+==================
 
 .. toctree::
 

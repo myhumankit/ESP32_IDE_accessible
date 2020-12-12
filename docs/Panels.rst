@@ -1,5 +1,5 @@
-menus
-===
+Panels lib
+==========
 
 .. toctree::
 

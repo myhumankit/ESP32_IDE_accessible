@@ -59,7 +59,7 @@ class ManageConnection():
         if self.card == "pyboard":
             self.frame.time_to_send = 0.1
 
-    def download_and_run(self, filename):
+    def upload_and_run(self, filename):
         """Execute the file gived in params on the MicroPython card
 
         :param filename: the path of the file to execute
@@ -72,8 +72,8 @@ class ManageConnection():
                 % str(filename))
         self.frame.shell.SetFocus()
 
-# TODO: rename to upload
-    def download(self, filepath, filename):
+
+    def upload(self, filepath, filename):
         """ Download a file on the card
 
         :param filepath: path of the file to upload
@@ -83,6 +83,7 @@ class ManageConnection():
         :return: success flag
         :rtype: boolean
         """
+
         filepath = filepath.replace("\\", "/")
         file_to_open = _check_extension_file(filename, ".py")
 
@@ -99,7 +100,7 @@ class ManageConnection():
         put_cmd(self.frame, '\x03')
         self.frame.show_cmd = False
         self.frame.shell.Clear()
-        self.frame.shell.WriteText("Ready to download this file...!\n")
+        self.frame.shell.WriteText("Ready to upload this file...!\n")
         self.write_in_file(fileHandle, file_to_open)
         treeModel(self.frame)
 
@@ -111,6 +112,7 @@ class ManageConnection():
         :param file_to_open: device file
         :type file_to_open: str
         """
+
         try:
             if self.card == "pyboard":
                 done = 0
@@ -136,7 +138,6 @@ class ManageConnection():
                 put_cmd(self.frame, "myfile.close()\r")
                 for i in range(10):
                     self.frame.exec_cmd("\r\n")
-                #self.frame.exec_cmd("myfile.close()\r\n")
                 time.sleep(0.01)
             else:
                 cmd = "myfile=open('%s','w')\r\n" % str(file_to_open)
@@ -156,6 +157,7 @@ def ConnectSerial(self):
     :return: success flag
     :rtype: boolean
     """
+
     self.shell.Clear()
     self.serial.write('\x03'.encode())
 
@@ -170,57 +172,53 @@ def ConnectSerial(self):
                 print("OK")
                 break
         time.sleep(0.1)
-        endTime=time.time()
+        endTime = time.time()
         if endTime-startTime > 10:
             self.serial.close()
             if not self.serial.isOpen():
                 print("UPDATE FIRMWARE")
                 return False
             return False
-    senddata="import sys\r\n"
+    senddata = "import sys\r\n"
     put_cmd(self, "import sys\r\n")
     for i in senddata:
         self.serial.write(i.encode())
-    startdata=""
-    startTime=time.time()
+    startdata = ""
+    startTime = time.time()
     while True:
         n = self.serial.inWaiting()
-        if n>0:
-            startdata+=(self.serial.read(n)).decode('utf-8', 'ignore')
-            if startdata.find('>>> ')>=0:
+        if n > 0:
+            startdata += (self.serial.read(n)).decode('utf-8', 'ignore')
+            if startdata.find('>>> ') >= 0:
                 self.shell.AppendText(">>> ")
                 break
         time.sleep(0.1)
-        endTime=time.time()
-        if endTime-startTime>2:
+        endTime = time.time()
+        if endTime-startTime > 2:
             print(startdata)
             self.serial.close()
-            self.shell.AppendText("connect serial timeout")
+            self.shell.AppendText("connect serial timeout: Retry or update firmware")
             return False
 
-    senddata="sys.platform\r\n"
+    senddata = "sys.platform\r\n"
     for i in senddata:
         self.serial.write(i.encode())
-    startdata=""
-    startTime=time.time()
+    startdata = ""
+    startTime = time.time()
     while True:
         n = self.serial.inWaiting()
-        if n>0:
-            startdata+=(self.serial.read(n)).decode('utf-8')
-            if startdata.find('>>> ')>=0:
+        if n > 0:
+            startdata += (self.serial.read(n)).decode('utf-8')
+            if startdata.find('>>> ') >= 0:
                 break
         time.sleep(0.1)
-        endTime=time.time()
-        if endTime-startTime>2:
+        endTime = time.time()
+        if endTime-startTime > 2:
             self.serial.close()
-            self.shell.AppendText("connect serial timeout")
+            self.shell.AppendText("connect serial timeout: retry or update firmware")
             return False
-
-    # self.start_thread_serial()
     return True
 
-
-# TODO : vérifier ce qu'on envoie à cette fonction
 
 def _check_extension_file(filename, extension):
     """Check the extension file correspond to the extension asked
@@ -232,6 +230,7 @@ def _check_extension_file(filename, extension):
     :return:
     :rtype: [type]
     """
+
     finalname = ""
     if str(filename).find(extension) >= 0:
         if str(filename).find(":") < 0:

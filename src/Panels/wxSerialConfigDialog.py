@@ -32,6 +32,7 @@ class SerialConfigDialog(wx.Dialog):
     def __init__(self, *args, **kwds):
         """ Constructor method
         """
+
         # grab the serial keyword and remove it from the dict
         self.serial = kwds['serial']
         del kwds['serial']

@@ -16,9 +16,11 @@ import sys
 class FirmwareManager():
     """Class which contains parameters to use esptool
     """
+
     def __init__(self):
         """Basic constructor for FirmwareManager Class
         """
+
         self.burn_adress = None
         self.port = None
         self.board = None
@@ -55,6 +57,7 @@ class FirmwareThread(Thread):
         """
         Set attributs of the instance
         """
+
         self.frame = frame
         self.burn_frame = console
         self.burn_console = console.txt
@@ -70,6 +73,7 @@ class FirmwareThread(Thread):
         """
         Run method of a Thread
          """
+
         while True:
             if self.stop_thread:
                 break
@@ -115,6 +119,7 @@ def burn_firmware(frame, event):
     :type event: wx.Event
     :raises Exception: Incorrect Path or Port
     """
+
     firmware_manager = frame.firmware_manager
     ok = False
     while not ok:

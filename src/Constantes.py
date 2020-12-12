@@ -5,7 +5,6 @@ import wx.stc as stc
 
 rootDirectoryPath = os.path.expanduser("~")
 rootDirectoryPath = rootDirectoryPath.replace("\\", "/")
-currentTempPath = "%s/AppData/Local/uPyCraft/temp/" % rootDirectoryPath
 
 wx.ID_RUN = wx.NewId()
 wx.ID_RENAME = wx.NewId()

@@ -3,14 +3,15 @@
 """
 import wx
 import sys
+import os
 
-from constantes import rootDirectoryPath
 from api.api_pyflakes import main as CheckPySyntax
 from Utils.voice_synthese import my_speak
 
 
 class EditMenu(wx.Menu):
-    """Inits a instance of a wx.Menu to create a Theme menu and his buttons (Copy, Paste, Find,...)
+    """Inits a instance of a wx.Menu to create a Theme menu and
+     his buttons (Copy, Paste, Find,...)
 
     :return: the Theme menu filled by buttons
     :rtype: wx.Menu see https://wxpython.org/Phoenix/docs/html/wx.Menu.html
@@ -20,10 +21,11 @@ class EditMenu(wx.Menu):
         """
         Constructor method
         """
-        wx.Menu.__init__(self, "Edit")
 
+        wx.Menu.__init__(self, "Edit")
         self.frame = frame
         self.item_list = []
+
         self.Append(wx.ID_COPY, "&Copy\tCTRL+C")
         self.Append(wx.ID_CUT, "&Cut\tCTRL+X")
         self.Append(wx.ID_PASTE, "&Paste\tCTRL+V")
@@ -38,6 +40,7 @@ class EditMenu(wx.Menu):
         :param evt: Event to trigger the method
         :type evt: wx.Event
         """
+
         self.frame.notebook.GetCurrentPage().Copy()
 
     def OnPaste(self, evt):
@@ -46,6 +49,7 @@ class EditMenu(wx.Menu):
         :param evt: Event to trigger the method
         :type evt: wx.Event
         """
+
         self.frame.notebook.GetCurrentPage().Paste()
 
     def OnCut(self, evt):
@@ -54,6 +58,7 @@ class EditMenu(wx.Menu):
         :param evt: Event to trigger the method
         :type evt: wx.Event
         """
+
         self.frame.notebook.GetCurrentPage().Cut()
 
     def OnRedo(self, evt):
@@ -62,6 +67,7 @@ class EditMenu(wx.Menu):
         :param evt: Event to trigger the method
         :type evt: wx.Event
         """
+
         self.frame.notebook.GetCurrentPage().Redo()
 
     def OnUndo(self, evt):
@@ -70,6 +76,7 @@ class EditMenu(wx.Menu):
         :param evt: Event to trigger the method
         :type evt: wx.Event
         """
+
         self.frame.notebook.GetCurrentPage().Undo()
 
     def OnFindReplace(self, evt):
@@ -78,22 +85,22 @@ class EditMenu(wx.Menu):
         :param evt: Event to trigger the method
         :type evt: wx.Event
         """
+
         notebookP = self.frame.notebook
         page = notebookP.GetCurrentPage()
         if page is None:
             return
         page.OnShowFindReplace()
 
-    # FIXME: too long fonction
     def OnSyntaxCheck(self, evt):
         """Check the python syntax on the current Tab
 
         :param evt: Event to trigger the method
         :type evt: wx.Event
         """
+
         page = self.frame.notebook.GetCurrentPage()
-        syntaxCheckFilePath = "%s/AppData/Local/uPyCraft/temp/syntaxCheck.py" % \
-                              rootDirectoryPath
+        syntaxCheckFilePath = "%s/temp/syntaxCheck.py" % os.getcwd()
         syntaxCheckFileText = page.GetValue()
         filehandle = open(syntaxCheckFilePath, "wb")
         syntaxCheckFileText = syntaxCheckFileText.split("\r")
@@ -123,10 +130,8 @@ class EditMenu(wx.Menu):
 
         backStdout = sys.stdout
         backStderr = sys.stderr
-        stdoutFilePath = "%s/AppData/Local/uPyCraft/temp/stdout.py" % \
-                         rootDirectoryPath
-        stderrFilePath = "%s/AppData/Local/uPyCraft/temp/stderr.py" % \
-                         rootDirectoryPath
+        stdoutFilePath = "%s/temp/stdout.py" % os.getcwd()
+        stderrFilePath = "%s/temp/stderr.py" % os.getcwd()
         stdoutFile = open(stdoutFilePath, 'w')
         stderrFile = open(stderrFilePath, 'w')
         sys.stdout = stdoutFile

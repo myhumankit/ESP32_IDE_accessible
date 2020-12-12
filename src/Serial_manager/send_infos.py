@@ -15,7 +15,7 @@ def put_cmd(frame, msg_cmd):
     :param msg_cmd: command to send
     :type msg_cmd: str
     """
-    # frame.show_cmd = False
+
     frame.serial.write(msg_cmd.encode('utf-8'))
     frame.serial.flush()
 
@@ -29,6 +29,7 @@ async def SendCmdAsync(frame, cmd):
     :type cmd: str
     :return: None
     """
+
     frame.cmd_return = ""
     put_cmd(frame, cmd)
     await asyncio.sleep(frame.time_to_send)
@@ -40,6 +41,7 @@ class Exec_cmd(Thread):
     :param Thread: Python thread
     :type Thread: :class: threading.Thread
     """
+
     def __init__(self, cmd, frame):
         """Constructor Method
 
@@ -48,6 +50,7 @@ class Exec_cmd(Thread):
         :param frame: main window
         :type frame: Main_window
         """
+
         Thread.__init__(self)
         self.frame = frame
         self.cmd = cmd
@@ -56,6 +59,7 @@ class Exec_cmd(Thread):
         """
         Thread run
          """
+
         if self.frame.serial.isOpen():
             cmd = self.cmd
             self.frame.result = ""

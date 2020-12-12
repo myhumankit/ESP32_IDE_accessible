@@ -13,17 +13,18 @@ class HelpMenu(wx.Menu):
     :return: the Theme menu filled by buttons
     :rtype: wx.Menu see https://wxpython.org/Phoenix/docs/html/wx.Menu.html
     """
+
     def __init__(self, frame):
         """ Constructor method
 
         :param frame: main window
         :type frame: MainWindow
         """
+
         wx.Menu.__init__(self, "Help")
-
         self.frame = frame
-
         self.item_list = []
+
         self.Append(wx.ID_ABOUT, "About")
         self.Append(wx.ID_SHORTCUT, "Shortcuts List")
         self.Append(wx.ID_ABORT, "Documentation")
@@ -39,14 +40,17 @@ class HelpMenu(wx.Menu):
     def OnHelp(self, evt):
         """ Open a webrowser and display the shortcuts list
         """
+
         webbrowser.open(os.getcwd()+"\\docs\\Help\\output\\shortcuts.html")
 
     def OnAbout(self, evt):
         """ Open a webrowser and display the about
         """
+
         webbrowser.open(os.getcwd()+"\\docs\\Help\\output\\about.html")
 
     def OnDocumentation(self, evt):
         """ Open a webrowser and display the docs
         """
+
         webbrowser.open(os.getcwd()+"\\docs\\_build\\html\\index.html")
