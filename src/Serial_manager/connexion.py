@@ -194,12 +194,12 @@ def ConnectSerial(self):
                 break
         time.sleep(0.1)
         endTime = time.time()
-        if endTime-startTime > 2:
+        if endTime-startTime > 10:
             print(startdata)
             self.serial.close()
             self.shell.AppendText("connect serial timeout: Retry or update firmware")
             return False
-
+    time.time()
     senddata = "sys.platform\r\n"
     for i in senddata:
         self.serial.write(i.encode())

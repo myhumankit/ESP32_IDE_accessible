@@ -341,7 +341,7 @@ class ClipboardMenuDevice(wx.Menu):
         else:
             self.Append(wx.ID_RUN, "&Run")
             self.Append(wx.ID_OPEN, "&Open")
-            self.Append(wx.ID_CLOSE, "&Close")
+            self.Append(wx.ID_STOP, "&Stop Run")
             self.Append(wx.ID_DELETE, "&Delete")
             self.Append(wx.ID_DEFAULT, "&Default Run")
             self.Append(wx.ID_RENAME, "&Rename")
@@ -361,6 +361,16 @@ class ClipboardMenuDevice(wx.Menu):
             self.Bind(wx.EVT_MENU, self.OnDelete, id=wx.ID_DELETE)
             self.Bind(wx.EVT_MENU, self.OnDefaultRun, id=wx.ID_DEFAULT)
             self.Bind(wx.EVT_MENU, self.OnRename, id=wx.ID_RENAME)
+            self.Bind(wx.EVT_MENU, self.OnStopRun, id=wx.ID_STOP)
+
+    def OnStopRun(self, evt):
+        """Stop the current program
+
+        :param evt: [description]
+        :type evt: wx.EVT_MENU
+        """
+        put_cmd(self.device_tree.frame, "\x03")
+
 
     def OnRun(self, evt):
         """

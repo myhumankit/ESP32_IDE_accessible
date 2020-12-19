@@ -5,14 +5,13 @@
 import wx
 import time
 from Panels import wxSerialConfigDialog
-from Panels.Device_tree import treeModel
 from Serial_manager.firmware import burn_firmware
 from editor_style import change_theme_choice, customize_editor
 from editor_style import activate_highlighted_syntax
 from Utils.voice_synthese import my_speak
 from Serial_manager.send_infos import put_cmd
 from Serial_manager.connexion import ConnectSerial
-from Panels.Device_tree import save_on_card
+from Panels.Device_tree import save_on_card, treeModel
 
 
 class ToolsMenu(wx.Menu):
@@ -40,6 +39,7 @@ class ToolsMenu(wx.Menu):
         self.Append(wx.ID_EXECUTE, "UploadandRun\tF5")
         self.Append(wx.ID_STOP, "&Stop\tCTRL+C")
         self.Append(wx.ID_BURN_FIRMWARE, "BurnFirmware\tF7")
+        self.Append(wx.ID_REFRESH, "&Refresh TreeView")
         self.Append(wx.ID_BOARD, "Themes", self.themes_submenu)
 
     def OnPortSettings(self, evt):
@@ -242,6 +242,9 @@ class ToolsMenu(wx.Menu):
         """
 
         burn_firmware(self.frame, event)
+
+    def OnRefreshTreeView(self, event):
+        treeModel(self.frame)
 
 
 class ThemesMenu(wx.Menu):

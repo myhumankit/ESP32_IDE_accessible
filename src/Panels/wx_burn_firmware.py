@@ -42,7 +42,6 @@ class ChooseBin(wx.FilePickerCtrl):
 
         self.burn_manager.bin_path = self.GetPath()
 
-
 class UpdateFirmwareDialog(wx.Dialog):
     """
     Dialog to update the firmware or other
@@ -117,7 +116,7 @@ class UpdateFirmwareDialog(wx.Dialog):
             preferred_index = n
         self.choice_port.SetSelection(preferred_index)
 
-        list_adresses = ["0x1000", "0x0", ]
+        list_adresses = ["0x0", "0x1000"]
         list_erase = ["no", "yes"]
 
         self.choice_adresses.Clear()
@@ -128,6 +127,7 @@ class UpdateFirmwareDialog(wx.Dialog):
             index = n
         self.choice_adresses.SetSelection(index)
 
+        index = 0
         for n, erase in enumerate(list_erase):
             self.choice_erase_flash.Append(str(erase))
             index = n

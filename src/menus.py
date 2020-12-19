@@ -104,6 +104,7 @@ class TopMenu(wx.MenuBar):
         self.Bind(wx.EVT_MENU, MenuTheme.OnChangeTheme, id=wx.ID_DARK_THEME)
         self.Bind(wx.EVT_MENU, MenuTheme.OnChangeTheme, id=wx.ID_NVDA_THEME)
         self.Bind(wx.EVT_MENU, self.MenuTools.OnDisconnect, id=wx.ID_CANCEL)
+        self.Bind(wx.EVT_MENU, self.MenuTools.OnRefreshTreeView, id=wx.ID_REFRESH)
 
 
 class ToolBar(wx.ToolBar):
